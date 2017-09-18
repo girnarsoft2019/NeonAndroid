@@ -65,6 +65,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -780,15 +781,18 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
             this.data = data;
         }
 
-        @Override
-        protected File doInBackground(Void... params) {
-            File pictureFile = Constants.getMediaOutputFile(getActivity(), Constants.TYPE_IMAGE);
 
+
+
+
+        public File savePictureToStorage(){
+            File pictureFile = Constants.getMediaOutputFile(getActivity(), Constants.TYPE_IMAGE);
+            Log.d("HIMANSHU FILE=",pictureFile.getAbsolutePath());
             if (pictureFile == null)
                 return null;
 
             try {
-                FileOutputStream fos = new FileOutputStream(pictureFile);
+                OutputStream fos = new FileOutputStream(pictureFile);
                 Bitmap bm;
 
                 // COnverting ByteArray to Bitmap - >Rotate and Convert back to Data
@@ -851,10 +855,23 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
             } catch (IOException e) {
                 Log.d(TAG, "Error accessing file: " + e.getMessage());
             }
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if(pictureFile.exists()){
+                return pictureFile;
+            }else{
+                pictureFile=null;
+                savePictureToStorage();
+            }
+            return pictureFile;
+        }
 
-          /*  if (mCamera != null) {
-                mCamera.startPreview();
-            }*/
+        @Override
+        protected File doInBackground(Void... params) {
+            File pictureFile= savePictureToStorage();
             return pictureFile;
         }
 
