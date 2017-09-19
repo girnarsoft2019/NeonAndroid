@@ -100,7 +100,12 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
                                             @Override
                                             public void run() {
                                                 try {
-                                                    CameraFragment1 fragment = new CameraFragment1();
+                                                    boolean locationRestrictive = true;
+                                                    if (cameraParams != null && cameraParams.getCustomParameters() != null) {
+                                                        locationRestrictive = cameraParams.getCustomParameters().getLocationRestrictive();
+                                                    }
+
+                                                    CameraFragment1 fragment = CameraFragment1.getInstance(locationRestrictive);
                                                     FragmentManager manager = getSupportFragmentManager();
                                                     manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
                                                 } catch (Exception e) {
@@ -234,7 +239,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
 
                     };
                 }
-                PhotosLibrary.collectPhotos(NeonImagesHandler.getSingletonInstance().getRequestCode(),this, NeonImagesHandler.getSingletonInstance().getLibraryMode(), PhotosMode.setGalleryMode().setParams(galleryParam), NeonImagesHandler.getSingleonInstance().getImageResultListener());
+                PhotosLibrary.collectPhotos(NeonImagesHandler.getSingletonInstance().getRequestCode(), this, NeonImagesHandler.getSingletonInstance().getLibraryMode(), PhotosMode.setGalleryMode().setParams(galleryParam), NeonImagesHandler.getSingleonInstance().getImageResultListener());
                 finish();
             } catch (NeonException e) {
                 e.printStackTrace();

@@ -7,11 +7,14 @@ package com.gaadi.neon.util;
  */
 public class CustomParameters {
 
-    private boolean hideCameraButtonInNeutral,hideGalleryButtonInNeutral=false;
+    private boolean hideCameraButtonInNeutral = false;
+    private boolean hideGalleryButtonInNeutral = false;
+    private boolean locationRestrictive = true;
 
     private CustomParameters(CustomParametersBuilder builder) {
         this.hideCameraButtonInNeutral = builder.hideCameraButtonInNeutral;
         this.hideGalleryButtonInNeutral = builder.hideGalleryButtonInNeutral;
+        this.locationRestrictive = builder.locationRestrictive;
     }
 
     public boolean gethideCameraButtonInNeutral() {
@@ -22,12 +25,16 @@ public class CustomParameters {
         return hideGalleryButtonInNeutral;
     }
 
+    public boolean getLocationRestrictive() {
+        return locationRestrictive;
+    }
 
 
     public static class CustomParametersBuilder {
 
         private boolean hideCameraButtonInNeutral;
         private boolean hideGalleryButtonInNeutral;
+        private boolean locationRestrictive = true;
 
 
         public CustomParametersBuilder sethideCameraButtonInNeutral(boolean hide) {
@@ -37,6 +44,11 @@ public class CustomParameters {
 
         public CustomParametersBuilder setHideGalleryButtonInNeutral(boolean hide) {
             this.hideGalleryButtonInNeutral = hide;
+            return this;
+        }
+
+        public CustomParametersBuilder setLocationRestrictive(boolean locationRestrictive) {
+            this.locationRestrictive = locationRestrictive;
             return this;
         }
 

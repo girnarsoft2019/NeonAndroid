@@ -97,6 +97,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     private CameraFacing cameraFacing;
     private CameraFacing localCameraFacing;
     private SensorManager sensorManager;
+    private boolean locationRestrictive = true;
     private float[] mGravity;
     private long lastUpdate = 0;
     private float last_x, last_y, last_z;
@@ -195,11 +196,15 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
         binder.setHandlers(this);
 
         binder.getRoot().setOnTouchListener(this);
+
+        if (getArguments() != null)
+            locationRestrictive = getArguments().getBoolean("locationRestrictive", true);
+
     }
 
     public void onClickFragmentsView(View v) {
         if (v.getId() == R.id.buttonCaptureVertical || v.getId() == R.id.buttonCaptureHorizontal) {
-            if (FindLocations.getInstance().checkPermissions(mActivity) &&
+            if (!locationRestrictive || FindLocations.getInstance().checkPermissions(mActivity) &&
                     FindLocations.getInstance().getLocation() != null) {
                 clickPicture();
             } else {
@@ -756,6 +761,15 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
             }
         }
         return cameraId;
+    }
+
+    public static CameraFragment1 getInstance(boolean locationRestrictive) {
+
+        CameraFragment1 fragment = new CameraFragment1();
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("locationRestrictive", locationRestrictive);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     public interface PictureTakenListener {
