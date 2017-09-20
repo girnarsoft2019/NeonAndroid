@@ -29,29 +29,24 @@ import java.util.List;
  * @version 1.0
  * @since 2/2/17
  */
-public class ImageShowFragment extends Fragment  {
+public class ImageShowFragment extends Fragment {
 
     ImageShowAdapter adapter;
     ImageShowLayoutBinding binder;
-    View.OnClickListener doneListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (NeonImagesHandler.getSingletonInstance().validateNeonExit(getActivity())) {
-                NeonImagesHandler.getSingletonInstance().sendImageCollectionAndFinish(getActivity(), ResponseCode.Success);
-            }
-        }
-    };
+    private boolean isProfileTagOnly;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        isProfileTagOnly = NeonImagesHandler.getSingletonInstance().getNeutralParam().hasOnlyProfileTag();
+
         binder = DataBindingUtil.inflate(getActivity().getLayoutInflater(), R.layout.image_show_layout, null, false);
         binder.btnDone.setOnClickListener(doneListener);
         binder.imageShowGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Intent viewPagerIntent = new Intent(getActivity(),ImageReviewActivity.class);
-                viewPagerIntent.putExtra(Constants.IMAGE_REVIEW_POSITION,position);
+                Intent viewPagerIntent = new Intent(getActivity(), ImageReviewActivity.class);
+                viewPagerIntent.putExtra(Constants.IMAGE_REVIEW_POSITION, position);
                 getActivity().startActivity(viewPagerIntent);
             }
         });
@@ -77,8 +72,8 @@ public class ImageShowFragment extends Fragment  {
 
             @Override
             public void onDragPositionsChanged(int oldPosition, int newPosition) {
-                if(NeonImagesHandler.getSingletonInstance().getImagesCollection() ==  null ||
-                        NeonImagesHandler.getSingletonInstance().getImagesCollection().size()<=0){
+                if (NeonImagesHandler.getSingletonInstance().getImagesCollection() == null ||
+                        NeonImagesHandler.getSingletonInstance().getImagesCollection().size() <= 0) {
                     return;
                 }
                 NeonImagesHandler.getSingletonInstance().getImagesCollection().add(newPosition,
@@ -97,10 +92,18 @@ public class ImageShowFragment extends Fragment  {
                 NeonImagesHandler.getSingletonInstance().getImagesCollection().size() < 0) {
             return;
         }
-        adapter = new ImageShowAdapter(getActivity());
+        adapter = new ImageShowAdapter(getActivity(),isProfileTagOnly);
         binder.imageShowGrid.setAdapter(adapter);
     }
 
     //binder.imageShowGrid.startEditMode(position);
 
+    View.OnClickListener doneListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (NeonImagesHandler.getSingletonInstance().validateNeonExit(getActivity())) {
+                NeonImagesHandler.getSingletonInstance().sendImageCollectionAndFinish(getActivity(), ResponseCode.Success);
+            }
+        }
+    };
 }

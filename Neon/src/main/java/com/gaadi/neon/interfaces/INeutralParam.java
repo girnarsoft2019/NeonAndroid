@@ -5,6 +5,13 @@ package com.gaadi.neon.interfaces;
  * @version 1.0
  * @since 2/2/17
  */
-public interface INeutralParam extends ICameraParam,IGalleryParam {
+public abstract class INeutralParam implements ICameraParam, IGalleryParam {
 
+    public boolean hasOnlyProfileTag() {
+        return false;
+    }
+
+    public String getProfileTagName() {
+        return "Profile Image";
+    }
 }

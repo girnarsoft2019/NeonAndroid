@@ -8,14 +8,18 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gaadi.neon.activity.ImageReviewActivity;
 import com.gaadi.neon.activity.neutral.NeonNeutralActivity;
 import com.gaadi.neon.dynamicgrid.BaseDynamicGridAdapter;
 import com.gaadi.neon.util.Constants;
+import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
+
+import java.util.List;
 
 /**
  * @author princebatra
@@ -25,15 +29,17 @@ import com.scanlibrary.R;
 public class ImageShowAdapter extends BaseDynamicGridAdapter {
 
     private Context context;
+    private boolean isProfileTagOnly;
 
-    public ImageShowAdapter(Context context) {
+    public ImageShowAdapter(Context context, boolean isProfileTagOnly) {
         super(context, NeonImagesHandler.getSingletonInstance().getImagesCollection(), 2);
         this.context = context;
+        this.isProfileTagOnly = isProfileTagOnly;
     }
 
     @Override
     public int getCount() {
-        if(NeonImagesHandler.getSingletonInstance().getImagesCollection() != null) {
+        if (NeonImagesHandler.getSingletonInstance().getImagesCollection() != null) {
             return NeonImagesHandler.getSingletonInstance().getImagesCollection().size();
         }
         return 0;
@@ -66,31 +72,42 @@ public class ImageShowAdapter extends BaseDynamicGridAdapter {
         } else {
             holder = (PhotosHolder) convertView.getTag();
         }
+        List<FileInfo> fileInfoList = NeonImagesHandler.getSingleonInstance().getImagesCollection();
+        if (isProfileTagOnly) {
+            if (position > 0) {
+                holder.tvProfile.setVisibility(View.GONE);
+            } else {
+                holder.tvProfile.setVisibility(View.VISIBLE);
+                String tagName = NeonImagesHandler.getSingletonInstance().getNeutralParam().getProfileTagName();
+                holder.tvProfile.setText(tagName);
 
-        if (!NeonImagesHandler.getSingletonInstance().getGenericParam().getTagEnabled()) {
-            holder.tvProfile.setVisibility(View.GONE);
+            }
         } else {
-            holder.tvProfile.setVisibility(View.VISIBLE);
-        }
 
-        if (NeonImagesHandler.getSingleonInstance().getImagesCollection().get(position).getFileTag() != null) {
-            holder.tvProfile.setText(NeonImagesHandler.getSingleonInstance().getImagesCollection().get(position).getFileTag().getTagName());
-        } else {
-            holder.tvProfile.setText(R.string.select_tag);
-        }
+            if (!NeonImagesHandler.getSingletonInstance().getGenericParam().getTagEnabled()) {
+                holder.tvProfile.setVisibility(View.GONE);
+            } else {
+                holder.tvProfile.setVisibility(View.VISIBLE);
+            }
 
+            if (fileInfoList.get(position).getFileTag() != null) {
+                holder.tvProfile.setText(fileInfoList.get(position).getFileTag().getTagName());
+            } else {
+                holder.tvProfile.setText(R.string.select_tag);
+            }
+        }
         holder.removeImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (NeonImagesHandler.getSingleonInstance().removeFromCollection(position)) {
                     notifyDataSetChanged();
-                    if((NeonImagesHandler.getSingleonInstance().getImagesCollection() == null ||
-                            NeonImagesHandler.getSingleonInstance().getImagesCollection().size()<=0) &&
-                            context instanceof NeonNeutralActivity){
-                        ((NeonNeutralActivity)context).onPostResume();
+                    if ((NeonImagesHandler.getSingleonInstance().getImagesCollection() == null ||
+                            NeonImagesHandler.getSingleonInstance().getImagesCollection().size() <= 0) &&
+                            context instanceof NeonNeutralActivity) {
+                        ((NeonNeutralActivity) context).onPostResume();
                     }
-                }else{
-                    Toast.makeText(context,"Failed to delete.Please try again later.",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "Failed to delete.Please try again later.", Toast.LENGTH_SHORT).show();
                 }
             }
         });

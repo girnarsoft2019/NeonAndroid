@@ -281,6 +281,16 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 }
 
                 @Override
+                public boolean hasOnlyProfileTag() {
+                    return true;
+                }
+
+                @Override
+                public String getProfileTagName() {
+                    return "Profile Image";
+                }
+
+                @Override
                 public boolean getTagEnabled() {
                     return true;
                 }

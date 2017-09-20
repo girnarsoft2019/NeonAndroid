@@ -62,7 +62,6 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
     private TextView tvTag, tvNext, tvPrevious;
     private ImageView buttonGallery;
     private Location location;
-    private boolean locationPermission;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -468,7 +467,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
 
     @Override
     public void getPermissionStatus(Boolean locationPermission) {
-        this.locationPermission = locationPermission;
+        boolean locationPermission1 = locationPermission;
         FindLocations.getInstance().init(this);
     }
 
