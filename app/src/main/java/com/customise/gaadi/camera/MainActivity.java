@@ -117,14 +117,14 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
                 @Override
                 public CustomParameters getCustomParameters() {
-                    return null;
+                    CustomParameters.CustomParametersBuilder builder = new CustomParameters.CustomParametersBuilder();
+                    builder.setLocationRestrictive(true);
+                    return builder.build();
                 }
 
 
             }), this);
-        } catch (NullPointerException e) {
-
-        } catch (NeonException e) {
+        } catch (NullPointerException | NeonException e) {
 
         }
 

@@ -78,9 +78,10 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         if (NeonImagesHandler.getSingletonInstance().getLivePhotosListener() != null) {
             NeonImagesHandler.getSingletonInstance().setLivePhotoNextTagListener(this);
         }
-
-        FindLocations.getInstance().init(this);
-        FindLocations.getInstance().checkPermissions(this);
+        if (cameraParams == null || cameraParams.getCustomParameters() == null || cameraParams.getCustomParameters().getLocationRestrictive()) {
+            FindLocations.getInstance().init(this);
+            FindLocations.getInstance().checkPermissions(this);
+        }
 
     }
 

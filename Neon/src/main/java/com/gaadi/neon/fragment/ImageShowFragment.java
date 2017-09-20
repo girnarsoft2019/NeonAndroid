@@ -15,6 +15,7 @@ import com.gaadi.neon.activity.ImageReviewActivity;
 import com.gaadi.neon.dynamicgrid.DynamicGridView;
 import com.gaadi.neon.enumerations.ResponseCode;
 import com.gaadi.neon.adapter.ImageShowAdapter;
+import com.gaadi.neon.interfaces.INeutralParam;
 import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.FileInfo;
@@ -38,8 +39,10 @@ public class ImageShowFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        isProfileTagOnly = NeonImagesHandler.getSingletonInstance().getNeutralParam().hasOnlyProfileTag();
-
+        INeutralParam iNeutralParam = NeonImagesHandler.getSingletonInstance().getNeutralParam();
+        if (iNeutralParam != null) {
+            isProfileTagOnly = iNeutralParam.hasOnlyProfileTag();
+        }
         binder = DataBindingUtil.inflate(getActivity().getLayoutInflater(), R.layout.image_show_layout, null, false);
         binder.btnDone.setOnClickListener(doneListener);
         binder.imageShowGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -92,7 +95,7 @@ public class ImageShowFragment extends Fragment {
                 NeonImagesHandler.getSingletonInstance().getImagesCollection().size() < 0) {
             return;
         }
-        adapter = new ImageShowAdapter(getActivity(),isProfileTagOnly);
+        adapter = new ImageShowAdapter(getActivity(), isProfileTagOnly);
         binder.imageShowGrid.setAdapter(adapter);
     }
 
