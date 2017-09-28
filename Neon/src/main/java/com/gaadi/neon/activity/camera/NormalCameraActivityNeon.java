@@ -432,28 +432,33 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         if (binder.imageHolderView.getVisibility() != View.VISIBLE) {
             binder.imageHolderView.setVisibility(View.VISIBLE);
         }
-        updateExifInfo(fileInfo);
-        NeonImagesHandler.getSingletonInstance().putInImageCollection(fileInfo, this);
+        boolean locationRestriction = cameraParams == null || cameraParams.getCustomParameters() == null || cameraParams.getCustomParameters().getLocationRestrictive();
+        boolean isUpdated = true;
+        if (locationRestriction) {
+            isUpdated = updateExifInfo(fileInfo);
+        }
+        if (isUpdated) {
+            NeonImagesHandler.getSingletonInstance().putInImageCollection(fileInfo, this);
 
-        if (NeonImagesHandler.getSingletonInstance().getLivePhotosListener() == null) {
+            if (NeonImagesHandler.getSingletonInstance().getLivePhotosListener() == null) {
 
-            if (NeonImagesHandler.getSingletonInstance().getCameraParam().getCameraViewType() == CameraType.gallery_preview_camera) {
-                ImageView image = new ImageView(this);
-                Bitmap thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(filePath), 200, 200);
-                image.setImageBitmap(thumbnail);
-                binder.imageHolderView.addView(image);
-            }
+                if (NeonImagesHandler.getSingletonInstance().getCameraParam().getCameraViewType() == CameraType.gallery_preview_camera) {
+                    ImageView image = new ImageView(this);
+                    Bitmap thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(filePath), 200, 200);
+                    image.setImageBitmap(thumbnail);
+                    binder.imageHolderView.addView(image);
+                }
 
-
-            if (cameraParams.getTagEnabled()) {
-                ImageTagModel imageTagModel = tagModels.get(currentTag);
-                if (imageTagModel.getNumberOfPhotos() > 0 && NeonImagesHandler.getSingletonInstance().getNumberOfPhotosCollected(imageTagModel) >= imageTagModel.getNumberOfPhotos()) {
-                    onClick(binder.tvSkip);
+                if (cameraParams.getTagEnabled()) {
+                    ImageTagModel imageTagModel = tagModels.get(currentTag);
+                    if (imageTagModel.getNumberOfPhotos() > 0 && NeonImagesHandler.getSingletonInstance().getNumberOfPhotosCollected(imageTagModel) >= imageTagModel.getNumberOfPhotos()) {
+                        onClick(binder.tvSkip);
+                    }
                 }
             }
+        } else {
+            Toast.makeText(this, "Unable to find location, Please try again later.", Toast.LENGTH_SHORT).show();
         }
-
-
     }
 
     @Override
@@ -474,7 +479,6 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
 
     @Override
     public boolean updateExifInfo(FileInfo fileInfo) {
-
         try {
             if (location == null)
                 return false;
