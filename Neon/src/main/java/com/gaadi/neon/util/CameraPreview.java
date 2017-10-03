@@ -41,6 +41,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             }
         }
     };
+    private int cameraOrientation;
     private List<Camera.Size> mSupportedPreviewSizes;
     private List<Camera.Size> mSupportedPictureSizes;
     private Camera.Size mPreviewSize;
@@ -86,6 +87,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                 Log.e(Constants.TAG, "Aspect : " + aspect);
 
                 ViewGroup.LayoutParams cameraHolderParams = getLayoutParams();
+                cameraOrientation = configuration.orientation;
+
                 if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
                     cameraHolderParams.height = height;
                     cameraHolderParams.width = (int) (height / aspect);
@@ -419,7 +422,12 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
     private Camera.Size getOptimalPreviewSizeByAspect(List<Camera.Size> sizes, int w, int h) {
         final double ASPECT_TOLERANCE = 0.01f;
-        double targetRatio = (double) w / h;
+        double targetRatio;
+        if (cameraOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+            targetRatio = (double) w / h;
+        } else {
+            targetRatio = (double) h / w;
+        }
         if (sizes == null) return null;
 
         Camera.Size optimalSize = null;
