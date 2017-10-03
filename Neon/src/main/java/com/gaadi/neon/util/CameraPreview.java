@@ -402,7 +402,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         mSupportedPictureSizes = mCamera.getParameters().getSupportedPictureSizes();
         if (mSupportedPreviewSizes != null) {
             mPreviewSize = getOptimalPreviewSizeByAspect(mSupportedPreviewSizes, width, height);
-            mPictureSize = getOptimalPreviewSize(mSupportedPictureSizes, width, height);
+            mPictureSize = getOptimalPreviewSizeByAspect(mSupportedPictureSizes, width, height);
             parameters.setPreviewSize(mPreviewSize.width, mPreviewSize.height);
             parameters.setPictureSize(mPictureSize.width, mPictureSize.height);
         }
