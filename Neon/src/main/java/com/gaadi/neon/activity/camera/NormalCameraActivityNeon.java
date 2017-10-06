@@ -482,7 +482,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         try {
             if (location == null)
                 return false;
-            if (cameraParams.getTagEnabled()) {
+            //if (cameraParams.getTagEnabled()) {
                 //ImageTagModel imageTagModel = tagModels.get(currentTag);
                 // Save exit attributes to file
                 final File file = new File(fileInfo.getFilePath());
@@ -494,7 +494,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
                     exifInterfaceHandling.setLocation(location);
                     return true;
                 }
-            }
+           // }
         } catch (IOException e) {
             e.printStackTrace();
         }
