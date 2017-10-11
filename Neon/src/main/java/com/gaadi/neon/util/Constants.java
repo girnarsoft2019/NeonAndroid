@@ -56,12 +56,12 @@ public class Constants {
             }
         }
         // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss.SSS").format(new Date());
+        //String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss.SSS").format(new Date());
         File mediaFile;
 
         if (type == TYPE_IMAGE) {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-                    "IMG_" + timeStamp + ".jpg");
+                    "IMG_" + System.currentTimeMillis() + ".jpg");
         } else
             return null;
         return mediaFile;
