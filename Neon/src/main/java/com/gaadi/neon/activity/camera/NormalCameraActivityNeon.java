@@ -483,18 +483,20 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
             if (location == null)
                 return false;
             //if (cameraParams.getTagEnabled()) {
-                //ImageTagModel imageTagModel = tagModels.get(currentTag);
-                // Save exit attributes to file
-                final File file = new File(fileInfo.getFilePath());
-                if (!file.exists()) {
-                    Toast.makeText(this, NeonImagesHandler.getSingletonInstance().getCurrentTag() + " File does not exist", Toast.LENGTH_SHORT).show();
-                    return false;
-                } else {
-                    ExifInterfaceHandling exifInterfaceHandling = new ExifInterfaceHandling(file);
-                    exifInterfaceHandling.setLocation(location);
+            //ImageTagModel imageTagModel = tagModels.get(currentTag);
+            // Save exit attributes to file
+            final File file = new File(fileInfo.getFilePath());
+            if (!file.exists()) {
+                Toast.makeText(this, NeonImagesHandler.getSingletonInstance().getCurrentTag() + " File does not exist", Toast.LENGTH_SHORT).show();
+                return false;
+            } else {
+                ExifInterfaceHandling exifInterfaceHandling = new ExifInterfaceHandling(file);
+                exifInterfaceHandling.setLocation(location);
+                if ((String.valueOf(location.getLatitude())).equals(exifInterfaceHandling.getAttribute(ExifInterfaceHandling.TAG_GPS_LATITUDE_REF))) {
                     return true;
                 }
-           // }
+            }
+            // }
         } catch (IOException e) {
             e.printStackTrace();
         }

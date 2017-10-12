@@ -34,12 +34,12 @@ public class ExifInterfaceHandling extends ExifInterface {
 
             //setLatLong(location.getLatitude(),location.getLongitude());
             Date date = new Date(location.getTime());
-            String dateStamp = new SimpleDateFormat("yyyy:MM:dd").format(date);
-            String timeStamp = new SimpleDateFormat("hh:mm:ss").format(date);
+//            String dateStamp = new SimpleDateFormat("yyyy:MM:dd").format(date);
+//            String timeStamp = new SimpleDateFormat("hh:mm:ss").format(date);
             this.setAttribute(TAG_GPS_LATITUDE_REF , String.valueOf(location.getLatitude()));
             this.setAttribute(TAG_GPS_LONGITUDE_REF, String.valueOf(location.getLongitude()));
-            this.setAttribute(TAG_GPS_DATESTAMP , dateStamp);
-            this.setAttribute(TAG_GPS_TIMESTAMP, timeStamp);
+//            this.setAttribute(TAG_GPS_DATESTAMP , dateStamp);
+//            this.setAttribute(TAG_GPS_TIMESTAMP, timeStamp);
             this.setAttribute(TAG_DATETIME, String.valueOf(date.getTime()) );
 
             saveAttributes();
