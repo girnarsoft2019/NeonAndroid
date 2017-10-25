@@ -135,12 +135,12 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
             PhotosLibrary.collectPhotos(1, this, NeonImagesHandler.getSingleonInstance().getLibraryMode(), PhotosMode.setCameraMode().setParams(new ICameraParam() {
                 @Override
                 public CameraFacing getCameraFacing() {
-                    return CameraFacing.front;
+                    return CameraFacing.back;
                 }
 
                 @Override
                 public CameraOrientation getCameraOrientation() {
-                    return CameraOrientation.landscape;
+                    return CameraOrientation.portrait;
                 }
 
                 @Override
@@ -217,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
             PhotosLibrary.collectPhotos(1, this, LibraryMode.Relax, PhotosMode.setNeutralMode().setParams(new INeutralParam() {
                 @Override
                 public CameraFacing getCameraFacing() {
-                    return CameraFacing.front;
+                    return CameraFacing.back;
                 }
 
                 @Override
@@ -320,7 +320,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
                 @Override
                 public CustomParameters getCustomParameters() {
-                    return new CustomParameters.CustomParametersBuilder().sethideCameraButtonInNeutral(false).build();
+                    return new CustomParameters.CustomParametersBuilder().sethideCameraButtonInNeutral(false).setLocationRestrictive(false).build();
                 }
             }), this);
         } catch (NeonException e) {
