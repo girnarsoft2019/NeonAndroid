@@ -34,7 +34,6 @@ public class FlashModeRecyclerHorizontalAdapter extends RecyclerView.Adapter<Fla
             this.flashList = imageList;
         }
         mContext = context;
-
     }
 
     @Override

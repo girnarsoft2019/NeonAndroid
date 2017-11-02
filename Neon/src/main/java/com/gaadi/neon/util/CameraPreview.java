@@ -7,13 +7,18 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.Camera;
 import android.os.Build;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
+
+import com.scanlibrary.R;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -55,10 +60,14 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         super(context);
     }
 
+    public CameraPreview(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
     public CameraPreview(Activity context, Camera camera) {
         super(context);
         mActivity = context;
-        Log.e(TAG, "constructor camerapreview");
+        Log.e(TAG, "constructor camera preview");
         mCamera = camera;
         holder = getHolder();
         holder.addCallback(this);
@@ -81,29 +90,35 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                 int displayOrientationDegrees = getDisplayOrientationDegrees(display);
                 mCamera.setDisplayOrientation(displayOrientationDegrees);
 
-                Camera.Size previewSize = mCamera.getParameters().getPreviewSize();
+                Camera.Size previewSize = getOptimalPreviewSizeByAspect(mSupportedPreviewSizes, width, height);
                 float aspect = (float) previewSize.width / previewSize.height;
 
                 Log.e(Constants.TAG, "Aspect : " + aspect);
 
-                ViewGroup.LayoutParams cameraHolderParams = getLayoutParams();
+                FrameLayout.LayoutParams cameraHolderParams = (FrameLayout.LayoutParams) getLayoutParams();
                 cameraOrientation = configuration.orientation;
 
                 if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                    cameraHolderParams.height = height;
-                    cameraHolderParams.width = (int) (height / aspect);
-
+                    if (cameraHolderParams == null) {
+                        cameraHolderParams = new FrameLayout.LayoutParams(width, (int) (width * aspect));
+                    } else {
+                        cameraHolderParams.height = (int) (width * aspect);
+                        cameraHolderParams.width = width;
+                    }
                     Log.e(Constants.TAG, " Camera width : " + cameraHolderParams.width + " Camera Height : " + cameraHolderParams.height);
 
                 } else {
-                    cameraHolderParams.width = width;
-                    cameraHolderParams.height = (int) (width / aspect);
-
+                    if (cameraHolderParams == null) {
+                        cameraHolderParams = new FrameLayout.LayoutParams(width, (int) (width / aspect));
+                    } else {
+                        cameraHolderParams.width = width;
+                        cameraHolderParams.height = (int) (width / aspect);
+                    }
                     Log.e(Constants.TAG, " Camera width : " + cameraHolderParams.width + " Camera Height : " + cameraHolderParams.height);
                 }
 
+                cameraHolderParams.gravity = Gravity.CENTER;
                 setLayoutParams(cameraHolderParams);
-
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -112,13 +127,9 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     }
 
     private int getScreenWidth() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR2)
-            return display.getWidth();
-        else {
-            Point size = new Point();
-            display.getSize(size);
-            return size.x;
-        }
+        Point size = new Point();
+        display.getSize(size);
+        return size.x;
     }
 
     private int getDisplayOrientationDegrees(Display display) {
@@ -154,13 +165,9 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     }
 
     private int getScreenHeight() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR2)
-            return display.getHeight();
-        else {
-            Point size = new Point();
-            display.getSize(size);
-            return size.y;
-        }
+        Point size = new Point();
+        display.getSize(size);
+        return size.y;
     }
 
     @Override
@@ -181,7 +188,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             mCamera.autoFocus(null);
 
         } catch (IOException e) {
-            Log.e("Exception ", "" + e.getMessage().toString());
+            Log.e("Exception ", "" + e.getMessage());
         }
     }
 
@@ -192,10 +199,10 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         setMeasuredDimension(width, height);
 
         if (mSupportedPreviewSizes != null) {
-            mPreviewSize = getOptimalPreviewSize(mSupportedPreviewSizes, width, height);
+            mPreviewSize = getOptimalPreview(mSupportedPreviewSizes, width, height);
         }
         if (mSupportedPictureSizes != null) {
-            mPictureSize = getOptimalPreviewSize(mSupportedPictureSizes, 900, 1280);
+            mPictureSize = getOptimalPreview(mSupportedPictureSizes, width, height);
         }
     }
 
@@ -335,54 +342,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             mCamera.autoFocus(myAutoFocusCallback);
         } catch (Exception e) {
             e.printStackTrace();
-            Log.i(TAG, "Unable to autofocus");
+            Log.i(TAG, "Unable to auto focus");
         }
-    }
-    //    private void focusOnTouch(MotionEvent event) {
-//        if (mCamera != null) {
-//
-//            mCamera.cancelAutoFocus();
-//            Rect focusRect = calculateTapArea(event.getX(), event.getY(), 1f);
-//            Rect meteringRect = calculateTapArea(event.getX(), event.getY(), 1.5f);
-//
-//            Camera.Parameters parameters = mCamera.getParameters();
-//            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
-//            ArrayList<Camera.Area> list = new ArrayList<>();
-//            list.add(new Camera.Area(focusRect, 1000));
-//            parameters.setFocusAreas(list);
-//
-//
-//            ArrayList<Camera.Area> list1 = new ArrayList<>();
-//            list1.add(new Camera.Area(meteringRect, 1000));
-//            if (meteringAreaSupported) {
-//                parameters.setMeteringAreas(list1);
-//            }
-//
-//            mCamera.setParameters(parameters);
-//            mCamera.autoFocus(this);
-//        }
-//    }
-
-//    private Rect calculateTapArea(float x, float y, float coefficient) {
-//        int areaSize = Float.valueOf(focusAreaSize * coefficient).intValue();
-//
-//        int left = clamp((int) x - areaSize / 2, 0, mPreviewSize.width - areaSize);
-//        int top = clamp((int) y - areaSize / 2, 0, mPreviewSize.height - areaSize);
-//
-//        RectF rectF = new RectF(left, top, left + areaSize, top + areaSize);
-//        matrix.mapRect(rectF);
-//
-//        return new Rect(Math.round(rectF.left), Math.round(rectF.top), Math.round(rectF.right), Math.round(rectF.bottom));
-//    }
-
-    private int clamp(int x, int min, int max) {
-        if (x > max) {
-            return max;
-        }
-        if (x < min) {
-            return min;
-        }
-        return x;
     }
 
     public void setReadyListener(ReadyToTakePicture listener) {
@@ -420,25 +381,52 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         mCamera.setParameters(parameters);
     }
 
+    private Camera.Size getOptimalPreview(List<Camera.Size> sizes, int w, int h) {
+        Camera.Size bestSize = null;
+        long used = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+        long availableMemory = Runtime.getRuntime().maxMemory() - used;
+        for (Camera.Size currentSize : sizes) {
+            int newArea = currentSize.width * currentSize.height;
+            long neededMemory = newArea * 4 * 4; // newArea * 4 Bytes/pixel * 4 needed copies of the bitmap (for safety :) )
+            boolean isDesiredRatio = (currentSize.width / 4) == (currentSize.height / 3);
+            boolean isBetterSize = (bestSize == null || currentSize.width > bestSize.width);
+            boolean isSafe = neededMemory < availableMemory;
+            if (isDesiredRatio && isBetterSize && isSafe) {
+                bestSize = currentSize;
+            }
+        }
+        if (bestSize == null) {
+            return sizes.get(0);
+        }
+        return bestSize;
+    }
+
     private Camera.Size getOptimalPreviewSizeByAspect(List<Camera.Size> sizes, int w, int h) {
-        final double ASPECT_TOLERANCE = 0.01f;
+        final double ASPECT_TOLERANCE = 0.1f;
         double targetRatio;
-        if (cameraOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+        int targetHeight;
+
+        if (sizes == null) return null;
+
+        if (w > h) {
+            targetHeight = h;
             targetRatio = (double) w / h;
         } else {
+            targetHeight = w;
             targetRatio = (double) h / w;
         }
-        if (sizes == null) return null;
 
         Camera.Size optimalSize = null;
         double minDiff = Double.MAX_VALUE;
 
-        int targetHeight = h;
 
         // Try to find an size match aspect ratio and size
         for (Camera.Size size : sizes) {
             //Log.e(TAG,size.height+" "+size.width);
             double ratio = (double) size.width / size.height;
+
+            Log.e(TAG, size.height + " X " + size.width + " ( " + (ratio) + " )");
+
             if (Math.abs(ratio - targetRatio) > ASPECT_TOLERANCE) continue;
             if (Math.abs(size.height - targetHeight) < minDiff) {
                 optimalSize = size;

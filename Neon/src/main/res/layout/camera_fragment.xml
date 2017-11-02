@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <FrameLayout
+        android:background="@color/tranparent_black"
         android:id="@+id/camera_preview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
