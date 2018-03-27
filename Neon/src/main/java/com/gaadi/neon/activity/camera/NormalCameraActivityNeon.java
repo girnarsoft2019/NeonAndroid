@@ -357,6 +357,9 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
     }
 
     private void customize() {
+        if (cameraParams == null) {
+            return;
+        }
         if (cameraParams.getTagEnabled()) {
             //tvImageName.setVisibility(View.GONE);
             tagsLayout.setVisibility(View.VISIBLE);

@@ -217,6 +217,9 @@ public class NeonImagesHandler {
             imagesCollection = new ArrayList<>();
         }
 
+        if (getGenericParam() == null){
+            return false;
+        }
         if (!getGenericParam().getTagEnabled()) {
             if (getGenericParam().getNumberOfPhotos() > 0 &&
                     getImagesCollection() != null &&

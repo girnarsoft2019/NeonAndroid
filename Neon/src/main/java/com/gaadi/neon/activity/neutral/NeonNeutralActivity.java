@@ -93,7 +93,7 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
     private void bindXml() {
         binder = DataBindingUtil.inflate(getLayoutInflater(), R.layout.neutral_activity_layout, frameLayout, true);
         binder.setHandlers(this);
-        if (NeonImagesHandler.getSingletonInstance().getNeutralParam().getCustomParameters() != null) {
+        if (NeonImagesHandler.getSingletonInstance().getNeutralParam() != null && NeonImagesHandler.getSingletonInstance().getNeutralParam().getCustomParameters() != null) {
             binder.addPhotoCamera.setVisibility(NeonImagesHandler.getSingletonInstance().getNeutralParam().getCustomParameters()
                     .gethideCameraButtonInNeutral() ? View.GONE : View.VISIBLE);
             binder.addPhotoGallary.setVisibility(NeonImagesHandler.getSingletonInstance().getNeutralParam().getCustomParameters()
