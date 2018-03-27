@@ -79,14 +79,12 @@ public class ImageShowAdapter extends BaseDynamicGridAdapter {
 
             }
         } else {
-            if (NeonImagesHandler.getSingletonInstance().getGenericParam() != null) {
-
-                if (!NeonImagesHandler.getSingletonInstance().getGenericParam().getTagEnabled()) {
-                    holder.tvProfile.setVisibility(View.GONE);
-                } else {
-                    holder.tvProfile.setVisibility(View.VISIBLE);
-                }
+            if (NeonImagesHandler.getSingletonInstance().getGenericParam() != null && !NeonImagesHandler.getSingletonInstance().getGenericParam().getTagEnabled()) {
+                holder.tvProfile.setVisibility(View.GONE);
+            } else {
+                holder.tvProfile.setVisibility(View.VISIBLE);
             }
+
             if (fileInfoList.get(position).getFileTag() != null) {
                 holder.tvProfile.setText(fileInfoList.get(position).getFileTag().getTagName());
             } else {
