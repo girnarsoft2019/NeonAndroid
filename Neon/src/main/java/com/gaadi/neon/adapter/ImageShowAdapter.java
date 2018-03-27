@@ -1,20 +1,16 @@
 package com.gaadi.neon.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.gaadi.neon.activity.ImageReviewActivity;
 import com.gaadi.neon.activity.neutral.NeonNeutralActivity;
 import com.gaadi.neon.dynamicgrid.BaseDynamicGridAdapter;
-import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
@@ -83,8 +79,7 @@ public class ImageShowAdapter extends BaseDynamicGridAdapter {
 
             }
         } else {
-
-            if (!NeonImagesHandler.getSingletonInstance().getGenericParam().getTagEnabled()) {
+            if (NeonImagesHandler.getSingletonInstance().getGenericParam() != null && !NeonImagesHandler.getSingletonInstance().getGenericParam().getTagEnabled()) {
                 holder.tvProfile.setVisibility(View.GONE);
             } else {
                 holder.tvProfile.setVisibility(View.VISIBLE);
