@@ -43,12 +43,12 @@ public class ImageReviewActivity extends NeonBaseActivity implements View.OnClic
         setContentView(R.layout.activity_image_review);
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
 
-        setSupportActionBar(toolbar);
+        if(toolbar!=null){
+            setSupportActionBar(toolbar);
+            toolbar.setNavigationIcon(R.drawable.ic_left_arrow);
+        }
         if (getSupportActionBar() != null){
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_left_arrow);
-        }
-        toolbar.setNavigationIcon(R.drawable.ic_left_arrow);
-        if(getSupportActionBar() != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 

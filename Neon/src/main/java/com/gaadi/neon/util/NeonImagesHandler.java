@@ -284,8 +284,12 @@ public class NeonImagesHandler {
         neonResponse.setResponseCode(responseCode);
         neonResponse.setImageCollection(NeonImagesHandler.getSingletonInstance().getImagesCollection());
         neonResponse.setImageTagsCollection(NeonImagesHandler.getSingletonInstance().getFileHashMap());
-        NeonImagesHandler.getSingletonInstance().getImageResultListener().imageCollection(neonResponse);
-        NeonImagesHandler.getSingletonInstance().scheduleSingletonClearance();
+        if(NeonImagesHandler.getSingletonInstance()!=null){
+            if(NeonImagesHandler.getSingletonInstance().getImageResultListener()!=null){
+                NeonImagesHandler.getSingletonInstance().getImageResultListener().imageCollection(neonResponse);
+                NeonImagesHandler.getSingletonInstance().scheduleSingletonClearance();
+            }
+        }
         activity.finish();
     }
 
@@ -344,32 +348,39 @@ public class NeonImagesHandler {
 
 
     public boolean validateNeonExit(Activity activity) {
-        if (!NeonImagesHandler.getSingleonInstance().getGenericParam().getTagEnabled()) {
-            return true;
-        }
-        List<FileInfo> fileInfos = NeonImagesHandler.getSingleonInstance().getImagesCollection();
-        if (fileInfos != null && fileInfos.size() > 0) {
-            for (int i = 0; i < fileInfos.size(); i++) {
-                if (fileInfos.get(i).getFileTag() == null) {
+        try {
+            if (NeonImagesHandler.getSingletonInstance()!=null &&
+                    NeonImagesHandler.getSingletonInstance().getGenericParam()!=null &&
+                    !NeonImagesHandler.getSingletonInstance().getGenericParam().getTagEnabled()) {
+                return true;
+            }
+            List<FileInfo> fileInfos = NeonImagesHandler.getSingletonInstance().getImagesCollection();
+            if (fileInfos != null && fileInfos.size() > 0) {
+                for (int i = 0; i < fileInfos.size(); i++) {
+                    if (fileInfos.get(i).getFileTag() == null) {
+                        if (activity != null) {
+                            Toast.makeText(activity, "Set tag for all images", Toast.LENGTH_SHORT).show();
+                        }
+                        return false;
+                    }
+                }
+            }
+
+            List<ImageTagModel> imageTagModels = NeonImagesHandler.getSingletonInstance().getGenericParam().getImageTagsModel();
+            for (int j = 0; j < imageTagModels.size(); j++) {
+                if (!imageTagModels.get(j).isMandatory()) {
+                    continue;
+                }
+                if (!NeonImagesHandler.getSingletonInstance().checkImagesAvailableForTag(imageTagModels.get(j))) {
                     if (activity != null) {
-                        Toast.makeText(activity, "Set tag for all images", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, imageTagModels.get(j).getTagName() + " tag not covered.", Toast.LENGTH_SHORT).show();
                     }
                     return false;
                 }
             }
-        }
-
-        List<ImageTagModel> imageTagModels = NeonImagesHandler.getSingleonInstance().getGenericParam().getImageTagsModel();
-        for (int j = 0; j < imageTagModels.size(); j++) {
-            if (!imageTagModels.get(j).isMandatory()) {
-                continue;
-            }
-            if (!NeonImagesHandler.getSingleonInstance().checkImagesAvailableForTag(imageTagModels.get(j))) {
-                if (activity != null) {
-                    Toast.makeText(activity, imageTagModels.get(j).getTagName() + " tag not covered.", Toast.LENGTH_SHORT).show();
-                }
-                return false;
-            }
+            return true;
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
         return true;

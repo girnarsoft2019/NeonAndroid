@@ -42,10 +42,12 @@ public abstract class NeonBaseActivity extends AppCompatActivity{
         frameLayout = (FrameLayout) findViewById(R.id.content_frame);
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
 
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_left_arrow);
-        toolbar.setNavigationIcon(R.drawable.ic_left_arrow);
-        if(getSupportActionBar() != null){
+        if(toolbar!=null){
+            setSupportActionBar(toolbar);
+            toolbar.setNavigationIcon(R.drawable.ic_left_arrow);
+        }
+        if (getSupportActionBar() != null){
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_left_arrow);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
