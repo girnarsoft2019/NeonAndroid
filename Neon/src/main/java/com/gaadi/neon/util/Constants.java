@@ -46,8 +46,9 @@ public class Constants {
         if (appName.length() > 0) {
             appName = appName.replace(" ", "");
         }
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), appName);
+
+        String path=Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+appName;
+        File mediaStorageDir = new File(path);
 
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {
