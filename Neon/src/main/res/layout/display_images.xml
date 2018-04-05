@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/grid_column_width"
     android:layout_height="@dimen/image_overlay_height"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <ImageView
@@ -25,7 +24,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignParentRight="true"
-        app:srcCompat="@drawable/ic_cancel"/>
+        android:src="@drawable/cancel"/>
 
 
     <TextView

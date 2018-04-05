@@ -4,14 +4,13 @@
     android:layout_width="match_parent"
     android:orientation="horizontal"
     android:padding="10dp"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ImageView
         android:id="@+id/flash_icon"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        app:srcCompat="@drawable/flash_off" />
+        android:src="@drawable/flash_off_selector" />
 
     <TextView
         style="@style/textStyleHeading2"
