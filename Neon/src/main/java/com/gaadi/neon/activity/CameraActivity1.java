@@ -215,7 +215,7 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
 
     private void enableDoneButton(boolean enable)
     {
-        buttonCapture.setImageResource(enable ? R.drawable.camera_switch : R.drawable.ic_camera);
+        buttonCapture.setImageResource(enable ? R.drawable.ic_camera_switch : R.drawable.ic_camera);
         buttonCapture.setTag(enable ? getString(R.string.done) : getString(R.string.capture));
     }
 

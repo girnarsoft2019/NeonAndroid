@@ -211,7 +211,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
         currentFlashMode.setOnClickListener(this);
         String flashMode = PrefsUtils.getStringSharedPreference(getActivity(), Constants.FLASH_MODE, "");
         if (flashMode.equals("")) {
-            currentFlashMode.setImageResource(R.drawable.flash_off);
+            currentFlashMode.setImageResource(R.drawable.ic_flash_off);
         } else {
             if (supportedFlashModes != null && supportedFlashModes.size() > 0) {
                 if (supportedFlashModes.contains(flashMode)) {
@@ -228,18 +228,18 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
         parameters.setFlashMode(mode);
 
         if ("off".equals(mode)) {
-            currentFlashMode.setImageResource(R.drawable.flash_off);
+            currentFlashMode.setImageResource(R.drawable.ic_flash_off);
         } else if ("on".equals(mode)) {
-            currentFlashMode.setImageResource(R.drawable.flash_on);
+            currentFlashMode.setImageResource(R.drawable.ic_flash_on);
         } else if ("auto".equals(mode)) {
-            currentFlashMode.setImageResource(R.drawable.flash_auto);
+            currentFlashMode.setImageResource(R.drawable.ic_flash_auto);
         } else if ("red-eye".equals(mode)) {
-            currentFlashMode.setImageResource(R.drawable.flash_red_eye);
+            currentFlashMode.setImageResource(R.drawable.ic_flash_red_eye);
         } else if ("torch".equals(mode)) {
-            currentFlashMode.setImageResource(R.drawable.flash_torch);
+            currentFlashMode.setImageResource(R.drawable.ic_flash_torch);
         }
         else{
-            currentFlashMode.setImageResource(R.drawable.flash_off);
+            currentFlashMode.setImageResource(R.drawable.ic_flash_off);
         }
         PrefsUtils.setStringSharedPreference(getActivity(), Constants.FLASH_MODE, mode);
         //Toast.makeText(getActivity(),mode,Toast.LENGTH_LONG).show();
@@ -786,7 +786,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
     }
 
     private void enableDoneButton(boolean enable) {
-        buttonCapture.setImageResource(enable ? R.drawable.camera_switch : R.drawable.ic_camera);
+        buttonCapture.setImageResource(enable ? R.drawable.ic_camera_switch : R.drawable.ic_camera);
         buttonCapture.setTag(enable ? "done" : "capture");
     }
 

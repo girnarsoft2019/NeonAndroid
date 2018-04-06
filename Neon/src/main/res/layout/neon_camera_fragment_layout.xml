@@ -55,7 +55,7 @@
             android:layout_margin="@dimen/neon_default_margin"
             android:contentDescription="@null"
             android:onClick="@{handlers::onClickFragmentsView}"
-            android:src="@drawable/camera_switch_white_selector" />
+            android:src="@drawable/camera_switch_white" />
 
         <LinearLayout
             android:layout_width="match_parent"

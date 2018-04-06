@@ -57,7 +57,7 @@
         android:layout_below="@id/llFlash"
         android:layout_margin="@dimen/neon_default_margin"
         android:contentDescription="@null"
-        android:src="@drawable/camera_switch_selector" />
+        android:src="@drawable/camera_switch" />
 
     <LinearLayout
         android:layout_width="match_parent"

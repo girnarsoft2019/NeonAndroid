@@ -72,15 +72,15 @@ public class FlashModeRecyclerHorizontalAdapter extends RecyclerView.Adapter<Fla
         Log.d(TAG, "onBindViewHolder: " + name);
         holder.text.setVisibility(View.GONE);
         if ("off".equals(name)) {
-            holder.icon.setImageResource(R.drawable.flash_off);
+            holder.icon.setImageResource(R.drawable.ic_flash_off);
         } else if ("on".equals(name)) {
-            holder.icon.setImageResource(R.drawable.flash_on);
+            holder.icon.setImageResource(R.drawable.ic_flash_on);
         } else if ("auto".equals(name)) {
-            holder.icon.setImageResource(R.drawable.flash_auto);
+            holder.icon.setImageResource(R.drawable.ic_flash_auto);
         } else if ("red-eye".equals(name)) {
-            holder.icon.setImageResource(R.drawable.flash_red_eye);
+            holder.icon.setImageResource(R.drawable.ic_flash_red_eye);
         } else if ("torch".equals(name)) {
-            holder.icon.setImageResource(R.drawable.flash_torch);
+            holder.icon.setImageResource(R.drawable.ic_flash_torch);
         } else {
             holder.text.setText(name);
             holder.text.setVisibility(View.VISIBLE);
