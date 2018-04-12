@@ -8,7 +8,8 @@
         android:id="@+id/ivImageDisplay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:adjustViewBounds="true"/>
+        android:adjustViewBounds="true"
+        android:contentDescription="@null" />
 
 
     <ImageView
@@ -16,15 +17,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
-        android:src="@color/tranparent_black" />
+        android:src="@color/tranparent_black"
+        android:contentDescription="@null" />
 
-    <android.support.v7.widget.AppCompatImageView
+    <ImageView
         android:contentDescription="@null"
         android:id="@+id/ivRemoveImage"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignParentRight="true"
-        android:src="@drawable/cancel"/>
+        android:src="@drawable/cancel"
+        android:layout_alignParentEnd="true" />
 
 
     <TextView
