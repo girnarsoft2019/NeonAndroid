@@ -175,8 +175,6 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
         localCameraFacing = NeonImagesHandler.getSingleonInstance().getCameraParam().getCameraFacing();
         mActivity = getActivity();
         cameraParam = NeonImagesHandler.getSingleonInstance().getCameraParam();
-        mApi = CSOpenApiFactory.createCSOpenApi(getActivity(), APP_KEY, null);
-
         if (cameraParam != null) {
             initialize();
             customize();
@@ -331,23 +329,6 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
             if (requestCode == REQUEST_REVIEW) {
                 String capturedFilePath = "";
                 mPictureTakenListener.onPictureTaken(capturedFilePath);
-            }else if(requestCode == REQ_CODE_CALL_CAMSCANNER){
-                mApi.handleResult(requestCode, resultCode, data, new CSOpenApiHandler() {
-                    @Override
-                    public void onSuccess() {
-                        mPictureTakenListener.onPictureTaken(mOutputImagePath);
-                    }
-
-                    @Override
-                    public void onError(int i) {
-                        android.util.Log.d("Rajeev", "onError");
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        android.util.Log.d("Rajeev", "onCancel: ");
-                    }
-                });
             }
         } else {
             if (requestCode != 101) {
@@ -925,7 +906,6 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
             if (progressDialog != null)
                 progressDialog.dismiss();
             if (file != null) {
-                mSourceImagePath = file.getAbsolutePath();
                 /*if(getActivity() instanceof NeonBaseNeutralActivity) {
                     mPictureTakenListener.onPictureTaken(file.getAbsolutePath());
                     readyToTakePicture = true;
@@ -945,12 +925,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                         }
                     },200);
                 }
-                if(mApi.isCamScannerInstalled()){
-                    go2CamScanner(file.getAbsolutePath());
-                }else {
-                    Toast.makeText(context, "CamScanner not found", Toast.LENGTH_SHORT).show();
-                    mPictureTakenListener.onPictureTaken(file.getAbsolutePath());
-                }
+                mPictureTakenListener.onPictureTaken(file.getAbsolutePath());
                 // readyToTakePicture = true;
             } else {
                 Toast.makeText(context, getString(R.string.camera_error), Toast.LENGTH_SHORT).show();
@@ -964,35 +939,4 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
             }
         }
     }
-
-    private static final String APP_KEY = "MRHrRa4H7EQby773KW66d6b1";
-    private final int REQ_CODE_CALL_CAMSCANNER = 101;
-    private String mSourceImagePath;
-    private String mOutputImagePath;
-    private String mOutputPdfPath;
-    private String mOutputOrgPath;
-    private CSOpenAPI mApi;
-
-
-    private void go2CamScanner(String filePath) {
-        String appName = getResources().getString(R.string.app_name);
-        String path= Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+appName;
-        mOutputImagePath = path +File.separator+"IMG_"+System.currentTimeMillis()+ "_scanned.jpg";
-        mOutputPdfPath = path +File.separator+"PDF_"+System.currentTimeMillis()+ "_scanned.pdf";
-        mOutputOrgPath = path +File.separator+"IMG_"+System.currentTimeMillis()+ "_org.jpg";
-        try {
-            FileOutputStream fos = new FileOutputStream(mOutputOrgPath);
-            fos.write(3);
-            fos.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        CSOpenAPIParam param = new CSOpenAPIParam(filePath,
-                mOutputImagePath, mOutputPdfPath, mOutputOrgPath, 1.0f);
-        boolean res = mApi.scanImage(getActivity(), REQ_CODE_CALL_CAMSCANNER, param);
-        Log.d("Rajeev", "send to CamScanner result: " + res);
-    }
-
 }
