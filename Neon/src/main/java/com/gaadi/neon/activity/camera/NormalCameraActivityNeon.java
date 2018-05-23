@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -447,6 +448,8 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
                 mOutputImagePath = path +File.separator+"IMG_"+System.currentTimeMillis()+ "_scanned.jpg";
                 boolean res = PhotosLibrary.go2CamScanner(this, filePath, mOutputImagePath, REQ_CODE_CALL_CAMSCANNER, camScannerApi);
                 Log.d("NormalCamera", "go2CamScanner  "+res);
+                if(!res)
+                    afterPictureTaken(filePath);
             }else {
                 Toast.makeText(NormalCameraActivityNeon.this, "CamScanner not found!!!", Toast.LENGTH_SHORT).show();
                 afterPictureTaken(filePath);
@@ -607,6 +610,8 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
                     @Override
                     public void onSuccess() {
                         Log.d("NormalCamera", "onSuccess: "+mOutputImagePath);
+                        File file = new File(mOutputImagePath);
+                        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
                         afterPictureTaken(mOutputImagePath);
                     }
 
