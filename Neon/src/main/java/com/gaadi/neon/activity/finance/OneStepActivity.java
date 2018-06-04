@@ -237,9 +237,10 @@ public class OneStepActivity extends AppCompatActivity implements CameraFragment
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     setupLatestPictureInGallery();
                 } else {
-                    Toast.makeText(OneStepActivity.this, "Permission Error", Toast.LENGTH_SHORT)
+                    //issue in react projects
+                    /*Toast.makeText(OneStepActivity.this, "Permission Error", Toast.LENGTH_SHORT)
                             .show();
-                    finish();
+                    finish();*/
                 }
             }
         }
