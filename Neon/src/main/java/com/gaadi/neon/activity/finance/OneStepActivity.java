@@ -28,7 +28,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -256,7 +255,6 @@ public class OneStepActivity extends AppCompatActivity implements CameraFragment
         final Cursor cursor = getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, selection, selectionArgs,
                 MediaStore.Images.Media.DATE_TAKEN + " DESC");
         if (cursor != null && cursor.moveToFirst()) {
-            Log.d("Rajeev", "setupLatestPictureInGallery: ");
             final int dataColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             String data = cursor.getString(dataColumn);
             cursor.close();
