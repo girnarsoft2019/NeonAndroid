@@ -86,7 +86,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:background="@drawable/gallery"
+            android:background="@drawable/gallery_round"
             android:contentDescription="@null" />
 
         <ImageView
