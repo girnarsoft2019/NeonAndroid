@@ -63,4 +63,7 @@
     <string name="no_tags_sent">Please set tags for images</string>
     <color name="gray">#808080</color>
     <string name="title_activity_image_review">ImageReviewActivity</string>
+    <string name="please_confirm">Please confirm</string>
+    <string name="would_you_like_to_save_captured_images">Would you like to save the captured images</string>
+    <string name="would_you_like_to_save_captured_pdf">Would you like to save the captured PDF file</string>
 </resources>

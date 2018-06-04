@@ -40,6 +40,8 @@ public class Constants {
     public static final String SINGLE_TAG_SELECTION = "singleTagSelection";
     public static final String ALREADY_SELECTED_TAGS = "alreadySelectedTags";
     public static String FLAG = "Flag";
+    public static final String CATEGORY = "category";
+    public static final String SUB_CATEGORY = "subCategory";
 
     public static File getMediaOutputFile(Context context, int type) {
         String appName = context.getString(R.string.app_name);

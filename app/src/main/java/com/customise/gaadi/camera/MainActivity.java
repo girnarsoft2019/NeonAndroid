@@ -28,6 +28,7 @@ import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.FindLocations;
 import com.gaadi.neon.util.NeonException;
 import com.gaadi.neon.util.NeonImagesHandler;
+import com.gaadi.neon.util.OneStepImageHandler.OneStepActionListener;
 
 import java.io.File;
 import java.io.IOException;
@@ -1155,5 +1156,20 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
         }, 100);
 
 
+    }
+
+    public void oneStepClick(View view) {
+        PhotosLibrary.startOneStepImageCollection(this, "ID Proof", "Adhaar",  new OneStepActionListener() {
+            @Override
+            public void onImageCollection(NeonResponse response) {
+                if(response.getImageCollection() != null && response.getImageCollection().size() > 0){
+                    for(FileInfo fileInfo : response.getImageCollection()){
+                        Log.d(TAG, "onImageCollection: "+fileInfo.getFilePath());
+                    }
+
+                }
+
+            }
+        });
     }
 }

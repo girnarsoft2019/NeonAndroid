@@ -31,6 +31,9 @@
     <color name="transparent">#00000000</color>
     <color name="action_bar_title_color">@color/white</color>
     <color name="red">#FF0000</color>
+    <color name="black_85">#D9000000</color>
 
     <color name="colorAccent">#FF4081</color>
+    <color name="dark_gray">#363434</color>
+    <color name="grey_light">#ffd3d3d3</color>
 </resources>

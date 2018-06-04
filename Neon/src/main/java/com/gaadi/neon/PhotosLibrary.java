@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import com.gaadi.neon.activity.camera.NormalCameraActivityNeon;
+import com.gaadi.neon.activity.finance.OneStepActivity;
 import com.gaadi.neon.activity.gallery.GridFilesActivity;
 import com.gaadi.neon.activity.gallery.GridFoldersActivity;
 import com.gaadi.neon.activity.gallery.HorizontalFilesActivity;
@@ -19,6 +20,9 @@ import com.gaadi.neon.model.PhotosMode;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.NeonException;
 import com.gaadi.neon.util.NeonImagesHandler;
+import com.gaadi.neon.util.OneStepImageHandler.OneStepActionListener;
+import com.gaadi.neon.util.OneStepImageHandler;
+import com.gaadi.neon.util.Constants;
 
 import java.util.List;
 
@@ -144,6 +148,15 @@ public class PhotosLibrary {
 
         Intent neutralIntent = new Intent(activity, NeonNeutralActivity.class);
         activity.startActivity(neutralIntent);
+
+    }
+
+    public static void startOneStepImageCollection(Context activity, String category, String subCategory, final OneStepActionListener oneStepActionListener){
+        OneStepImageHandler.getInstance().setOneStepImagesActionListener(oneStepActionListener);
+        Intent intent = new Intent(activity, OneStepActivity.class);
+        intent.putExtra(Constants.CATEGORY, category);
+        intent.putExtra(Constants.SUB_CATEGORY, subCategory);
+        activity.startActivity(intent);
 
     }
 }
