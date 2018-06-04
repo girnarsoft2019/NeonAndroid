@@ -32,7 +32,7 @@ public class OneStepImageHandler {
     }
 
     public interface OneStepActionListener {
-        void onImageCollection(NeonResponse response);
+        void imageCollection(NeonResponse response);
 
     }
 }

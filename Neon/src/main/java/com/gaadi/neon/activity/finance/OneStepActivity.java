@@ -745,7 +745,7 @@ public class OneStepActivity extends AppCompatActivity implements CameraFragment
         }
         NeonResponse response = new NeonResponse();
         response.setImageCollection(imageCollection);
-        OneStepImageHandler.getInstance().getOneStepImagesActionListener().onImageCollection(response);
+        OneStepImageHandler.getInstance().getOneStepImagesActionListener().imageCollection(response);
         finish();
     }
 }

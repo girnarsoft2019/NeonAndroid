@@ -1161,10 +1161,10 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
     public void oneStepClick(View view) {
         PhotosLibrary.startOneStepImageCollection(this, "ID Proof", "Adhaar",  new OneStepActionListener() {
             @Override
-            public void onImageCollection(NeonResponse response) {
+            public void imageCollection(NeonResponse response) {
                 if(response.getImageCollection() != null && response.getImageCollection().size() > 0){
                     for(FileInfo fileInfo : response.getImageCollection()){
-                        Log.d(TAG, "onImageCollection: "+fileInfo.getFilePath());
+                        Log.d(TAG, "imageCollection: "+fileInfo.getFilePath());
                     }
 
                 }
