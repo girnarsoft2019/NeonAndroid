@@ -47,10 +47,12 @@ public class GridFoldersActivity extends NeonBaseGalleryActivity {
 
         MenuItem textViewDone = menu.findItem(R.id.menu_next);
         MenuItem textViewCamera = menu.findItem(R.id.menuCamera);
-        if (NeonImagesHandler.getSingletonInstance().getGalleryParam().galleryToCameraSwitchEnabled()) {
-            textViewCamera.setVisible(true);
-        } else {
-            textViewCamera.setVisible(false);
+        if(NeonImagesHandler.getSingletonInstance().getGalleryParam() != null){
+            if (NeonImagesHandler.getSingletonInstance().getGalleryParam().galleryToCameraSwitchEnabled()) {
+                textViewCamera.setVisible(true);
+            } else {
+                textViewCamera.setVisible(false);
+            }
         }
         textViewDone.setVisible(true);
         return super.onCreateOptionsMenu(menu);
