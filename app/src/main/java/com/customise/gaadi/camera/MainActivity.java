@@ -2,6 +2,7 @@ package com.customise.gaadi.camera;
 
 import android.location.Location;
 import android.media.ExifInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -28,6 +29,7 @@ import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.FindLocations;
 import com.gaadi.neon.util.NeonException;
 import com.gaadi.neon.util.NeonImagesHandler;
+import com.gaadi.neon.util.PhotosLibrary2;
 
 import java.io.File;
 import java.io.IOException;
@@ -131,79 +133,88 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
     }
 
     public void cameraOnlyClicked(View view) {
+        Log.d("", "cameraOnlyClicked") ;
+        ICameraParam cameraParam = new ICameraParam() {
+            @Override
+            public CameraFacing getCameraFacing() {
+                return CameraFacing.back;
+            }
+
+            @Override
+            public CameraOrientation getCameraOrientation() {
+                return CameraOrientation.portrait;
+            }
+
+            @Override
+            public boolean getFlashEnabled() {
+                return true;
+            }
+
+            @Override
+            public boolean getCameraSwitchingEnabled() {
+                return true;
+            }
+
+            @Override
+            public boolean getVideoCaptureEnabled() {
+                return false;
+            }
+
+            @Override
+            public CameraType getCameraViewType() {
+                return CameraType.normal_camera;
+            }
+
+            @Override
+            public boolean cameraToGallerySwitchEnabled() {
+                return false;
+            }
+
+            @Override
+            public int getNumberOfPhotos() {
+                return 0;
+            }
+
+            @Override
+            public boolean getTagEnabled() {
+                return true;
+            }
+
+            @Override
+            public List<ImageTagModel> getImageTagsModel() {
+                ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
+                for (int i = 0; i < numberOfTags; i++) {
+                    list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true, 1));
+                }
+                return list;
+            }
+
+            @Override
+            public List<FileInfo> getAlreadyAddedImages() {
+                return allreadyImages;
+            }
+
+            @Override
+            public boolean enableImageEditing() {
+                return false;
+            }
+
+            @Override
+            public CustomParameters getCustomParameters() {
+                return null;
+            }
+
+
+        };
+
         try {
-            PhotosLibrary.collectPhotos(1, this, NeonImagesHandler.getSingleonInstance().getLibraryMode(), PhotosMode.setCameraMode().setParams(new ICameraParam() {
-                @Override
-                public CameraFacing getCameraFacing() {
-                    return CameraFacing.back;
-                }
-
-                @Override
-                public CameraOrientation getCameraOrientation() {
-                    return CameraOrientation.portrait;
-                }
-
-                @Override
-                public boolean getFlashEnabled() {
-                    return true;
-                }
-
-                @Override
-                public boolean getCameraSwitchingEnabled() {
-                    return true;
-                }
-
-                @Override
-                public boolean getVideoCaptureEnabled() {
-                    return false;
-                }
-
-                @Override
-                public CameraType getCameraViewType() {
-                    return CameraType.normal_camera;
-                }
-
-                @Override
-                public boolean cameraToGallerySwitchEnabled() {
-                    return false;
-                }
-
-                @Override
-                public int getNumberOfPhotos() {
-                    return 0;
-                }
-
-                @Override
-                public boolean getTagEnabled() {
-                    return true;
-                }
-
-                @Override
-                public List<ImageTagModel> getImageTagsModel() {
-                    ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
-                    for (int i = 0; i < numberOfTags; i++) {
-                        list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true, 1));
-                    }
-                    return list;
-                }
-
-                @Override
-                public List<FileInfo> getAlreadyAddedImages() {
-                    return allreadyImages;
-                }
-
-                @Override
-                public boolean enableImageEditing() {
-                    return false;
-                }
-
-                @Override
-                public CustomParameters getCustomParameters() {
-                    return null;
-                }
-
-
-            }), this);
+            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                PhotosLibrary.collectPhotos(1, this, NeonImagesHandler.getSingleonInstance().getLibraryMode(),
+                        PhotosMode.setCameraMode().setParams(cameraParam), this);
+            }else{
+                PhotosLibrary2.collectPhotos(1, this, NeonImagesHandler.getSingleonInstance().getLibraryMode(),
+                        PhotosMode.setCameraMode().setParams(cameraParam), this);
+            }
         } catch (NullPointerException e) {
 
         } catch (NeonException e) {
