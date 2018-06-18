@@ -208,6 +208,13 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
         };
 
         try {
+            PhotosLibrary.collectPhotos(1, this, NeonImagesHandler.getSingleonInstance().getLibraryMode(),
+                    PhotosMode.setCameraMode().setParams(cameraParam), this);
+        } catch (NeonException e) {
+            e.printStackTrace();
+        }
+
+        /*try {
             if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                 PhotosLibrary.collectPhotos(1, this, NeonImagesHandler.getSingleonInstance().getLibraryMode(),
                         PhotosMode.setCameraMode().setParams(cameraParam), this);
@@ -219,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
         } catch (NeonException e) {
 
-        }
+        }*/
 
     }
 

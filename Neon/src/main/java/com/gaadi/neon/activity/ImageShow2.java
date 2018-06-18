@@ -53,7 +53,7 @@ public class ImageShow2 extends NeonBaseActivity {
                         PhotosMode.setGalleryMode().setParams(galleryParam), NeonImagesHandler.getSingleonInstance()
                                 .getImageResultListener());
             } else {
-                PhotosLibrary2.collectPhotos(NeonImagesHandler.getSingletonInstance().getRequestCode(),
+                PhotosLibrary.collectPhotos(NeonImagesHandler.getSingletonInstance().getRequestCode(),
                         this,NeonImagesHandler.getSingleonInstance().getLibraryMode(),
                         PhotosMode.setCameraMode().setParams(cameraParam), NeonImagesHandler.getSingleonInstance()
                                 .getImageResultListener());

@@ -3,10 +3,12 @@ package com.gaadi.neon;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.gaadi.neon.activity.camera.NormalCamera2ActivityNeon;
 import com.gaadi.neon.activity.camera.NormalCameraActivityNeon;
 import com.gaadi.neon.activity.gallery.GridFilesActivity;
 import com.gaadi.neon.activity.gallery.GridFoldersActivity;
@@ -103,8 +105,14 @@ public class PhotosLibrary {
 
             case normal_camera:
             case gallery_preview_camera:
-                Intent intent = new Intent(activity, NormalCameraActivityNeon.class);
-                activity.startActivity(intent);
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                    Intent intent = new Intent(activity, NormalCameraActivityNeon.class);
+                    activity.startActivity(intent);
+                } else {
+                    Intent intent = new Intent(activity, NormalCamera2ActivityNeon.class);
+                    activity.startActivity(intent);
+                }
+
                 break;
 
         }
