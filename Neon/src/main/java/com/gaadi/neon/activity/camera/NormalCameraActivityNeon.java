@@ -1,14 +1,18 @@
 package com.gaadi.neon.activity.camera;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -36,10 +40,16 @@ import com.gaadi.neon.util.ManifestPermission;
 import com.gaadi.neon.util.NeonException;
 import com.gaadi.neon.util.NeonImagesHandler;
 import com.gaadi.neon.util.PermissionType;
+import com.intsig.csopen.sdk.CSOpenAPI;
+import com.intsig.csopen.sdk.CSOpenAPIParam;
+import com.intsig.csopen.sdk.CSOpenApiFactory;
+import com.intsig.csopen.sdk.CSOpenApiHandler;
 import com.scanlibrary.R;
 import com.scanlibrary.databinding.NormalCameraActivityLayoutBinding;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +72,9 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
     private TextView tvTag, tvNext, tvPrevious;
     private ImageView buttonGallery;
     private Location location;
+    private final int REQ_CODE_CALL_CAMSCANNER = 168;
+    private String mOutputImagePath;
+    private CSOpenAPI camScannerApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +88,12 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         }
         customize();
         bindCameraFragment();
+        /*String appName = getResources().getString(R.string.app_name).replace(" ","");
+        String path= Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+appName;
+        mOutputImagePath = path +File.separator+"IMG_"+System.currentTimeMillis()+ "_scanned.jpg";*/
+        if(cameraParams != null && cameraParams.getCustomParameters() != null){
+            camScannerApi = CSOpenApiFactory.createCSOpenApi(this, cameraParams.getCustomParameters().getCamScannerAPIKey(), null);
+            }
         if (NeonImagesHandler.getSingletonInstance().getLivePhotosListener() != null) {
             NeonImagesHandler.getSingletonInstance().setLivePhotoNextTagListener(this);
         }
@@ -82,7 +101,6 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
             FindLocations.getInstance().init(this);
             FindLocations.getInstance().checkPermissions(this);
         }
-
     }
 
     private void bindCameraFragment() {
@@ -422,6 +440,72 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
 
     @Override
     public void onPictureTaken(String filePath) {
+        Log.d("NormalCamera", "onPictureTaken: ");
+        if(cameraParams != null && cameraParams.getCustomParameters() != null && cameraParams.getCustomParameters().isCamScannerActive() && !cameraParams.getCustomParameters().getCamScannerAPIKey().equals("")){
+            if(camScannerApi.isCamScannerInstalled()){
+                String appName = getResources().getString(R.string.app_name).replace(" ","");
+                String path= Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+appName;
+                mOutputImagePath = path +File.separator+"IMG_"+System.currentTimeMillis()+ "_scanned.jpg";
+                boolean res = PhotosLibrary.go2CamScanner(this, filePath, mOutputImagePath, REQ_CODE_CALL_CAMSCANNER, camScannerApi);
+                Log.d("NormalCamera", "go2CamScanner  "+res);
+                if(!res)
+                    afterPictureTaken(filePath);
+            }else {
+                Toast.makeText(NormalCameraActivityNeon.this, "CamScanner not found!!!", Toast.LENGTH_SHORT).show();
+                afterPictureTaken(filePath);
+            }
+        }else {
+            Log.d("NormalCamera", "WithoutCamScanner");
+            afterPictureTaken(filePath);
+        }
+       /* if(mApi.isCamScannerInstalled()){
+            boolean res = PhotosLibrary.go2CamScanner(filePath, this, mOutputImagePath,REQ_CODE_CALL_CAMSCANNER, mApi);
+            Log.d("Rajeev", "go2CamScanner  "+res);
+        }else {
+            Toast.makeText(NormalCameraActivityNeon.this, "CamScanner not found", Toast.LENGTH_SHORT).show();
+            afterPictureTaken(filePath);
+            *//*FileInfo fileInfo = new FileInfo();
+            fileInfo.setFilePath(filePath);
+        fileInfo.setFileName(filePath.substring(filePath.lastIndexOf("/") + 1));
+        fileInfo.setSource(FileInfo.SOURCE.PHONE_CAMERA);
+        if (cameraParams.getTagEnabled()) {
+            fileInfo.setFileTag(tagModels.get(currentTag));
+        }
+        if (binder.imageHolderView.getVisibility() != View.VISIBLE) {
+            binder.imageHolderView.setVisibility(View.VISIBLE);
+        }
+        boolean locationRestriction = cameraParams == null || cameraParams.getCustomParameters() == null || cameraParams.getCustomParameters().getLocationRestrictive();
+        boolean isUpdated = true;
+        if (locationRestriction) {
+            isUpdated = updateExifInfo(fileInfo);
+        }
+        if (isUpdated) {
+            NeonImagesHandler.getSingletonInstance().putInImageCollection(fileInfo, this);
+
+            if (NeonImagesHandler.getSingletonInstance().getLivePhotosListener() == null) {
+
+                if (NeonImagesHandler.getSingletonInstance().getCameraParam().getCameraViewType() == CameraType.gallery_preview_camera) {
+                    ImageView image = new ImageView(this);
+                    Bitmap thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(filePath), 200, 200);
+                    image.setImageBitmap(thumbnail);
+                    binder.imageHolderView.addView(image);
+                }
+
+                if (cameraParams.getTagEnabled()) {
+                    ImageTagModel imageTagModel = tagModels.get(currentTag);
+                    if (imageTagModel.getNumberOfPhotos() > 0 && NeonImagesHandler.getSingletonInstance().getNumberOfPhotosCollected(imageTagModel) >= imageTagModel.getNumberOfPhotos()) {
+                        onClick(binder.tvSkip);
+                    }
+                }
+            }
+        } else {
+            Toast.makeText(this, "Unable to find location, Please try again later.", Toast.LENGTH_SHORT).show();
+        }*//*
+
+        }*/
+    }
+
+    public void afterPictureTaken(String filePath){
         FileInfo fileInfo = new FileInfo();
         fileInfo.setFilePath(filePath);
         fileInfo.setFileName(filePath.substring(filePath.lastIndexOf("/") + 1));
@@ -515,5 +599,56 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
             }
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("NormalCamera", "onActivityResult: ");
+        if (resultCode == Activity.RESULT_OK){
+            if (requestCode == REQ_CODE_CALL_CAMSCANNER){
+                camScannerApi.handleResult(requestCode, resultCode, data, new CSOpenApiHandler() {
+                    @Override
+                    public void onSuccess() {
+                        Log.d("NormalCamera", "onSuccess: "+mOutputImagePath);
+                        File file = new File(mOutputImagePath);
+                        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
+                        afterPictureTaken(mOutputImagePath);
+                    }
+
+                    @Override
+                    public void onError(int i) {
+                        Log.d("NormalCamera", "onError: "+i);
+                        Toast.makeText(NormalCameraActivityNeon.this, "Error Code: "+i, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        Log.d("NormalCamera", "onCancel: ");
+                    }
+                });
+            }
+        }
+    }
+
+   /* private void go2CamScanner(String filePath) {
+        String appName = getResources().getString(R.string.app_name).replace(" ","");
+        String path= Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+appName;
+        mOutputImagePath = path +File.separator+"IMG_"+System.currentTimeMillis()+ "_scanned.jpg";
+        mOutputPdfPath = path +File.separator+"PDF_"+System.currentTimeMillis()+ "_scanned.pdf";
+        mOutputOrgPath = path +File.separator+"IMG_"+System.currentTimeMillis()+ "_org.jpg";
+        try {
+            FileOutputStream fos = new FileOutputStream(mOutputOrgPath);
+            fos.write(3);
+            fos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        CSOpenAPIParam param = new CSOpenAPIParam(filePath,
+                mOutputImagePath, mOutputPdfPath, mOutputOrgPath, 1.0f);
+        boolean res = mApi.scanImage(this, REQ_CODE_CALL_CAMSCANNER, param);
+        Log.d("Rajeev", "send to CamScanner result: " + res);
+    }*/
 
 }

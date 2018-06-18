@@ -26,6 +26,7 @@ import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -57,6 +58,10 @@ import com.gaadi.neon.util.FindLocations;
 import com.gaadi.neon.util.NeonImagesHandler;
 import com.gaadi.neon.util.NeonUtils;
 import com.gaadi.neon.util.PrefsUtils;
+import com.intsig.csopen.sdk.CSOpenAPI;
+import com.intsig.csopen.sdk.CSOpenAPIParam;
+import com.intsig.csopen.sdk.CSOpenApiFactory;
+import com.intsig.csopen.sdk.CSOpenApiHandler;
 import com.scanlibrary.R;
 import com.scanlibrary.databinding.NeonCameraFragmentLayoutBinding;
 
@@ -920,9 +925,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                         }
                     },200);
                 }
-
                 mPictureTakenListener.onPictureTaken(file.getAbsolutePath());
-
                 // readyToTakePicture = true;
             } else {
                 Toast.makeText(context, getString(R.string.camera_error), Toast.LENGTH_SHORT).show();
