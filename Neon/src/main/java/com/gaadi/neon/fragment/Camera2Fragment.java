@@ -6,37 +6,59 @@ package com.gaadi.neon.fragment;
  * @since 19/10/16
  */
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraCaptureSession;
+import android.hardware.camera2.CameraCharacteristics;
+import android.hardware.camera2.CameraDevice;
+import android.hardware.camera2.CameraManager;
+import android.hardware.camera2.CameraMetadata;
+import android.hardware.camera2.CaptureRequest;
+import android.hardware.camera2.TotalCaptureResult;
+import android.hardware.camera2.params.StreamConfigurationMap;
+import android.media.Image;
+import android.media.ImageReader;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.HandlerThread;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.Size;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.Surface;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -58,12 +80,8 @@ import com.gaadi.neon.util.FindLocations;
 import com.gaadi.neon.util.NeonImagesHandler;
 import com.gaadi.neon.util.NeonUtils;
 import com.gaadi.neon.util.PrefsUtils;
-import com.intsig.csopen.sdk.CSOpenAPI;
-import com.intsig.csopen.sdk.CSOpenAPIParam;
-import com.intsig.csopen.sdk.CSOpenApiFactory;
-import com.intsig.csopen.sdk.CSOpenApiHandler;
 import com.scanlibrary.R;
-import com.scanlibrary.databinding.NeonCameraFragmentLayoutBinding;
+import com.scanlibrary.databinding.NeonCamera2FragmentLayoutBinding;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -71,18 +89,38 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("deprecation,unchecked")
-public class CameraFragment1 extends Fragment implements View.OnTouchListener, Camera.PictureCallback {
+public class Camera2Fragment extends Fragment implements View.OnTouchListener, Camera.PictureCallback {
 
-    private static final String TAG = "CameraFragment1";
+    private static final String TAG = "Camera2Fragment";
+    private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
+    private static final int REQUEST_CAMERA_PERMISSION = 200;
     private static final int REQUEST_REVIEW = 100;
     private static final int SHAKE_THRESHOLD = 20;
-    public NeonCameraFragmentLayoutBinding binder;
+
+    static {
+        ORIENTATIONS.append(Surface.ROTATION_0, 90);
+        ORIENTATIONS.append(Surface.ROTATION_90, 0);
+        ORIENTATIONS.append(Surface.ROTATION_180, 270);
+        ORIENTATIONS.append(Surface.ROTATION_270, 180);
+    }
+
+    public NeonCamera2FragmentLayoutBinding binder;
     public Camera mCamera;
+    protected CameraDevice cameraDevice;
+    protected CameraCaptureSession cameraCaptureSessions;
+    protected CaptureRequest captureRequest;
+    protected CaptureRequest.Builder captureRequestBuilder;
+    private String cameraId;
+    private Size imageDimension;
+    private TextureView textureView;
+    private HandlerThread mBackgroundThread;
     private DrawingView drawingView;
     private ImageView currentFlashMode;
     private ArrayList<String> supportedFlashModes;
@@ -93,8 +131,54 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     // private View fragmentView;
     private ICameraParam cameraParam;
     private SetOnPictureTaken mPictureTakenListener;
+    private Handler mBackgroundHandler;
     private boolean permissionAlreadyRequested;
     private Activity mActivity;
+    TextureView.SurfaceTextureListener textureListener = new TextureView.SurfaceTextureListener() {
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+        @Override
+        public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+            openCamera();
+        }
+
+        @Override
+        public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+            // Transform you image captured size according to the surface width and height
+        }
+
+        @Override
+        public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+            return false;
+        }
+
+        @Override
+        public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+        }
+    };
+    private final CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+        @Override
+        public void onOpened(CameraDevice camera) {
+            //This is called when the camera is open
+            Log.e(TAG, "onOpened");
+            cameraDevice = camera;
+//            createSupportedFlashList();
+            createCameraPreview();
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+        @Override
+        public void onDisconnected(CameraDevice camera) {
+            camera.close();
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+        @Override
+        public void onError(CameraDevice camera, int error) {
+            camera.close();
+            cameraDevice = null;
+        }
+    };
     private boolean useFrontFacingCamera;
     //private boolean enableCapturedReview;
     private float mDist;
@@ -124,7 +208,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
 
                     float speed = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 10000;
 
-                    if (speed > SHAKE_THRESHOLD && mCamera!=null && mCamera.getParameters()!=null) {
+                    if (speed > SHAKE_THRESHOLD && mCamera != null && mCamera.getParameters() != null) {
                         handleFocus(null, mCamera.getParameters());
                     }
                     Log.e("tag", String.valueOf(speed));
@@ -149,6 +233,220 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 
+    public static Camera2Fragment getInstance(boolean locationRestrictive) {
+
+        Camera2Fragment fragment = new Camera2Fragment();
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("locationRestrictive", locationRestrictive);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void openCamera() {
+        CameraManager manager = (CameraManager) mActivity.getSystemService(Context.CAMERA_SERVICE);
+        Log.e(TAG, "is camera open");
+        try {
+            if (cameraId == null) {
+                cameraId = manager.getCameraIdList()[0];
+            }
+            if (cameraCaptureSessions != null && cameraDevice != null) {
+                cameraDevice.close();
+                cameraCaptureSessions.close();
+            }
+            CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
+            createSupportedFlashList(characteristics);
+            StreamConfigurationMap map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+            assert map != null;
+            imageDimension = map.getOutputSizes(SurfaceTexture.class)[0];
+            // Add permission for camera and let user grant the permission
+            if (ActivityCompat.checkSelfPermission(mActivity, Manifest.permission.CAMERA) !=
+                    PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mActivity,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CAMERA_PERMISSION);
+                return;
+            }
+            manager.openCamera(cameraId, stateCallback, null);
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+        Log.e(TAG, "openCamera " + cameraId);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    protected void createCameraPreview() {
+        try {
+            SurfaceTexture texture = textureView.getSurfaceTexture();
+            if(texture != null){
+                texture.setDefaultBufferSize(imageDimension.getWidth(), imageDimension.getHeight());
+//            Log.d(TAG, "width: " + imageDimension.getWidth() + ", height: " + imageDimension.getHeight());
+                Surface surface = new Surface(texture);
+                captureRequestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
+                captureRequestBuilder.addTarget(surface);
+                cameraDevice.createCaptureSession(Arrays.asList(surface), new CameraCaptureSession.StateCallback() {
+                    @Override
+                    public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
+                        //The camera is already closed
+                        if (null == cameraDevice) {
+                            return;
+                        }
+                        // When the session is ready, we start displaying the preview.
+                        cameraCaptureSessions = cameraCaptureSession;
+                        updatePreview();
+                    }
+
+                    @Override
+                    public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
+                        Toast.makeText(mActivity, "Configuration change", Toast.LENGTH_SHORT).show();
+                    }
+                }, null);
+            }
+
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    protected void updatePreview() {
+        if (null == cameraDevice) {
+            Log.e(TAG, "updatePreview error, return");
+        }
+        captureRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CameraMetadata.CONTROL_MODE_AUTO);
+        try {
+            cameraCaptureSessions.setRepeatingRequest(captureRequestBuilder.build(), null, mBackgroundHandler);
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.e(TAG, "onResume");
+        startBackgroundThread();
+        if (textureView.isAvailable()) {
+            Log.e(TAG, "opening camera from onResume()");
+            openCamera();
+        } else {
+            textureView.setSurfaceTextureListener(textureListener);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void onPause() {
+        Log.e(TAG, "onPause");
+        //closeCamera();
+        if (cameraDevice != null) {
+            cameraDevice.close();
+        }
+        stopBackgroundThread();
+        super.onPause();
+    }
+
+    protected void startBackgroundThread() {
+        mBackgroundThread = new HandlerThread("Camera Background");
+        mBackgroundThread.start();
+        mBackgroundHandler = new Handler(mBackgroundThread.getLooper());
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
+    protected void stopBackgroundThread() {
+        mBackgroundThread.quitSafely();
+        try {
+            mBackgroundThread.join();
+            mBackgroundThread = null;
+            mBackgroundHandler = null;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    protected void takePicture() {
+        if (null == cameraDevice) {
+            Log.e(TAG, "cameraDevice is null");
+            return;
+        }
+        CameraManager manager = (CameraManager) mActivity.getSystemService(Context.CAMERA_SERVICE);
+        try {
+            CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraDevice.getId());
+            Size[] jpegSizes = null;
+            if (characteristics != null) {
+                jpegSizes = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP).getOutputSizes(ImageFormat.JPEG);
+            }
+            int width = 640;
+            int height = 480;
+            if (jpegSizes != null && 0 < jpegSizes.length) {
+                width = jpegSizes[0].getWidth();
+                height = jpegSizes[0].getHeight();
+            }
+            ImageReader reader = ImageReader.newInstance(width, height, ImageFormat.JPEG, 1);
+            List<Surface> outputSurfaces = new ArrayList<Surface>(2);
+            outputSurfaces.add(reader.getSurface());
+            outputSurfaces.add(new Surface(textureView.getSurfaceTexture()));
+            final CaptureRequest.Builder captureBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
+            captureBuilder.addTarget(reader.getSurface());
+            captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
+            // Orientation
+            int rotation = mActivity.getWindowManager().getDefaultDisplay().getRotation();
+            captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
+            final File file = new File(Environment.getExternalStorageDirectory() + "/pic.jpg");
+            ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
+                @Override
+                public void onImageAvailable(ImageReader reader) {
+                    Image image = null;
+                    try {
+                        image = reader.acquireLatestImage();
+                        ByteBuffer buffer = image.getPlanes()[0].getBuffer();
+                        byte[] bytes = new byte[buffer.capacity()];
+                        buffer.get(bytes);
+                        save(bytes);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (image != null) {
+                            image.close();
+                        }
+                    }
+                }
+
+                private void save(byte[] bytes) throws IOException {
+                    new Camera2Fragment.ImagePostProcessing(mActivity, bytes).execute();
+                }
+            };
+            reader.setOnImageAvailableListener(readerListener, mBackgroundHandler);
+            final CameraCaptureSession.CaptureCallback captureListener = new CameraCaptureSession.CaptureCallback() {
+                @Override
+                public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
+                    super.onCaptureCompleted(session, request, result);
+                    createCameraPreview();
+                }
+            };
+            cameraDevice.createCaptureSession(outputSurfaces, new CameraCaptureSession.StateCallback() {
+                @Override
+                public void onConfigured(CameraCaptureSession session) {
+                    try {
+                        session.capture(captureBuilder.build(), captureListener, mBackgroundHandler);
+                    } catch (CameraAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onConfigureFailed(CameraCaptureSession session) {
+                }
+            }, mBackgroundHandler);
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void clickPicture() {
         if (readyToTakePicture) {
             if (mCamera != null) {
@@ -171,7 +469,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binder = DataBindingUtil.inflate(getActivity().getLayoutInflater(), R.layout.neon_camera_fragment_layout, container, false);
+        binder = DataBindingUtil.inflate(getActivity().getLayoutInflater(), R.layout.neon_camera2_fragment_layout, container, false);
         localCameraFacing = NeonImagesHandler.getSingleonInstance().getCameraParam().getCameraFacing();
         mActivity = getActivity();
         cameraParam = NeonImagesHandler.getSingleonInstance().getCameraParam();
@@ -189,6 +487,9 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     private void initialize() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
 
+        textureView = binder.texture;
+        assert textureView != null;
+        textureView.setSurfaceTextureListener(textureListener);
         currentFlashMode = binder.currentFlashMode;
         rcvFlash = binder.flashListview;
         mSwitchCamera = binder.switchCamera;
@@ -207,28 +508,39 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void onClickFragmentsView(View v) {
+        Log.d("", "onClickFragmentsView");
         if (v.getId() == R.id.buttonCaptureVertical || v.getId() == R.id.buttonCaptureHorizontal) {
             if (!locationRestrictive || FindLocations.getInstance().checkPermissions(mActivity) &&
                     FindLocations.getInstance().getLocation() != null) {
-                clickPicture();
+//                clickPicture();
+                takePicture();
             } else {
                 Toast.makeText(getActivity(), "Failed to get location.Please try again later.", Toast.LENGTH_SHORT).show();
             }
 
         } else if (v.getId() == R.id.switchCamera) {
-            int cameraFacing = initCameraId();
-            if (localCameraFacing == CameraFacing.back) {
-                stopCamera();
-                useFrontFacingCamera = true;
-                localCameraFacing = CameraFacing.front;
-                startCamera(Camera.CameraInfo.CAMERA_FACING_FRONT);
-            } else {
-                stopCamera();
-                useFrontFacingCamera = false;
-                localCameraFacing = CameraFacing.back;
-                startCamera(Camera.CameraInfo.CAMERA_FACING_BACK);
+            CameraManager cameraManager = (CameraManager) mActivity.getSystemService(Context.CAMERA_SERVICE);
+            try {
+                String[] cameraIdList = cameraManager.getCameraIdList();
+                CameraCharacteristics characteristics = cameraManager.getCameraCharacteristics(cameraId);
+                int desiredCameraFacing = -1;
+                if (CameraCharacteristics.LENS_FACING_BACK == characteristics.get(CameraCharacteristics.LENS_FACING)) {
+                    desiredCameraFacing = CameraCharacteristics.LENS_FACING_FRONT;
+                } else if (CameraCharacteristics.LENS_FACING_FRONT == characteristics.get(CameraCharacteristics.LENS_FACING)) {
+                    desiredCameraFacing = CameraCharacteristics.LENS_FACING_BACK;
+                }
+                for (String id : cameraIdList) {
+                    characteristics = cameraManager.getCameraCharacteristics(id);
+                    if (desiredCameraFacing == characteristics.get(CameraCharacteristics.LENS_FACING)) {
+                        cameraId = id;
+                    }
+                }
+            } catch (CameraAccessException e) {
+                e.printStackTrace();
             }
+            openCamera();
         } else if (v.getId() == R.id.currentFlashMode) {
             if (rcvFlash.getVisibility() == View.GONE)
                 createFlashModesDropDown();
@@ -259,22 +571,6 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        try {
-            mCamera.setPreviewCallback(null);
-            mCameraPreview.getHolder().removeCallback(mCameraPreview);
-            mCamera.stopPreview();
-            mCamera.release();
-            sensorManager.unregisterListener(sensorEventListener);
-            mCamera = null;
-            mCameraPreview = null;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
@@ -288,7 +584,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     private void setFlashLayoutAndMode() {
         String flashMode = PrefsUtils.getStringSharedPreference(getActivity(), Constants.FLASH_MODE, "");
         if (flashMode.equals("")) {
-            currentFlashMode.setImageResource(R.drawable.ic_flash_off);
+            currentFlashMode.setImageResource(R.drawable.flash_off);
         } else {
             if (supportedFlashModes != null && supportedFlashModes.size() > 0) {
                 if (supportedFlashModes.contains(flashMode)) {
@@ -305,21 +601,84 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
         parameters.setFlashMode(mode);
 
         if ("off".equals(mode)) {
-            currentFlashMode.setImageResource(R.drawable.ic_flash_off);
+            currentFlashMode.setImageResource(R.drawable.flash_off);
         } else if ("on".equals(mode)) {
-            currentFlashMode.setImageResource(R.drawable.ic_flash_on);
+            currentFlashMode.setImageResource(R.drawable.flash_on);
         } else if ("auto".equals(mode)) {
-            currentFlashMode.setImageResource(R.drawable.ic_flash_auto);
+            currentFlashMode.setImageResource(R.drawable.flash_auto);
         } else if ("red-eye".equals(mode)) {
-            currentFlashMode.setImageResource(R.drawable.ic_flash_red_eye);
+            currentFlashMode.setImageResource(R.drawable.flash_red_eye);
         } else if ("torch".equals(mode)) {
-            currentFlashMode.setImageResource(R.drawable.ic_flash_torch);
+            currentFlashMode.setImageResource(R.drawable.flash_torch);
         } else {
-            currentFlashMode.setImageResource(R.drawable.ic_flash_off);
+            currentFlashMode.setImageResource(R.drawable.flash_off);
         }
         PrefsUtils.setStringSharedPreference(getActivity(), Constants.FLASH_MODE, mode);
         mCamera.setParameters(parameters);
     }
+
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        if (!fromCreate) {
+//            try {
+//                new Handler().post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            Camera2Fragment fragment = new Camera2Fragment();
+//                            FragmentManager manager = getActivity().getSupportFragmentManager();
+//                            manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                });
+//                return;
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        fromCreate = false;
+//        if (mCamera == null) {
+//            try {
+//                if (cameraFacing == CameraFacing.front && NeonUtils.isFrontCameraAvailable() == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+//                    Log.d(TAG, "onResume: open front");
+//                    mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
+//                } else {
+//                    mCamera = Camera.open();
+//                }
+//
+//                //To set hardware camera rotation
+//                setCameraRotation();
+//
+//
+//                mCameraPreview = new CameraPreview(mActivity, mCamera);
+//                mCameraPreview.setReadyListener(new CameraPreview.ReadyToTakePicture() {
+//                    @Override
+//                    public void readyToTakePicture(boolean ready) {
+//                        readyToTakePicture = ready;
+//                        handleFocus(null, mCamera.getParameters());
+//                    }
+//                });
+//
+//                mCameraPreview.setOnTouchListener(this);
+//
+//                mCameraLayout = binder.cameraPreview;
+//                mCameraLayout.addView(mCameraPreview);
+//
+//                //set the screen layout to fullscreen
+//                mActivity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                        WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//            } catch (Exception e) {
+//                Log.e("Camera Open Exception", "" + e.getMessage());
+//            }
+//
+//        } else {
+//            Log.e(TAG, "camera not null");
+//        }
+//    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -338,71 +697,17 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (!fromCreate) {
-            try {
-                new Handler().post(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            CameraFragment1 fragment = new CameraFragment1();
-                            FragmentManager manager = getActivity().getSupportFragmentManager();
-                            manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                return;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        fromCreate = false;
-        if (mCamera == null) {
-            try {
-                if (cameraFacing == CameraFacing.front && NeonUtils.isFrontCameraAvailable() == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-                    Log.d(TAG, "onResume: open front");
-                    mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
-                } else {
-                    mCamera = Camera.open();
-                }
-
-                //To set hardware camera rotation
-                setCameraRotation();
-
-
-                mCameraPreview = new CameraPreview(mActivity, mCamera);
-                mCameraPreview.setReadyListener(new CameraPreview.ReadyToTakePicture() {
-                    @Override
-                    public void readyToTakePicture(boolean ready) {
-                        readyToTakePicture = ready;
-                        handleFocus(null, mCamera.getParameters());
-                    }
-                });
-
-                mCameraPreview.setOnTouchListener(this);
-
-                mCameraLayout = binder.cameraPreview;
-                mCameraLayout.addView(mCameraPreview);
-
-                //set the screen layout to fullscreen
-                mActivity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                        WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            } catch (Exception e) {
-                Log.e("Camera Open Exception", "" + e.getMessage());
-            }
-
-        } else {
-            Log.e(TAG, "camera not null");
-        }
-    }
-
     private void createSupportedFlashList(Camera.Parameters parameters) {
         supportedFlashModes = (ArrayList<String>) parameters.getSupportedFlashModes();
+        if (supportedFlashModes == null) {
+            currentFlashMode.setVisibility(View.GONE);
+            rcvFlash.setVisibility(View.GONE);
+        } else {
+            currentFlashMode.setVisibility(View.VISIBLE);
+        }
+    }
+    private void createSupportedFlashList(CameraCharacteristics cc) {
+//        supportedFlashModes = Arrays.asList(cc.get(CameraCharacteristics.CONTROL_AE_AVAILABLE_MODES));
         if (supportedFlashModes == null) {
             currentFlashMode.setVisibility(View.GONE);
             rcvFlash.setVisibility(View.GONE);
@@ -768,15 +1073,6 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
         return cameraId;
     }
 
-    public static CameraFragment1 getInstance(boolean locationRestrictive) {
-
-        CameraFragment1 fragment = new CameraFragment1();
-        Bundle bundle = new Bundle();
-        bundle.putBoolean("locationRestrictive", locationRestrictive);
-        fragment.setArguments(bundle);
-        return fragment;
-    }
-
     public interface PictureTakenListener {
         void onPictureTaken(String filePath);
 
@@ -801,12 +1097,9 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
         }
 
 
-
-
-
-        public File savePictureToStorage(){
+        public File savePictureToStorage() {
             File pictureFile = Constants.getMediaOutputFile(getActivity(), Constants.TYPE_IMAGE);
-            Log.d("HIMANSHU FILE=",pictureFile.getAbsolutePath());
+            Log.d("HIMANSHU FILE=", pictureFile.getAbsolutePath());
             if (pictureFile == null)
                 return null;
 
@@ -879,10 +1172,10 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if(pictureFile.exists()){
+            if (pictureFile.exists()) {
                 return pictureFile;
-            }else{
-                pictureFile=null;
+            } else {
+                pictureFile = null;
                 savePictureToStorage();
             }
             return pictureFile;
@@ -890,7 +1183,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
 
         @Override
         protected File doInBackground(Void... params) {
-            File pictureFile= savePictureToStorage();
+            File pictureFile = savePictureToStorage();
             return pictureFile;
         }
 
@@ -923,9 +1216,11 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                             viewPagerIntent.putExtra(Constants.IMAGE_REVIEW_POSITION, NeonImagesHandler.getSingletonInstance().getImagesCollection().size() - 1);
                             startActivity(viewPagerIntent);
                         }
-                    },200);
+                    }, 200);
                 }
+
                 mPictureTakenListener.onPictureTaken(file.getAbsolutePath());
+
                 // readyToTakePicture = true;
             } else {
                 Toast.makeText(context, getString(R.string.camera_error), Toast.LENGTH_SHORT).show();

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable name="handlers" type="com.gaadi.neon.activity.camera.NormalCamera2ActivityNeon"/>
+    </data>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/content_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <RelativeLayout
+            android:id="@+id/rlTags"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/default_button_small_height"
+            android:background="@color/tranparent_black">
+
+            <TextView
+                android:id="@+id/tvTag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/tvPrev"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/neon_default_margin"
+                android:layout_marginStart="@dimen/neon_default_margin"
+                android:background="@color/black"
+                android:padding="@dimen/neon_default_margin"
+                android:text="@string/prev"
+                android:textColor="@color/white"
+                android:visibility="gone"
+                android:onClick="@{handlers::onClick}"/>
+
+            <TextView
+                android:id="@+id/tvSkip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/neon_default_margin"
+                android:layout_marginRight="@dimen/neon_default_margin"
+                android:background="@color/black"
+                android:padding="@dimen/neon_default_margin"
+                android:text="@string/next"
+                android:textColor="@color/white"
+                android:onClick="@{handlers::onClick}"/>
+        </RelativeLayout>
+
+       <!-- <TextView
+            android:id="@+id/tvImageName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:background="@color/tranparent_black"
+            android:gravity="center"
+            android:padding="10dp"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:visibility="visible" />
+-->
+        <LinearLayout
+            android:id="@+id/belowLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/tranparent_black"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
+
+                <TextView
+                    android:id="@+id/buttonDone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Done"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:layout_centerVertical="true"
+                    android:visibility="visible"
+                    android:onClick="@{handlers::onClick}"/>
+
+
+                <ImageView
+                    android:id="@+id/buttonGallery"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_camera_gallery"
+                    android:onClick="@{handlers::onClick}"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
+        <HorizontalScrollView
+            android:layout_below="@+id/rlTags"
+            android:id="@+id/hsvPreview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/imageHolderView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/tranparent_black"
+                android:orientation="horizontal"
+                android:visibility="visible"/>
+        </HorizontalScrollView>
+
+
+    </RelativeLayout>
+
+
+</layout>
