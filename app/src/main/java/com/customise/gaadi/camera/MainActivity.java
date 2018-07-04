@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
                 @Override
                 public CameraOrientation getCameraOrientation() {
-                    return CameraOrientation.portrait;
+                    return CameraOrientation.landscape;
                 }
 
                 @Override
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
             @Override
             public CameraOrientation getCameraOrientation() {
-                return CameraOrientation.landscape;
+                return CameraOrientation.portrait;
             }
 
             @Override
@@ -201,7 +201,11 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
             @Override
             public CustomParameters getCustomParameters() {
-                return null;
+                CustomParameters.CustomParametersBuilder builder = new CustomParameters.CustomParametersBuilder();
+                builder.setLocationRestrictive(false);
+                builder.setCamScannerActive(true);
+                builder.setCamScannerAPIKey("MRHrRa4H7EQby773KW66d6b1");
+                return builder.build();
             }
 
 

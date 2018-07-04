@@ -278,29 +278,31 @@ public class Camera2Fragment extends Fragment implements View.OnTouchListener, C
     protected void createCameraPreview() {
         try {
             SurfaceTexture texture = textureView.getSurfaceTexture();
-            assert texture != null;
-            texture.setDefaultBufferSize(imageDimension.getWidth(), imageDimension.getHeight());
+            if(texture != null){
+                texture.setDefaultBufferSize(imageDimension.getWidth(), imageDimension.getHeight());
 //            Log.d(TAG, "width: " + imageDimension.getWidth() + ", height: " + imageDimension.getHeight());
-            Surface surface = new Surface(texture);
-            captureRequestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
-            captureRequestBuilder.addTarget(surface);
-            cameraDevice.createCaptureSession(Arrays.asList(surface), new CameraCaptureSession.StateCallback() {
-                @Override
-                public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
-                    //The camera is already closed
-                    if (null == cameraDevice) {
-                        return;
+                Surface surface = new Surface(texture);
+                captureRequestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
+                captureRequestBuilder.addTarget(surface);
+                cameraDevice.createCaptureSession(Arrays.asList(surface), new CameraCaptureSession.StateCallback() {
+                    @Override
+                    public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
+                        //The camera is already closed
+                        if (null == cameraDevice) {
+                            return;
+                        }
+                        // When the session is ready, we start displaying the preview.
+                        cameraCaptureSessions = cameraCaptureSession;
+                        updatePreview();
                     }
-                    // When the session is ready, we start displaying the preview.
-                    cameraCaptureSessions = cameraCaptureSession;
-                    updatePreview();
-                }
 
-                @Override
-                public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
-                    Toast.makeText(mActivity, "Configuration change", Toast.LENGTH_SHORT).show();
-                }
-            }, null);
+                    @Override
+                    public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
+                        Toast.makeText(mActivity, "Configuration change", Toast.LENGTH_SHORT).show();
+                    }
+                }, null);
+            }
+
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
