@@ -179,6 +179,7 @@ public class OneStepActivity extends AppCompatActivity implements CameraFragment
             @Override
             public void onClick(View v) {
                 tvNext.setClickable(false);
+                ivClickPicture.setClickable(false);
                 getCameraFragmentInstance().clickPicture();
             }
         });
@@ -478,6 +479,7 @@ public class OneStepActivity extends AppCompatActivity implements CameraFragment
         tvImageCount.setText(String.valueOf(count));
         tvNext.setVisibility(View.VISIBLE);
         tvNext.setClickable(true);
+        ivClickPicture.setClickable(true);
 
         FileInfo fileInfo = new FileInfo();
         fileInfo.setFilePath(filePath);
