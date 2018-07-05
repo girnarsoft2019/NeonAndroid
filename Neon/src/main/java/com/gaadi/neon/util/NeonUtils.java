@@ -502,4 +502,15 @@ public class NeonUtils {
             return null;
         return result;
     }
+
+    public static void deleteFile(String filePath){
+           File file = new File(filePath);
+           if(file.exists()){
+               try {
+                   file.delete();
+               }catch (Exception e){
+                   e.printStackTrace();
+               }
+           }
+    }
 }

@@ -41,6 +41,7 @@ import com.gaadi.neon.util.FindLocations;
 import com.gaadi.neon.util.ManifestPermission;
 import com.gaadi.neon.util.NeonException;
 import com.gaadi.neon.util.NeonImagesHandler;
+import com.gaadi.neon.util.NeonUtils;
 import com.gaadi.neon.util.PermissionType;
 import com.intsig.csopen.sdk.CSOpenAPI;
 import com.intsig.csopen.sdk.CSOpenApiFactory;
@@ -74,6 +75,7 @@ public class NormalCamera2ActivityNeon extends NeonBaseCameraActivity implements
     private Location location;
     private final int REQ_CODE_CALL_CAMSCANNER = 168;
     private String mOutputImagePath;
+    private String mInputImagePath;
     private CSOpenAPI camScannerApi;
 
     @Override
@@ -438,6 +440,7 @@ public class NormalCamera2ActivityNeon extends NeonBaseCameraActivity implements
 
     @Override
     public void onPictureTaken(String filePath) {
+        mInputImagePath = filePath;
         Log.d("NormalCamera2", "onPictureTaken: ");
         if(cameraParams != null && cameraParams.getCustomParameters() != null && cameraParams.getCustomParameters().isCamScannerActive() && !cameraParams.getCustomParameters().getCamScannerAPIKey().equals("")){
             if(camScannerApi.isCamScannerInstalled()){
@@ -603,6 +606,7 @@ public class NormalCamera2ActivityNeon extends NeonBaseCameraActivity implements
                         File file = new File(mOutputImagePath);
                         sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
                         afterPictureTaken(mOutputImagePath);
+                        NeonUtils.deleteFile(mInputImagePath);
                     }
 
                     @Override

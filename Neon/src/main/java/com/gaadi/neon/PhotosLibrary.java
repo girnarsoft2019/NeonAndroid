@@ -170,11 +170,16 @@ public class PhotosLibrary {
 
     }
 
-    public static void startOneStepImageCollection(Context activity, String category, String subCategory, final OneStepActionListener oneStepActionListener){
+    public static void startOneStepImageCollection(Context activity, String category, String subCategory, String camScannerApiKey, final OneStepActionListener oneStepActionListener){
         OneStepImageHandler.getInstance().setOneStepImagesActionListener(oneStepActionListener);
         Intent intent = new Intent(activity, OneStepActivity.class);
         intent.putExtra(Constants.CATEGORY, category);
         intent.putExtra(Constants.SUB_CATEGORY, subCategory);
+        if(camScannerApiKey == null){
+            intent.putExtra(Constants.CAM_SCANNER_API_KEY, "");
+        }else {
+            intent.putExtra(Constants.CAM_SCANNER_API_KEY, camScannerApiKey);
+        }
         activity.startActivity(intent);
 
     }

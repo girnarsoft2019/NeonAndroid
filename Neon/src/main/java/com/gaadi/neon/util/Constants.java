@@ -42,7 +42,7 @@ public class Constants {
     public static String FLAG = "Flag";
     public static final String CATEGORY = "category";
     public static final String SUB_CATEGORY = "subCategory";
-
+    public static final String CAM_SCANNER_API_KEY = "camScannerApiKey";
     public static File getMediaOutputFile(Context context, int type) {
         String appName = context.getString(R.string.app_name);
         if (appName.length() > 0) {

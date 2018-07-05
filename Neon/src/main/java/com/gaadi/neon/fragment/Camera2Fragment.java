@@ -105,8 +105,8 @@ public class Camera2Fragment extends Fragment implements View.OnTouchListener, C
     private static final int SHAKE_THRESHOLD = 20;
 
     static {
-        ORIENTATIONS.append(Surface.ROTATION_0, 90);
-        ORIENTATIONS.append(Surface.ROTATION_90, 0);
+        ORIENTATIONS.append(Surface.ROTATION_0, 0);
+        ORIENTATIONS.append(Surface.ROTATION_90, 90);
         ORIENTATIONS.append(Surface.ROTATION_180, 270);
         ORIENTATIONS.append(Surface.ROTATION_270, 180);
     }
@@ -278,7 +278,7 @@ public class Camera2Fragment extends Fragment implements View.OnTouchListener, C
     protected void createCameraPreview() {
         try {
             SurfaceTexture texture = textureView.getSurfaceTexture();
-            if(texture != null){
+            if (texture != null) {
                 texture.setDefaultBufferSize(imageDimension.getWidth(), imageDimension.getHeight());
 //            Log.d(TAG, "width: " + imageDimension.getWidth() + ", height: " + imageDimension.getHeight());
                 Surface surface = new Surface(texture);
@@ -447,12 +447,93 @@ public class Camera2Fragment extends Fragment implements View.OnTouchListener, C
         }
     }
 
-    public void clickPicture() {
+    /*public void clickPicture() {
         if (readyToTakePicture) {
             if (mCamera != null) {
                 mCamera.takePicture(null, null, this);
             }
             readyToTakePicture = false;
+        }
+    }*/
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public void clickPicture() {
+        if (null == cameraDevice) {
+            Log.e(TAG, "cameraDevice is null");
+            return;
+        }
+        CameraManager manager = (CameraManager) mActivity.getSystemService(Context.CAMERA_SERVICE);
+        try {
+            CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraDevice.getId());
+            Size[] jpegSizes = null;
+            if (characteristics != null) {
+                jpegSizes = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP).getOutputSizes(ImageFormat.JPEG);
+            }
+            int width = 640;
+            int height = 480;
+            if (jpegSizes != null && 0 < jpegSizes.length) {
+                width = jpegSizes[0].getWidth();
+                height = jpegSizes[0].getHeight();
+            }
+            ImageReader reader = ImageReader.newInstance(width, height, ImageFormat.JPEG, 1);
+            List<Surface> outputSurfaces = new ArrayList<Surface>(2);
+            outputSurfaces.add(reader.getSurface());
+            outputSurfaces.add(new Surface(textureView.getSurfaceTexture()));
+            final CaptureRequest.Builder captureBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
+            captureBuilder.addTarget(reader.getSurface());
+            captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
+            // Orientation
+            int rotation = mActivity.getWindowManager().getDefaultDisplay().getRotation();
+            captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
+            final File file = new File(Environment.getExternalStorageDirectory() + "/pic.jpg");
+            ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
+                @Override
+                public void onImageAvailable(ImageReader reader) {
+                    Image image = null;
+                    try {
+                        image = reader.acquireLatestImage();
+                        ByteBuffer buffer = image.getPlanes()[0].getBuffer();
+                        byte[] bytes = new byte[buffer.capacity()];
+                        buffer.get(bytes);
+                        save(bytes);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (image != null) {
+                            image.close();
+                        }
+                    }
+                }
+
+                private void save(byte[] bytes) throws IOException {
+                    new Camera2Fragment.ImagePostProcessing(mActivity, bytes).execute();
+                }
+            };
+            reader.setOnImageAvailableListener(readerListener, mBackgroundHandler);
+            final CameraCaptureSession.CaptureCallback captureListener = new CameraCaptureSession.CaptureCallback() {
+                @Override
+                public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
+                    super.onCaptureCompleted(session, request, result);
+                    createCameraPreview();
+                }
+            };
+            cameraDevice.createCaptureSession(outputSurfaces, new CameraCaptureSession.StateCallback() {
+                @Override
+                public void onConfigured(CameraCaptureSession session) {
+                    try {
+                        session.capture(captureBuilder.build(), captureListener, mBackgroundHandler);
+                    } catch (CameraAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onConfigureFailed(CameraCaptureSession session) {
+                }
+            }, mBackgroundHandler);
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
         }
     }
 
@@ -514,8 +595,8 @@ public class Camera2Fragment extends Fragment implements View.OnTouchListener, C
         if (v.getId() == R.id.buttonCaptureVertical || v.getId() == R.id.buttonCaptureHorizontal) {
             if (!locationRestrictive || FindLocations.getInstance().checkPermissions(mActivity) &&
                     FindLocations.getInstance().getLocation() != null) {
-//                clickPicture();
-                takePicture();
+                clickPicture();
+//                takePicture();
             } else {
                 Toast.makeText(getActivity(), "Failed to get location.Please try again later.", Toast.LENGTH_SHORT).show();
             }
@@ -706,6 +787,7 @@ public class Camera2Fragment extends Fragment implements View.OnTouchListener, C
             currentFlashMode.setVisibility(View.VISIBLE);
         }
     }
+
     private void createSupportedFlashList(CameraCharacteristics cc) {
 //        supportedFlashModes = Arrays.asList(cc.get(CameraCharacteristics.CONTROL_AE_AVAILABLE_MODES));
         if (supportedFlashModes == null) {

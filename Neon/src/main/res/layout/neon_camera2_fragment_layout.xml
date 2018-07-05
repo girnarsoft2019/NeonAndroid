@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-        <variable name="handlers" type="com.gaadi.neon.fragment.Camera2Fragment"/>
+
+        <variable
+            name="handlers"
+            type="com.gaadi.neon.fragment.Camera2Fragment" />
     </data>
 
 
@@ -18,11 +20,11 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/black" />
+
         <TextureView
             android:id="@+id/texture"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
+            android:layout_height="wrap_content" />
 
         <LinearLayout
             android:id="@+id/llFlash"
@@ -61,7 +63,7 @@
             android:layout_margin="@dimen/neon_default_margin"
             android:contentDescription="@null"
             android:onClick="@{handlers::onClickFragmentsView}"
-            app:srcCompat="@drawable/camera_switch_white" />
+            android:src="@drawable/camera_switch_white" />
 
         <LinearLayout
             android:layout_width="match_parent"
