@@ -109,16 +109,17 @@ public class PhotosLibrary {
 
             case normal_camera:
             case gallery_preview_camera:
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                Intent intent = new Intent(activity, NormalCameraActivityNeon.class);
+                activity.startActivity(intent);
+                /*if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                     Intent intent = new Intent(activity, NormalCameraActivityNeon.class);
                     activity.startActivity(intent);
                 } else {
                     Intent intent = new Intent(activity, NormalCamera2ActivityNeon.class);
                     activity.startActivity(intent);
-                }
+                }*/
 
                 break;
-
         }
     }
 

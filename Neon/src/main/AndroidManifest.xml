@@ -92,7 +92,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name="com.gaadi.neon.activity.finance.OneStepActivity"
-            android:label=""
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 
     </application>

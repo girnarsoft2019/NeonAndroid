@@ -50,6 +50,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -298,7 +299,7 @@ public class Camera2Fragment extends Fragment implements View.OnTouchListener, C
 
                     @Override
                     public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
-                        Toast.makeText(mActivity, "Configuration change", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mActivity, "Configuration change", Toast.LENGTH_SHORT).show();
                     }
                 }, null);
             }
@@ -325,6 +326,27 @@ public class Camera2Fragment extends Fragment implements View.OnTouchListener, C
     @Override
     public void onResume() {
         super.onResume();
+        /*if (!fromCreate) {
+            try {
+                new Handler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Camera2Fragment fragment = new Camera2Fragment();
+                            FragmentManager manager = getActivity().getSupportFragmentManager();
+                            manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                return;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }*/
+        mActivity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Log.e(TAG, "onResume");
         startBackgroundThread();
         if (textureView.isAvailable()) {

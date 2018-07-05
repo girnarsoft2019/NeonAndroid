@@ -153,11 +153,13 @@ public class OneStepActivity extends AppCompatActivity implements CameraFragment
             @Override
             public void run() {
                 if (lollipopOrAbove) {
-                    Camera2Fragment camFragment = new Camera2Fragment();
-                    fragmentManager.beginTransaction().replace(R.id.content_frame, camFragment).commit();
+                    Camera2Fragment fragment = Camera2Fragment.getInstance(false);
+                    FragmentManager manager = getSupportFragmentManager();
+                    manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
                 } else {
-                    CameraFragment1 camFragment = new CameraFragment1();
-                    fragmentManager.beginTransaction().replace(R.id.content_frame, camFragment).commit();
+                    CameraFragment1 fragment = CameraFragment1.getInstance(false);
+                    FragmentManager manager = getSupportFragmentManager();
+                    manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
                 }
 
             }
@@ -335,6 +337,7 @@ public class OneStepActivity extends AppCompatActivity implements CameraFragment
         docCat = getIntent().getStringExtra(Constants.CATEGORY);
         docSubCat = getIntent().getStringExtra(Constants.SUB_CATEGORY);
         camScannerApiKey = getIntent().getStringExtra(Constants.CAM_SCANNER_API_KEY);
+        Log.d("Rajeev", "extractData: "+camScannerApiKey);
     }
 
     private void openGallery() {
@@ -438,6 +441,10 @@ public class OneStepActivity extends AppCompatActivity implements CameraFragment
     @Override
     protected void onResume() {
         super.onResume();
+        /*View decorView = getWindow().getDecorView();
+// Hide the status bar.
+        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);*/
         if (NeonImagesHandler.getSingletonInstance().getCameraParam() == null) {
             NeonImagesHandler.getSingletonInstance().setCameraParam(cameraParam);
         }
@@ -524,6 +531,7 @@ public class OneStepActivity extends AppCompatActivity implements CameraFragment
 
     @Override
     public void onPictureTaken(String filePath) {
+        ivClickPicture.setClickable(true);
         mInputImagePath = filePath;
         if (camScannerApi != null && camScannerApi.isCamScannerInstalled()) {
             String appName = getResources().getString(R.string.app_name).replace(" ", "");

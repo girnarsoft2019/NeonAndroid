@@ -445,7 +445,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         mInputImagePath = filePath;
         Log.d("NormalCamera", "onPictureTaken: ");
         if(cameraParams != null && cameraParams.getCustomParameters() != null && cameraParams.getCustomParameters().isCamScannerActive() && !cameraParams.getCustomParameters().getCamScannerAPIKey().equals("")){
-            if(camScannerApi.isCamScannerInstalled()){
+            if(camScannerApi != null && camScannerApi.isCamScannerInstalled()){
                 String appName = getResources().getString(R.string.app_name).replace(" ","");
                 String path= Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+appName;
                 mOutputImagePath = path +File.separator+"IMG_"+System.currentTimeMillis()+ "_scanned.jpg";
