@@ -294,7 +294,12 @@ public class Camera2Fragment extends Fragment implements View.OnTouchListener, C
                         }
                         // When the session is ready, we start displaying the preview.
                         cameraCaptureSessions = cameraCaptureSession;
-                        updatePreview();
+                        try{
+                            updatePreview();
+                        }catch (Exception e){
+
+                        }
+
                     }
 
                     @Override
@@ -316,6 +321,7 @@ public class Camera2Fragment extends Fragment implements View.OnTouchListener, C
         }
         captureRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CameraMetadata.CONTROL_MODE_AUTO);
         try {
+
             cameraCaptureSessions.setRepeatingRequest(captureRequestBuilder.build(), null, mBackgroundHandler);
         } catch (CameraAccessException e) {
             e.printStackTrace();
