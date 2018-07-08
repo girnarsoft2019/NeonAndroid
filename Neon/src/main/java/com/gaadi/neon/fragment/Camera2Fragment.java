@@ -297,7 +297,7 @@ public class Camera2Fragment extends Fragment implements View.OnTouchListener, C
                         try{
                             updatePreview();
                         }catch (Exception e){
-
+                            e.printStackTrace();
                         }
 
                     }
