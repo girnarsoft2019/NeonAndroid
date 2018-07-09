@@ -606,7 +606,7 @@ public class NormalCamera2ActivityNeon extends NeonBaseCameraActivity implements
                         File file = new File(mOutputImagePath);
                         sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
                         afterPictureTaken(mOutputImagePath);
-                        NeonUtils.deleteFile(mInputImagePath);
+                        NeonUtils.deleteFile(NormalCamera2ActivityNeon.this, mInputImagePath);
                     }
 
                     @Override

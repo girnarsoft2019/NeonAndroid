@@ -503,11 +503,12 @@ public class NeonUtils {
         return result;
     }
 
-    public static void deleteFile(String filePath){
+    public static void deleteFile(final Context context,String filePath){
            File file = new File(filePath);
            if(file.exists()){
                try {
                    file.delete();
+                   context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
                }catch (Exception e){
                    e.printStackTrace();
                }

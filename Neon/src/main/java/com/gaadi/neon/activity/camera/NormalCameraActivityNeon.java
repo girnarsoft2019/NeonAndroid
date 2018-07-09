@@ -616,7 +616,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
                         File file = new File(mOutputImagePath);
                         sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
                         afterPictureTaken(mOutputImagePath);
-                        NeonUtils.deleteFile(mInputImagePath);
+                        NeonUtils.deleteFile(NormalCameraActivityNeon.this, mInputImagePath);
                     }
 
                     @Override
@@ -633,26 +633,5 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
             }
         }
     }
-
-   /* private void go2CamScanner(String filePath) {
-        String appName = getResources().getString(R.string.app_name).replace(" ","");
-        String path= Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+appName;
-        mOutputImagePath = path +File.separator+"IMG_"+System.currentTimeMillis()+ "_scanned.jpg";
-        mOutputPdfPath = path +File.separator+"PDF_"+System.currentTimeMillis()+ "_scanned.pdf";
-        mOutputOrgPath = path +File.separator+"IMG_"+System.currentTimeMillis()+ "_org.jpg";
-        try {
-            FileOutputStream fos = new FileOutputStream(mOutputOrgPath);
-            fos.write(3);
-            fos.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        CSOpenAPIParam param = new CSOpenAPIParam(filePath,
-                mOutputImagePath, mOutputPdfPath, mOutputOrgPath, 1.0f);
-        boolean res = mApi.scanImage(this, REQ_CODE_CALL_CAMSCANNER, param);
-        Log.d("Rajeev", "send to CamScanner result: " + res);
-    }*/
 
 }
