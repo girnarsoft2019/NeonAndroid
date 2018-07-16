@@ -171,14 +171,14 @@ public class PhotosLibrary {
 
     }
 
-    public static void startOneStepImageCollection(Context activity, String category, String subCategory, String camScannerApiKey, final OneStepActionListener oneStepActionListener){
+    public static void startOneStepImageCollection(Context activity, String category, String subCategory, String camScannerApiKey, final OneStepActionListener oneStepActionListener) {
         OneStepImageHandler.getInstance().setOneStepImagesActionListener(oneStepActionListener);
         Intent intent = new Intent(activity, OneStepActivity.class);
         intent.putExtra(Constants.CATEGORY, category);
         intent.putExtra(Constants.SUB_CATEGORY, subCategory);
-        if(camScannerApiKey == null){
+        if (camScannerApiKey == null) {
             intent.putExtra(Constants.CAM_SCANNER_API_KEY, "");
-        }else {
+        } else {
             intent.putExtra(Constants.CAM_SCANNER_API_KEY, camScannerApiKey);
         }
         activity.startActivity(intent);
@@ -188,5 +188,10 @@ public class PhotosLibrary {
     public static boolean go2CamScanner(Activity activity, String filePath, String outputImagePath, int requestCode, CSOpenAPI csOpenAPI) {
         CSOpenAPIParam param = new CSOpenAPIParam(filePath, outputImagePath, null, null, 1.0f);
         return csOpenAPI.scanImage(activity, requestCode, param);
+    }
+
+    public static boolean isCamScannerInstalled(Context context, String camScannerApiKey) {
+        CSOpenAPI camScannerApi = CSOpenApiFactory.createCSOpenApi(context, camScannerApiKey, null);
+        return camScannerApi.isCamScannerInstalled();
     }
 }

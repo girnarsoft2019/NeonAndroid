@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d(TAG, "onCreate: "+PhotosLibrary.isCamScannerInstalled(this, "camScanner"));
     }
 
     public void cameraPriorityClicked(View view) {
