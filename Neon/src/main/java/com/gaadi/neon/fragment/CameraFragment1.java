@@ -199,6 +199,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
 
 //        if (getArguments() != null)
 //            locationRestrictive = getArguments().getBoolean("locationRestrictive", true);
+
         locationRestrictive = NeonImagesHandler.getSingletonInstance().getCameraParam() == null || NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters() == null || NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters().getLocationRestrictive();
         Log.e("Rajeev", "initialize: " + locationRestrictive);
 
