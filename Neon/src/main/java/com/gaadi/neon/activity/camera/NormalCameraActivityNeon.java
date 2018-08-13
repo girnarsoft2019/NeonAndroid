@@ -9,6 +9,7 @@ import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -79,6 +80,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
             NeonImagesHandler.getSingletonInstance().setLivePhotoNextTagListener(this);
         }
         if (cameraParams == null || cameraParams.getCustomParameters() == null || cameraParams.getCustomParameters().getLocationRestrictive()) {
+            Log.e("Rajeev", "onCreate: Activity" );
             FindLocations.getInstance().init(this);
             FindLocations.getInstance().checkPermissions(this);
         }
@@ -104,6 +106,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
                                                     if (cameraParams != null && cameraParams.getCustomParameters() != null) {
                                                         locationRestrictive = cameraParams.getCustomParameters().getLocationRestrictive();
                                                     }
+                                                    Log.e("Rajeev", "From Activity: "+locationRestrictive );
 
                                                     CameraFragment1 fragment = CameraFragment1.getInstance(locationRestrictive);
                                                     FragmentManager manager = getSupportFragmentManager();
@@ -433,6 +436,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
             binder.imageHolderView.setVisibility(View.VISIBLE);
         }
         boolean locationRestriction = cameraParams == null || cameraParams.getCustomParameters() == null || cameraParams.getCustomParameters().getLocationRestrictive();
+        Log.e("Activity", "onPictureTaken: "+locationRestriction );
         boolean isUpdated = true;
         if (locationRestriction) {
             isUpdated = updateExifInfo(fileInfo);

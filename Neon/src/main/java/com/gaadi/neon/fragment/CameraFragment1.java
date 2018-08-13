@@ -119,7 +119,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
 
                     float speed = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 10000;
 
-                    if (speed > SHAKE_THRESHOLD && mCamera!=null && mCamera.getParameters()!=null) {
+                    if (speed > SHAKE_THRESHOLD && mCamera != null && mCamera.getParameters() != null) {
                         handleFocus(null, mCamera.getParameters());
                     }
                     Log.e("tag", String.valueOf(speed));
@@ -197,19 +197,34 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
 
         binder.getRoot().setOnTouchListener(this);
 
-        if (getArguments() != null)
-            locationRestrictive = getArguments().getBoolean("locationRestrictive", true);
+//        if (getArguments() != null)
+//            locationRestrictive = getArguments().getBoolean("locationRestrictive", true);
+        locationRestrictive = NeonImagesHandler.getSingletonInstance().getCameraParam() == null || NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters() == null || NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters().getLocationRestrictive();
+        Log.e("Rajeev", "initialize: " + locationRestrictive);
 
     }
 
     public void onClickFragmentsView(View v) {
         if (v.getId() == R.id.buttonCaptureVertical || v.getId() == R.id.buttonCaptureHorizontal) {
-            if (!locationRestrictive || FindLocations.getInstance().checkPermissions(mActivity) &&
-                    FindLocations.getInstance().getLocation() != null) {
-                clickPicture();
+            Log.e("Rajeev", "onClickFragmentsView: " + locationRestrictive);
+            if (locationRestrictive) {
+                if (FindLocations.getInstance().checkPermissions(mActivity) &&
+                        FindLocations.getInstance().getLocation() != null) {
+                    clickPicture();
+
+                } else {
+                    Toast.makeText(getActivity(), "Failed to get location.Please try again later.", Toast.LENGTH_SHORT).show();
+                }
+
             } else {
-                Toast.makeText(getActivity(), "Failed to get location.Please try again later.", Toast.LENGTH_SHORT).show();
+                clickPicture();
             }
+//            if (!locationRestrictive || (FindLocations.getInstance().checkPermissions(mActivity) &&
+//                    FindLocations.getInstance().getLocation() != null)) {
+//                clickPicture();
+//            } else {
+//                Toast.makeText(getActivity(), "Failed to get location.Please try again later.", Toast.LENGTH_SHORT).show();
+//            }
 
         } else if (v.getId() == R.id.switchCamera) {
             int cameraFacing = initCameraId();
@@ -342,6 +357,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                     @Override
                     public void run() {
                         try {
+                            Log.d(TAG, "run: not fron create");
                             CameraFragment1 fragment = new CameraFragment1();
                             FragmentManager manager = getActivity().getSupportFragmentManager();
                             manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
@@ -796,12 +812,9 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
         }
 
 
-
-
-
-        public File savePictureToStorage(){
+        public File savePictureToStorage() {
             File pictureFile = Constants.getMediaOutputFile(getActivity(), Constants.TYPE_IMAGE);
-            Log.d("HIMANSHU FILE=",pictureFile.getAbsolutePath());
+            Log.d("HIMANSHU FILE=", pictureFile.getAbsolutePath());
             if (pictureFile == null)
                 return null;
 
@@ -874,10 +887,10 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if(pictureFile.exists()){
+            if (pictureFile.exists()) {
                 return pictureFile;
-            }else{
-                pictureFile=null;
+            } else {
+                pictureFile = null;
                 savePictureToStorage();
             }
             return pictureFile;
@@ -885,7 +898,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
 
         @Override
         protected File doInBackground(Void... params) {
-            File pictureFile= savePictureToStorage();
+            File pictureFile = savePictureToStorage();
             return pictureFile;
         }
 
@@ -918,7 +931,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                             viewPagerIntent.putExtra(Constants.IMAGE_REVIEW_POSITION, NeonImagesHandler.getSingletonInstance().getImagesCollection().size() - 1);
                             startActivity(viewPagerIntent);
                         }
-                    },200);
+                    }, 200);
                 }
 
                 mPictureTakenListener.onPictureTaken(file.getAbsolutePath());
