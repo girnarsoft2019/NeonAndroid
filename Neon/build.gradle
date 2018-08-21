@@ -9,7 +9,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        vectorDrawables.useSupportLibrary = true
+        vectorDrawables.useSupportLibrary = false
         multiDexEnabled true
     }
     dataBinding {
@@ -61,7 +61,7 @@ ext {
     siteUrl = 'https://github.com/lakshaygirdhar/neon'
     gitUrl = 'https://github.com/lakshaygirdhar/neon'
 
-    libraryVersion = '3.0.4'
+    libraryVersion = '3.0.5'
 
     developerId = 'lakshay'
     developerName = 'Lakshay Girdhar'

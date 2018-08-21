@@ -52,7 +52,9 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
             binder.tabList.setVisibility(View.VISIBLE);
             //binder.imageShowFragmentContainer.setVisibility(View.GONE);
             if (adapter == null) {
-                List<ImageTagModel> tagModels = NeonImagesHandler.getSingletonInstance().getNeutralParam().getImageTagsModel();
+                List<ImageTagModel> tagModels = new ArrayList<>();
+                if(NeonImagesHandler.getSingletonInstance().getNeutralParam() != null && NeonImagesHandler.getSingletonInstance().getNeutralParam().getImageTagsModel() != null)
+                    tagModels = NeonImagesHandler.getSingletonInstance().getNeutralParam().getImageTagsModel();
                 if (tagModels == null || tagModels.size() <= 0) {
                     return;
                 }
