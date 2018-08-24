@@ -69,43 +69,44 @@ public class ImageShowAdapter extends BaseDynamicGridAdapter {
             holder = (PhotosHolder) convertView.getTag();
         }
         List<FileInfo> fileInfoList = NeonImagesHandler.getSingleonInstance().getImagesCollection();
-        if (isProfileTagOnly) {
-            if (position > 0) {
-                holder.tvProfile.setVisibility(View.GONE);
-            } else {
-                holder.tvProfile.setVisibility(View.VISIBLE);
-                String tagName = NeonImagesHandler.getSingletonInstance().getNeutralParam().getProfileTagName();
-                holder.tvProfile.setText(tagName);
-
-            }
-        } else {
-            if (NeonImagesHandler.getSingletonInstance().getGenericParam() != null && !NeonImagesHandler.getSingletonInstance().getGenericParam().getTagEnabled()) {
-                holder.tvProfile.setVisibility(View.GONE);
-            } else {
-                holder.tvProfile.setVisibility(View.VISIBLE);
-            }
-
-            if (fileInfoList.get(position).getFileTag() != null) {
-                holder.tvProfile.setText(fileInfoList.get(position).getFileTag().getTagName());
-            } else {
-                holder.tvProfile.setText(R.string.select_tag);
-            }
-        }
-        holder.removeImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (NeonImagesHandler.getSingleonInstance().removeFromCollection(position)) {
-                    notifyDataSetChanged();
-                    if ((NeonImagesHandler.getSingleonInstance().getImagesCollection() == null ||
-                            NeonImagesHandler.getSingleonInstance().getImagesCollection().size() <= 0) &&
-                            context instanceof NeonNeutralActivity) {
-                        ((NeonNeutralActivity) context).onPostResume();
-                    }
+        if(fileInfoList != null && fileInfoList.size() > 0){
+            if (isProfileTagOnly) {
+                if (position > 0) {
+                    holder.tvProfile.setVisibility(View.GONE);
                 } else {
-                    Toast.makeText(context, "Failed to delete.Please try again later.", Toast.LENGTH_SHORT).show();
+                    holder.tvProfile.setVisibility(View.VISIBLE);
+                    String tagName = NeonImagesHandler.getSingletonInstance().getNeutralParam().getProfileTagName();
+                    holder.tvProfile.setText(tagName);
+
+                }
+            } else {
+                if (NeonImagesHandler.getSingletonInstance().getGenericParam() != null && !NeonImagesHandler.getSingletonInstance().getGenericParam().getTagEnabled()) {
+                    holder.tvProfile.setVisibility(View.GONE);
+                } else {
+                    holder.tvProfile.setVisibility(View.VISIBLE);
+                }
+
+                if (fileInfoList.get(position).getFileTag() != null) {
+                    holder.tvProfile.setText(fileInfoList.get(position).getFileTag().getTagName());
+                } else {
+                    holder.tvProfile.setText(R.string.select_tag);
                 }
             }
-        });
+            holder.removeImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (NeonImagesHandler.getSingleonInstance().removeFromCollection(position)) {
+                        notifyDataSetChanged();
+                        if ((NeonImagesHandler.getSingleonInstance().getImagesCollection() == null ||
+                                NeonImagesHandler.getSingleonInstance().getImagesCollection().size() <= 0) &&
+                                context instanceof NeonNeutralActivity) {
+                            ((NeonNeutralActivity) context).onPostResume();
+                        }
+                    } else {
+                        Toast.makeText(context, "Failed to delete.Please try again later.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
 
        /* convertView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,12 +125,14 @@ public class ImageShowAdapter extends BaseDynamicGridAdapter {
             }
         });
 */
-        Glide.with(context).load(NeonImagesHandler.getSingleonInstance().getImagesCollection().get(position).getFilePath())
-                .crossFade()
-                .placeholder(R.drawable.default_placeholder)
-                .centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(holder.image);
+            Glide.with(context).load(NeonImagesHandler.getSingleonInstance().getImagesCollection().get(position).getFilePath())
+                    .crossFade()
+                    .placeholder(R.drawable.default_placeholder)
+                    .centerCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(holder.image);
+        }
+
 
         return convertView;
     }

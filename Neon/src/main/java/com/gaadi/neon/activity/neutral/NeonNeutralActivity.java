@@ -154,7 +154,7 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
 
                     @Override
                     public boolean getTagEnabled() {
-                        return NeonImagesHandler.getSingletonInstance().getNeutralParam().getTagEnabled();
+                        return NeonImagesHandler.getSingletonInstance().getNeutralParam() != null && NeonImagesHandler.getSingletonInstance().getNeutralParam().getTagEnabled();
                     }
 
                     @Override
@@ -215,7 +215,7 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
 
                     @Override
                     public boolean getTagEnabled() {
-                        return NeonImagesHandler.getSingletonInstance().getNeutralParam().getTagEnabled();
+                        return NeonImagesHandler.getSingletonInstance().getNeutralParam() != null && NeonImagesHandler.getSingletonInstance().getNeutralParam().getTagEnabled();
                     }
 
                     @Override
