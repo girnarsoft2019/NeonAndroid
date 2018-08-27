@@ -163,22 +163,30 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.buttonDone) {
-            if (!NeonImagesHandler.getSingletonInstance().isNeutralEnabled()) {
-                if (NeonImagesHandler.getSingletonInstance().getCameraParam().enableImageEditing()
-                        || NeonImagesHandler.getSingletonInstance().getCameraParam().getTagEnabled()) {
-                    Intent intent = new Intent(this, ImageShow.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    if (NeonImagesHandler.getSingletonInstance().validateNeonExit(this)) {
-                        NeonImagesHandler.getSingletonInstance().sendImageCollectionAndFinish(this, ResponseCode.Success);
-                        finish();
+            try{
+                if (!NeonImagesHandler.getSingletonInstance().isNeutralEnabled()) {
+                    if(NeonImagesHandler.getSingletonInstance().getCameraParam() != null){
+                        if (NeonImagesHandler.getSingletonInstance().getCameraParam().enableImageEditing()
+                                || NeonImagesHandler.getSingletonInstance().getCameraParam().getTagEnabled()) {
+                            Intent intent = new Intent(this, ImageShow.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            if (NeonImagesHandler.getSingletonInstance().validateNeonExit(this)) {
+                                NeonImagesHandler.getSingletonInstance().sendImageCollectionAndFinish(this, ResponseCode.Success);
+                                finish();
+                            }
+                        }
                     }
+
+                } else {
+                    setResult(RESULT_OK);
+                    finish();
                 }
-            } else {
-                setResult(RESULT_OK);
-                finish();
+            }catch (Exception e ){
+               e.printStackTrace();
             }
+
 
         } else if (id == R.id.buttonGallery) {
             try {
