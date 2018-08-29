@@ -439,7 +439,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         if (mCamera != null) {
-
+            try {
             Camera.Parameters params = mCamera.getParameters();
             int action = event.getAction();
 
@@ -464,7 +464,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
 
             final Rect focusRect = calculateTapArea(event.getX(), event.getY(), 1f);
 
-            try {
+
                 mCamera.autoFocus(null);
 
                 drawingView.setHaveTouch(true, focusRect);

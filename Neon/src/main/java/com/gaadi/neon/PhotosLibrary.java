@@ -49,20 +49,24 @@ public class PhotosLibrary {
     public static void collectPhotos(int requestCode, Context activity, LibraryMode libraryMode,
                                      PhotosMode photosMode, OnImageCollectionListener listener)
             throws NullPointerException, NeonException {
-        NeonImagesHandler.getSingletonInstance().setImageResultListener(listener);
-        NeonImagesHandler.getSingletonInstance().setLibraryMode(libraryMode);
-        NeonImagesHandler.getSingletonInstance().setRequestCode(requestCode);
-        validate(activity, photosMode, listener);
-        List<FileInfo> alreadyAddedImages = photosMode.getParams().getAlreadyAddedImages();
-        if (alreadyAddedImages != null) {
-            NeonImagesHandler.getSingletonInstance().setImagesCollection(alreadyAddedImages);
-        }
-        if (photosMode.getParams() instanceof INeutralParam) {
-            startNeutralActivity(activity, photosMode);
-        } else if (photosMode.getParams() instanceof ICameraParam) {
-            startCameraActivity(activity, photosMode);
-        } else if (photosMode.getParams() instanceof IGalleryParam) {
-            startGalleryActivity(activity, photosMode);
+        try {
+            NeonImagesHandler.getSingletonInstance().setImageResultListener(listener);
+            NeonImagesHandler.getSingletonInstance().setLibraryMode(libraryMode);
+            NeonImagesHandler.getSingletonInstance().setRequestCode(requestCode);
+            validate(activity, photosMode, listener);
+            List<FileInfo> alreadyAddedImages = photosMode.getParams().getAlreadyAddedImages();
+            if (alreadyAddedImages != null) {
+                NeonImagesHandler.getSingletonInstance().setImagesCollection(alreadyAddedImages);
+            }
+            if (photosMode.getParams() instanceof INeutralParam) {
+                startNeutralActivity(activity, photosMode);
+            } else if (photosMode.getParams() instanceof ICameraParam) {
+                startCameraActivity(activity, photosMode);
+            } else if (photosMode.getParams() instanceof IGalleryParam) {
+                startGalleryActivity(activity, photosMode);
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
     }
 

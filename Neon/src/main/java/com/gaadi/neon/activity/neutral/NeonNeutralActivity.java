@@ -179,6 +179,8 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
                 }), NeonImagesHandler.getSingletonInstance().getImageResultListener());
             } catch (NeonException e) {
                 e.printStackTrace();
+            }catch (Exception e){
+                e.printStackTrace();
             }
         } else if (id == R.id.addPhotoGallary) {
             try {
@@ -239,6 +241,8 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
                     }
                 }), NeonImagesHandler.getSingletonInstance().getImageResultListener());
             } catch (NeonException e) {
+                e.printStackTrace();
+            }catch (Exception e){
                 e.printStackTrace();
             }
         } else if (id == android.R.id.home) {
