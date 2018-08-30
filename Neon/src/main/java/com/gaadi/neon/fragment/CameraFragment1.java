@@ -202,19 +202,33 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
 
         binder.getRoot().setOnTouchListener(this);
 
-        if (getArguments() != null)
-            locationRestrictive = getArguments().getBoolean("locationRestrictive", true);
+//        if (getArguments() != null)
+//            locationRestrictive = getArguments().getBoolean("locationRestrictive", true);
+        locationRestrictive = NeonImagesHandler.getSingletonInstance().getCameraParam() == null || NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters() == null || NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters().getLocationRestrictive();
+        Log.e("Rajeev", "initialize: " + locationRestrictive);
 
     }
 
     public void onClickFragmentsView(View v) {
         if (v.getId() == R.id.buttonCaptureVertical || v.getId() == R.id.buttonCaptureHorizontal) {
-            if (!locationRestrictive || FindLocations.getInstance().checkPermissions(mActivity) &&
-                    FindLocations.getInstance().getLocation() != null) {
-                clickPicture();
+            if (locationRestrictive) {
+                if (FindLocations.getInstance().checkPermissions(mActivity) &&
+                        FindLocations.getInstance().getLocation() != null) {
+                    clickPicture();
+
+                } else {
+                    Toast.makeText(getActivity(), "Failed to get location.Please try again later.", Toast.LENGTH_SHORT).show();
+                }
+
             } else {
-                Toast.makeText(getActivity(), "Failed to get location.Please try again later.", Toast.LENGTH_SHORT).show();
+                clickPicture();
             }
+//            if (!locationRestrictive || FindLocations.getInstance().checkPermissions(mActivity) &&
+//                    FindLocations.getInstance().getLocation() != null) {
+//                clickPicture();
+//            } else {
+//                Toast.makeText(getActivity(), "Failed to get location.Please try again later.", Toast.LENGTH_SHORT).show();
+//            }
 
         } else if (v.getId() == R.id.switchCamera) {
             int cameraFacing = initCameraId();
