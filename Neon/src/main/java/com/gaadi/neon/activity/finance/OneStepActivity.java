@@ -124,7 +124,8 @@ public class OneStepActivity extends AppCompatActivity implements CameraFragment
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             lollipopOrAbove = false;
         } else {
-            lollipopOrAbove = true;
+            //true for camera2
+            lollipopOrAbove = false;
         }
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
