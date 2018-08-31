@@ -22,6 +22,23 @@ public class FileInfo implements Serializable {
     private ImageTagModel fileTag;
     private String latitude;
     private String longitude;
+    private String timestamp;
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
 
     public FileInfo(String _filePath) {
         filePath = _filePath;

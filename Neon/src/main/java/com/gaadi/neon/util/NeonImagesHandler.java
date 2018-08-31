@@ -3,6 +3,7 @@ package com.gaadi.neon.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.media.ExifInterface;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
@@ -19,6 +20,8 @@ import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.model.NeonResponse;
 import com.scanlibrary.R;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -279,18 +282,46 @@ public class NeonImagesHandler {
     }
 
     public void sendImageCollectionAndFinish(Activity activity, ResponseCode responseCode) {
-        NeonResponse neonResponse = new NeonResponse();
-        neonResponse.setRequestCode(getRequestCode());
-        neonResponse.setResponseCode(responseCode);
-        neonResponse.setImageCollection(NeonImagesHandler.getSingletonInstance().getImagesCollection());
-        neonResponse.setImageTagsCollection(NeonImagesHandler.getSingletonInstance().getFileHashMap());
-        if(NeonImagesHandler.getSingletonInstance()!=null){
-            if(NeonImagesHandler.getSingletonInstance().getImageResultListener()!=null){
-                NeonImagesHandler.getSingletonInstance().getImageResultListener().imageCollection(neonResponse);
-                NeonImagesHandler.getSingletonInstance().scheduleSingletonClearance();
+        try{
+            NeonResponse neonResponse = new NeonResponse();
+            neonResponse.setRequestCode(getRequestCode());
+            neonResponse.setResponseCode(responseCode);
+            List<FileInfo> fileInfos=new ArrayList<>();
+
+            if(NeonImagesHandler.getSingletonInstance().getImagesCollection()!=null){
+                for (FileInfo fileInfo:NeonImagesHandler.getSingletonInstance().getImagesCollection()){
+                    String latitude = "0";
+                    String longitude = "0";
+                    String timestamp = "0";
+                    try {
+                        File file = new File(fileInfo.getFilePath());
+                        ExifInterfaceHandling exifInterfaceHandling = new ExifInterfaceHandling(file);
+                        latitude = exifInterfaceHandling.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);
+                        longitude = exifInterfaceHandling.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);
+                        timestamp = exifInterfaceHandling.getAttribute(ExifInterface.TAG_DATETIME);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    fileInfo.setLatitude(latitude);
+                    fileInfo.setLongitude(longitude);
+                    fileInfo.setTimestamp(timestamp);
+                    fileInfos.add(fileInfo);
+
+                }
             }
+            neonResponse.setImageCollection(fileInfos);
+            neonResponse.setImageTagsCollection(NeonImagesHandler.getSingletonInstance().getFileHashMap());
+            if(NeonImagesHandler.getSingletonInstance()!=null){
+                if(NeonImagesHandler.getSingletonInstance().getImageResultListener()!=null){
+                    NeonImagesHandler.getSingletonInstance().getImageResultListener().imageCollection(neonResponse);
+                    NeonImagesHandler.getSingletonInstance().scheduleSingletonClearance();
+                }
+            }
+            activity.finish();
+        }catch (Exception e){
+           e.printStackTrace();
         }
-        activity.finish();
+
     }
 
     public void showBackOperationAlertIfNeeded(final Activity activity) {
