@@ -26,7 +26,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tvPrev"
@@ -42,12 +43,15 @@
                 android:text="@string/prev"
                 android:textColor="@color/white"
                 android:visibility="gone"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 android:onClick="@{handlers::onClick}"/>
 
             <TextView
                 android:id="@+id/tvSkip"
-                android:layout_width="wrap_content"
+                android:layout_width="90dp"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
@@ -56,6 +60,8 @@
                 android:background="@color/black"
                 android:padding="@dimen/neon_default_margin"
                 android:text="@string/next"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 android:textColor="@color/white"
                 android:onClick="@{handlers::onClick}"/>
         </RelativeLayout>
@@ -91,13 +97,15 @@
                     android:id="@+id/buttonDone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:onClick="@{handlers::onClick}"
                     android:text="Done"
+                    android:background="@color/black"
+                    android:padding="10dp"
+                    android:textColor="@color/white"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:textColor="@color/white"
-                    android:layout_centerVertical="true"
-                    android:visibility="visible"
-                    android:onClick="@{handlers::onClick}"/>
+                    android:visibility="visible" />
 
 
                 <ImageView

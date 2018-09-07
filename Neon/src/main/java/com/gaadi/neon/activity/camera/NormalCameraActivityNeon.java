@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.location.Location;
 import android.media.ThumbnailUtils;
 import android.os.Bundle;
@@ -353,7 +354,11 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
 
     public void setTag(ImageTagModel imageTagModel, boolean rightToLeft) {
         tvTag.setText(imageTagModel.isMandatory() ? "*" + imageTagModel.getTagName() : imageTagModel.getTagName());
-
+        if (imageTagModel.isMandatory()) {
+            tvTag.setTextColor(Color.RED);
+        } else {
+            tvTag.setTextColor(Color.WHITE);
+        }
         if (rightToLeft) {
             AnimationUtils.translateOnXAxis(tvTag, 200, 0);
         } else {
