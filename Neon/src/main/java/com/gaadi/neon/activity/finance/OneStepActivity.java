@@ -80,7 +80,6 @@ import java.util.List;
 public class OneStepActivity extends AppCompatActivity implements CameraFragment1.SetOnPictureTaken, Camera2Fragment.SetOnPictureTaken, OnImageCollectionListener {
     //private CameraFragment1 camFragment;
     private ImageView ivGallery, ivClickPicture, ivFlash, ivPdf;
-
     private RecyclerView rvFlash;
     private List<String> listOfFlashModes = new ArrayList<>();
     private HashSet<String> mSelectedImages = new HashSet<>();
