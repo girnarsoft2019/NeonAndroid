@@ -10,13 +10,13 @@ public class CustomParameters {
     private boolean hideCameraButtonInNeutral = false;
     private boolean hideGalleryButtonInNeutral = false;
     private boolean locationRestrictive = true;
-    private int compressImage;
+    private int setCompressBy;
 
     private CustomParameters(CustomParametersBuilder builder) {
         this.hideCameraButtonInNeutral = builder.hideCameraButtonInNeutral;
         this.hideGalleryButtonInNeutral = builder.hideGalleryButtonInNeutral;
         this.locationRestrictive = builder.locationRestrictive;
-        this.compressImage = builder.compressImage;
+        this.setCompressBy = builder.setCompressBy;
     }
 
     public boolean gethideCameraButtonInNeutral() {
@@ -31,8 +31,8 @@ public class CustomParameters {
         return locationRestrictive;
     }
 
-    public int getCompressImage() {
-        return compressImage;
+    public int getCompressBy() {
+        return setCompressBy;
     }
 
 
@@ -41,7 +41,7 @@ public class CustomParameters {
         private boolean hideCameraButtonInNeutral;
         private boolean hideGalleryButtonInNeutral;
         private boolean locationRestrictive = true;
-        private int compressImage;
+        private int setCompressBy;
 
 
         public CustomParametersBuilder sethideCameraButtonInNeutral(boolean hide) {
@@ -59,8 +59,8 @@ public class CustomParameters {
             return this;
         }
 
-        public CustomParametersBuilder setCompressImage(int compressImage) {
-            this.compressImage = compressImage;
+        public CustomParametersBuilder setCompressBy(int setCompressBy) {
+            this.setCompressBy = setCompressBy;
             return this;
         }
 

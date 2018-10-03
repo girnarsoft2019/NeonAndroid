@@ -98,7 +98,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     private CameraFacing localCameraFacing;
     private SensorManager sensorManager;
     private boolean locationRestrictive = true;
-    private int isCompress;
+    private int setCompressBy;
     private float[] mGravity;
     private long lastUpdate = 0;
     private float last_x, last_y, last_z;
@@ -207,11 +207,11 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
 
         if (NeonImagesHandler.getSingletonInstance() != null && NeonImagesHandler.getSingletonInstance().getCameraParam() != null &&
                 NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters() != null &&
-                NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters().getCompressImage() != 0) {
-            isCompress = NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters().getCompressImage();
+                NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters().getCompressBy() != 0) {
+            setCompressBy = NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters().getCompressBy();
         }
         Log.e("Rajeev", "initialize: " + locationRestrictive);
-        Log.e("Dipanshu", "initialize: " + isCompress);
+        Log.e("Dipanshu", "initialize: " + setCompressBy);
 
     }
 
@@ -879,11 +879,11 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
 
 
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                if (isCompress == 0) {
+                if (setCompressBy == 0) {
                     bm.compress(Bitmap.CompressFormat.JPEG, 100, stream);
                 } else {
-                    Log.d(TAG, "savePictureToStorage: " + isCompress);
-                    bm.compress(Bitmap.CompressFormat.JPEG, isCompress, stream);
+                    Log.d(TAG, "savePictureToStorage: " + setCompressBy);
+                    bm.compress(Bitmap.CompressFormat.JPEG, setCompressBy, stream);
                 }
                 byte[] byteArray = stream.toByteArray();
                 fos.write(byteArray);
