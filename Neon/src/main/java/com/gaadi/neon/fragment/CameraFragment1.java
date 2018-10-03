@@ -98,6 +98,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     private CameraFacing localCameraFacing;
     private SensorManager sensorManager;
     private boolean locationRestrictive = true;
+    private int isCompress;
     private float[] mGravity;
     private long lastUpdate = 0;
     private float last_x, last_y, last_z;
@@ -200,8 +201,17 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
 //        if (getArguments() != null)
 //            locationRestrictive = getArguments().getBoolean("locationRestrictive", true);
 
-        locationRestrictive = NeonImagesHandler.getSingletonInstance().getCameraParam() == null || NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters() == null || NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters().getLocationRestrictive();
+        locationRestrictive = NeonImagesHandler.getSingletonInstance().getCameraParam() == null ||
+                NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters() == null ||
+                NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters().getLocationRestrictive();
+
+        if (NeonImagesHandler.getSingletonInstance() != null && NeonImagesHandler.getSingletonInstance().getCameraParam() != null &&
+                NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters() != null &&
+                NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters().getCompressImage() != 0) {
+            isCompress = NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters().getCompressImage();
+        }
         Log.e("Rajeev", "initialize: " + locationRestrictive);
+        Log.e("Dipanshu", "initialize: " + isCompress);
 
     }
 
@@ -869,7 +879,12 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
 
 
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bm.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                if (isCompress == 0) {
+                    bm.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                } else {
+                    Log.d(TAG, "savePictureToStorage: " + isCompress);
+                    bm.compress(Bitmap.CompressFormat.JPEG, isCompress, stream);
+                }
                 byte[] byteArray = stream.toByteArray();
                 fos.write(byteArray);
                 //fos.write(data);

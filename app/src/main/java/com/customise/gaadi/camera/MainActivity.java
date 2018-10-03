@@ -199,7 +199,9 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
                 @Override
                 public CustomParameters getCustomParameters() {
-                    return null;
+                    CustomParameters.CustomParametersBuilder builder = new CustomParameters.CustomParametersBuilder();
+                    builder.setCompressImage(40);
+                    return builder.build();
                 }
 
 
