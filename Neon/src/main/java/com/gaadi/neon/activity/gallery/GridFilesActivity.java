@@ -9,13 +9,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.gaadi.neon.activity.camera.NormalCameraActivityNeon;
-import com.gaadi.neon.enumerations.CameraFacing;
-import com.gaadi.neon.enumerations.CameraOrientation;
-import com.gaadi.neon.enumerations.CameraType;
 import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.activity.ImageShow;
 import com.gaadi.neon.adapter.GridFilesAdapter;
+import com.gaadi.neon.enumerations.CameraFacing;
+import com.gaadi.neon.enumerations.CameraOrientation;
+import com.gaadi.neon.enumerations.CameraType;
 import com.gaadi.neon.enumerations.ResponseCode;
 import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.interfaces.OnPermissionResultListener;
@@ -26,8 +25,8 @@ import com.gaadi.neon.util.CustomParameters;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.ManifestPermission;
 import com.gaadi.neon.util.NeonException;
-import com.gaadi.neon.util.PermissionType;
 import com.gaadi.neon.util.NeonImagesHandler;
+import com.gaadi.neon.util.PermissionType;
 import com.scanlibrary.R;
 import com.scanlibrary.databinding.ActivityGridFilesBinding;
 
@@ -72,7 +71,9 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
         getMenuInflater().inflate(R.menu.menu_done_file, menu);
         MenuItem textViewDone = menu.findItem(R.id.menu_next);
         MenuItem menuItemCamera = menu.findItem(R.id.menuCamera);
-        menuItemCamera.setVisible(NeonImagesHandler.getSingleonInstance().getGalleryParam().galleryToCameraSwitchEnabled());
+        if (NeonImagesHandler.getSingletonInstance().getGalleryParam() != null) {
+            menuItemCamera.setVisible(NeonImagesHandler.getSingletonInstance().getGalleryParam().galleryToCameraSwitchEnabled());
+        }
         textViewDone.setVisible(true);
         return super.onCreateOptionsMenu(menu);
     }
