@@ -119,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 public CustomParameters getCustomParameters() {
                     CustomParameters.CustomParametersBuilder builder = new CustomParameters.CustomParametersBuilder();
                     builder.setLocationRestrictive(true);
+                    builder.setCompressBy(75);
                     return builder.build();
                 }
 

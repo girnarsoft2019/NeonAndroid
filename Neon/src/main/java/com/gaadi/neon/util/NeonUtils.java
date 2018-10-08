@@ -31,6 +31,7 @@ import android.view.animation.Transformation;
 import com.scanlibrary.R;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -501,5 +502,71 @@ public class NeonUtils {
         if (result.isEmpty())
             return null;
         return result;
+    }
+
+    public static Bitmap scaleBitmap(String path, int DESIREDWIDTH, int DESIREDHEIGHT){
+        Bitmap scaledBitmap=null;
+
+        try {
+            Bitmap unscaledBitmap = ScalingUtilies.decodeFile(path, DESIREDWIDTH, DESIREDHEIGHT, ScalingUtilies.ScalingLogic.FIT);
+
+            if (!(unscaledBitmap.getWidth() <= DESIREDWIDTH && unscaledBitmap.getHeight() <= DESIREDHEIGHT)) {
+                scaledBitmap = ScalingUtilies.createScaledBitmap(unscaledBitmap, DESIREDWIDTH, DESIREDHEIGHT, ScalingUtilies.ScalingLogic.FIT);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return scaledBitmap;
+    }
+
+    public static String compressImage(int compressionValue,String path, int DESIREDWIDTH, int DESIREDHEIGHT) {
+        String strMyImagePath = null;
+        Bitmap scaledBitmap;
+
+        try {
+// Part 1: Decode image
+            Bitmap unscaledBitmap = ScalingUtilies.decodeFile(path, DESIREDWIDTH, DESIREDHEIGHT, ScalingUtilies.ScalingLogic.FIT);
+
+            if (!(unscaledBitmap.getWidth() <= DESIREDWIDTH && unscaledBitmap.getHeight() <= DESIREDHEIGHT)) {
+// Part 2: Scale image
+                scaledBitmap = ScalingUtilies.createScaledBitmap(unscaledBitmap, DESIREDWIDTH, DESIREDHEIGHT, ScalingUtilies.ScalingLogic.FIT);
+            } else {
+                unscaledBitmap.recycle();
+                return path;
+            }
+
+// Store to tmp file
+
+           /* String extr = Environment.getExternalStorageDirectory().toString();
+            File mFolder = new File(extr + "/TMMFOLDER");
+            if (!mFolder.exists()) {
+                mFolder.mkdir();
+            }
+
+            String s = "tmp.jpg";*/
+
+            File f = new File(path);
+
+            strMyImagePath = f.getAbsolutePath();
+            FileOutputStream fos;
+            try {
+                fos = new FileOutputStream(f);
+                scaledBitmap.compress(Bitmap.CompressFormat.JPEG, compressionValue, fos);
+                fos.flush();
+                fos.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            scaledBitmap.recycle();
+        } catch (Throwable ignored) {
+        }
+
+        if (strMyImagePath == null) {
+            return path;
+        }
+        return strMyImagePath;
+
     }
 }

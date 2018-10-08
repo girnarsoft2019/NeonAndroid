@@ -454,29 +454,29 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     public boolean onTouch(View v, MotionEvent event) {
         if (mCamera != null) {
             try {
-            Camera.Parameters params = mCamera.getParameters();
-            int action = event.getAction();
+                Camera.Parameters params = mCamera.getParameters();
+                int action = event.getAction();
 
 
-            if (event.getPointerCount() > 1) {
-                // handle multi-touch events
-                if (action == MotionEvent.ACTION_POINTER_DOWN) {
-                    mDist = getFingerSpacing(event);
-                } else if (action == MotionEvent.ACTION_MOVE && params.isZoomSupported()) {
-                    mCamera.cancelAutoFocus();
-                    handleZoom(event, params);
+                if (event.getPointerCount() > 1) {
+                    // handle multi-touch events
+                    if (action == MotionEvent.ACTION_POINTER_DOWN) {
+                        mDist = getFingerSpacing(event);
+                    } else if (action == MotionEvent.ACTION_MOVE && params.isZoomSupported()) {
+                        mCamera.cancelAutoFocus();
+                        handleZoom(event, params);
+                    }
+                } else {
+                    // handle single touch events
+                    if (action == MotionEvent.ACTION_UP) {
+                        handleFocus(event, params);
+                    }
                 }
-            } else {
-                // handle single touch events
-                if (action == MotionEvent.ACTION_UP) {
-                    handleFocus(event, params);
+                if (event.getPointerCount() > 1) {
+                    return true;
                 }
-            }
-            if (event.getPointerCount() > 1) {
-                return true;
-            }
 
-            final Rect focusRect = calculateTapArea(event.getX(), event.getY(), 1f);
+                final Rect focusRect = calculateTapArea(event.getX(), event.getY(), 1f);
 
 
                 mCamera.autoFocus(null);
@@ -842,8 +842,10 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
 
                 // COnverting ByteArray to Bitmap - >Rotate and Convert back to Data
                 if (data != null) {
+
                     int screenWidth = getResources().getDisplayMetrics().widthPixels;
                     int screenHeight = getResources().getDisplayMetrics().heightPixels;
+
                     bm = BitmapFactory.decodeByteArray(data, 0, (data != null) ? data.length : 0);
                     if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                         // Notice that width and height are reversed
@@ -886,16 +888,17 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
 
 
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                if (setCompressBy == 0) {
-                    bm.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                } else {
-                    Log.d(TAG, "savePictureToStorage: " + setCompressBy);
-                    bm.compress(Bitmap.CompressFormat.JPEG, setCompressBy, stream);
-                }
+                bm.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+
                 byte[] byteArray = stream.toByteArray();
                 fos.write(byteArray);
                 //fos.write(data);
                 fos.close();
+
+                if (setCompressBy != 0) {
+                    NeonUtils.compressImage(setCompressBy, pictureFile.getAbsolutePath(), 1024, 900);
+                }
+
                 Uri pictureFileUri = Uri.parse("file://" + pictureFile.getAbsolutePath());
                 mActivity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                         pictureFileUri));
