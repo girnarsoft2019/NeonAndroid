@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
@@ -27,7 +28,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
-import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 
 /**
@@ -36,56 +36,55 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
  * @since 12/4/17
  */
 public class FindLocations implements
-        GoogleApiClient.ConnectionCallbacks,
+        ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener{
+        LocationListener {
 
+    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9 * 1000;
+    //new code for permission::start
+    private static final int REQUEST_CHECK_SETTINGS = 2000;
+    //private static GoogleApiClient mGoogleApiClient;
+    private static final int ACCESS_FINE_LOCATION_INTENT_ID = 3;
+    private static final String BROADCAST_ACTION = "android.location.PROVIDERS_CHANGED";
+    private static FindLocations self;
+    private AddressResultReceiver mResultReceiver;
+    private String mAddressOutput;
     private GoogleApiClient mGoogleApiClient;
     private Activity activity;
+    private long UPDATE_INTERVAL = 6 * 1000;  /* 6 secs */
+    private long FASTEST_INTERVAL = 5 * 1000; /* 5 secs */
+    private Location location;
+    private ILocation callBack;
 
-    private long UPDATE_INTERVAL = 6*1000;  /* 6 secs */
-    private long FASTEST_INTERVAL = 5*1000; /* 5 secs */
-    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9*1000;
+    public static FindLocations getInstance() {
+        if (self == null)
+            self = new FindLocations();
+        return self;
+    }
+    //private TextView gps_status;
+    //eoc
 
     public Location getLocation() {
         return location;
     }
 
-    private Location location;
-    private ILocation callBack;
-    private static FindLocations self;
-    protected String mAddressOutput;
-    public AddressResultReceiver mResultReceiver;
-
-    //new code for permission::start
-    private static final int REQUEST_CHECK_SETTINGS = 0x1;
-    //private static GoogleApiClient mGoogleApiClient;
-    private static final int ACCESS_FINE_LOCATION_INTENT_ID = 3;
-    private static final String BROADCAST_ACTION = "android.location.PROVIDERS_CHANGED";
-    //private TextView gps_status;
-    //eoc
-
-    public static  FindLocations getInstance(){
-        if(self==null)
-            self=new FindLocations();
-        return self;
-    }
-
-    public void init(Activity activity){
-        this.activity =activity;
-        callBack=(ILocation) activity;
+    public void init(Activity activity) {
+        this.activity = activity;
+        callBack = (ILocation) activity;
         mGoogleApiClient = new GoogleApiClient.Builder(activity)
-                .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this).build();
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API).build();
         mResultReceiver = new AddressResultReceiver(new Handler());
         connectClient();
     }
 
-    protected void connectClient() {
+    private void connectClient() {
         // Connect the client.
         if (isGooglePlayServicesAvailable() && mGoogleApiClient != null) {
             mGoogleApiClient.connect();
+        } else {
+            Toast.makeText(activity, "Please update the google play services.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -95,21 +94,21 @@ public class FindLocations implements
         // Display the connection status
 
         boolean permissionGranted = ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-        if(permissionGranted) {
+        if (permissionGranted) {
             location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             if (location != null) {
-              //  Toast.makeText(activity, "GPS location was found!", Toast.LENGTH_SHORT).show();
+                //  Toast.makeText(activity, "GPS location was found!", Toast.LENGTH_SHORT).show();
                 //LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                 callBack.getLocation(location);
                 // CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 17);
                 // map.animateCamera(cameraUpdate);
                 //For Loaction Address
                 if (!Geocoder.isPresent()) {
-                   // Toast.makeText(activity, R.string.no_geocoder_available, Toast.LENGTH_LONG).show();
+                    // Toast.makeText(activity, R.string.no_geocoder_available, Toast.LENGTH_LONG).show();
                     return;
                 }
             } else {
-               // Toast.makeText(activity, "Current location was null, enable GPS on emulator!", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(activity, "Current location was null, enable GPS on emulator!", Toast.LENGTH_SHORT).show();
             }
 
 
@@ -121,7 +120,7 @@ public class FindLocations implements
     }
 
     protected void startLocationUpdates() {
-        if(!mGoogleApiClient.isConnected()){
+        if (!mGoogleApiClient.isConnected()) {
             return;
         }
         LocationRequest locationRequest = new LocationRequest();
@@ -131,7 +130,7 @@ public class FindLocations implements
 
         boolean permissionGranted = ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
 
-        if(permissionGranted) {
+        if (permissionGranted) {
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,
                     locationRequest, this);
         } else {
@@ -145,7 +144,7 @@ public class FindLocations implements
         String msg = "Updated Location: " +
                 Double.toString(location.getLatitude()) + "," +
                 Double.toString(location.getLongitude());
-       // Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show();
+        // Toast.makeText(activity, msg, Toast.LENGTH_SHORT).show();
         this.location = location;
         callBack.getLocation(location);
         startIntentService();
@@ -158,38 +157,38 @@ public class FindLocations implements
     @Override
     public void onConnectionSuspended(int i) {
         if (i == CAUSE_SERVICE_DISCONNECTED) {
-           // Toast.makeText(activity, "Disconnected. Please re-connect.", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(activity, "Disconnected. Please re-connect.", Toast.LENGTH_SHORT).show();
         } else if (i == CAUSE_NETWORK_LOST) {
             //Toast.makeText(activity, "Network lost. Please re-connect.", Toast.LENGTH_SHORT).show();
         }
     }
 
-	/*
-	 * Called by Location Services if the attempt to Location Services fails.
-	 */
+    /*
+     * Called by Location Services if the attempt to Location Services fails.
+     */
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-		/*
-		 * Google Play services can resolve some errors it detects. If the error
-		 * has a resolution, try sending an Intent to start a Google Play
-		 * services activity that can resolve error.
-		 */
+        /*
+         * Google Play services can resolve some errors it detects. If the error
+         * has a resolution, try sending an Intent to start a Google Play
+         * services activity that can resolve error.
+         */
         if (connectionResult.hasResolution()) {
             try {
                 // Start an Activity that tries to resolve the error
                 connectionResult.startResolutionForResult(activity,
                         CONNECTION_FAILURE_RESOLUTION_REQUEST);
-				/*
-				 * Thrown if Google Play services canceled the original
-				 * PendingIntent
-				 */
+                /*
+                 * Thrown if Google Play services canceled the original
+                 * PendingIntent
+                 */
             } catch (IntentSender.SendIntentException e) {
                 // Log the error
                 e.printStackTrace();
             }
         } else {
-          //  Toast.makeText(activity,"Sorry. Location services not available to you", Toast.LENGTH_LONG).show();
+            //  Toast.makeText(activity,"Sorry. Location services not available to you", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -197,8 +196,8 @@ public class FindLocations implements
     private boolean isGooglePlayServicesAvailable() {
         GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
         int result = googleAPI.isGooglePlayServicesAvailable(activity);
-        if(result != ConnectionResult.SUCCESS) {
-            if(googleAPI.isUserResolvableError(result)) {
+        if (result != ConnectionResult.SUCCESS) {
+            if (googleAPI.isUserResolvableError(result)) {
                 googleAPI.getErrorDialog(activity, result,
                         CONNECTION_FAILURE_RESOLUTION_REQUEST).show();
             }
@@ -224,60 +223,26 @@ public class FindLocations implements
         activity.startService(intent);*/
     }
 
-    public interface ILocation{
-        void getLocation(Location location);
-        void getAddress(String locationAddress);
-        void getPermissionStatus(Boolean locationPermission);
-    }
-
-
-    class AddressResultReceiver extends ResultReceiver {
-        public AddressResultReceiver(Handler handler) {
-            super(handler);
-        }
-
-        /**
-         *  Receives data sent from FetchAddressIntentService and updates the UI in MainActivity.
-         */
-        @Override
-        protected void onReceiveResult(int resultCode, Bundle resultData) {
-
-            // Display the address string or an error message sent from the intent service.
-            //mAddressOutput = resultData.getString(Constants.RESULT_DATA_KEY);
-            displayAddressOutput();
-
-
-            // Reset. Enable the Fetch Address button and stop showing the progress bar.
-        }
-
-        private void displayAddressOutput() {
-            callBack.getAddress(mAddressOutput);
-            //Toast.makeText(activity, ""+mAddressOutput, Toast.LENGTH_SHORT).show();
-        }
-
-
-    }
-
     /* Check Location Permission for Marshmallow Devices */
     public boolean checkPermissions(Activity activity) {
         callBack = (ILocation) activity;
-        return checkPermissions(activity,callBack);
+        return checkPermissions(activity, callBack);
     }
-    public boolean checkPermissions(Activity activity,ILocation callBack) {
+
+    public boolean checkPermissions(Activity activity, ILocation callBack) {
         if (Build.VERSION.SDK_INT >= 23) {
             if (ContextCompat.checkSelfPermission(activity,
                     Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED){
+                    != PackageManager.PERMISSION_GRANTED) {
                 requestLocationPermission(activity);
                 return false;
-            }
-            else{
-                showSettingDialog(activity,callBack);
+            } else {
+                showSettingDialog(activity, callBack);
                 return true;
             }
 
-        } else{
-            showSettingDialog(activity,callBack);
+        } else {
+            showSettingDialog(activity, callBack);
             return true;
         }
     }
@@ -298,14 +263,14 @@ public class FindLocations implements
 
     /* Show Location Access Dialog */
     private void showSettingDialog(final Activity activity, final ILocation callBack) {
-        LocationRequest locationRequest = LocationRequest.create();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);//Setting priotity of Location request to high
+        LocationRequest locationRequest = new LocationRequest();
         locationRequest.setInterval(30 * 1000);
         locationRequest.setFastestInterval(5 * 1000);//5 sec Time interval for location update
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);//Setting priotity of Location request to high
         LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
                 .addLocationRequest(locationRequest);
         builder.setAlwaysShow(true); //this is the key ingredient to show dialog always when GPS is off
-        if (mGoogleApiClient == null){
+        if (mGoogleApiClient == null) {
             return;
         }
         PendingResult<LocationSettingsResult> result =
@@ -314,17 +279,15 @@ public class FindLocations implements
             @Override
             public void onResult(@NonNull LocationSettingsResult result) {
                 final Status status = result.getStatus();
-                final LocationSettingsStates state = result.getLocationSettingsStates();
                 switch (status.getStatusCode()) {
                     case LocationSettingsStatusCodes.SUCCESS:
                         // All location settings are satisfied. The client can initialize location
                         // requests here.
-                        if(location!=null){
+                        if (location != null) {
                             callBack.getPermissionStatus(true);
-                        }
-                        else {
+                        } else {
                             callBack.getPermissionStatus(false);
-                            Toast.makeText(activity,"Finding Location.Please try again",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity, "Finding Location.Please try again", Toast.LENGTH_SHORT).show();
                         }
 
                         //updateGPSStatus("GPS is Enabled in your device");
@@ -345,11 +308,46 @@ public class FindLocations implements
                         // Location settings are not satisfied. However, we have no way to fix the
                         // settings so we won't show the dialog.
                         break;
-                    default:{
+                    default: {
                         callBack.getPermissionStatus(false);
                     }
                 }
             }
         });
+    }
+
+    public interface ILocation {
+        void getLocation(Location location);
+
+        void getAddress(String locationAddress);
+
+        void getPermissionStatus(Boolean locationPermission);
+    }
+
+    class AddressResultReceiver extends ResultReceiver {
+        public AddressResultReceiver(Handler handler) {
+            super(handler);
+        }
+
+        /**
+         * Receives data sent from FetchAddressIntentService and updates the UI in MainActivity.
+         */
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+
+            // Display the address string or an error message sent from the intent service.
+            //mAddressOutput = resultData.getString(Constants.RESULT_DATA_KEY);
+            displayAddressOutput();
+
+
+            // Reset. Enable the Fetch Address button and stop showing the progress bar.
+        }
+
+        private void displayAddressOutput() {
+            callBack.getAddress(mAddressOutput);
+            //Toast.makeText(activity, ""+mAddressOutput, Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 }
