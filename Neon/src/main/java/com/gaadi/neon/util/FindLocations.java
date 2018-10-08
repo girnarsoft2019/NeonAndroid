@@ -283,6 +283,7 @@ public class FindLocations implements
                     case LocationSettingsStatusCodes.SUCCESS:
                         // All location settings are satisfied. The client can initialize location
                         // requests here.
+                        startLocationUpdates();
                         if (location != null) {
                             callBack.getPermissionStatus(true);
                         } else {
