@@ -6,7 +6,6 @@ import android.content.res.Configuration;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.Camera;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
@@ -14,11 +13,8 @@ import android.view.Gravity;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-
-import com.scanlibrary.R;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -187,7 +183,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
             mCamera.autoFocus(null);
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e("Exception ", "" + e.getMessage());
         }
     }
@@ -351,34 +347,38 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     }
 
     public void setParametersToCamera() {
-        if (mCamera == null) {
-            return;
-        }
+      try {
+          if (mCamera == null) {
+              return;
+          }
 
-        Camera.Parameters parameters = mCamera.getParameters();
-        WindowManager wm = (WindowManager) mActivity.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
-        int height = size.y;
-        mSupportedPreviewSizes = mCamera.getParameters().getSupportedPreviewSizes();
-        mSupportedPictureSizes = mCamera.getParameters().getSupportedPictureSizes();
-        if (mSupportedPreviewSizes != null) {
-            mPreviewSize = getOptimalPreviewSizeByAspect(mSupportedPreviewSizes, width, height);
-            mPictureSize = getOptimalPreviewSizeByAspect(mSupportedPictureSizes, width, height);
-            parameters.setPreviewSize(mPreviewSize.width, mPreviewSize.height);
-            parameters.setPictureSize(mPictureSize.width, mPictureSize.height);
-        }
+          Camera.Parameters parameters = mCamera.getParameters();
+          WindowManager wm = (WindowManager) mActivity.getSystemService(Context.WINDOW_SERVICE);
+          Display display = wm.getDefaultDisplay();
+          Point size = new Point();
+          display.getSize(size);
+          int width = size.x;
+          int height = size.y;
+          mSupportedPreviewSizes = mCamera.getParameters().getSupportedPreviewSizes();
+          mSupportedPictureSizes = mCamera.getParameters().getSupportedPictureSizes();
+          if (mSupportedPreviewSizes != null) {
+              mPreviewSize = getOptimalPreviewSizeByAspect(mSupportedPreviewSizes, width, height);
+              mPictureSize = getOptimalPreviewSizeByAspect(mSupportedPictureSizes, width, height);
+              parameters.setPreviewSize(mPreviewSize.width, mPreviewSize.height);
+              parameters.setPictureSize(mPictureSize.width, mPictureSize.height);
+          }
 
-        if (parameters.getMaxNumFocusAreas() > 0) {
-            parameters.setFocusAreas(null);
-        }
-        List<String> supportedFocusModes = parameters.getSupportedFocusModes();
-        if (supportedFocusModes != null && supportedFocusModes.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
-            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
-        }
-        mCamera.setParameters(parameters);
+          if (parameters.getMaxNumFocusAreas() > 0) {
+              parameters.setFocusAreas(null);
+          }
+          List<String> supportedFocusModes = parameters.getSupportedFocusModes();
+          if (supportedFocusModes != null && supportedFocusModes.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
+              parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+          }
+          mCamera.setParameters(parameters);
+      } catch (Exception e) {
+          e.printStackTrace();
+      }
     }
 
     private Camera.Size getOptimalPreview(List<Camera.Size> sizes, int w, int h) {

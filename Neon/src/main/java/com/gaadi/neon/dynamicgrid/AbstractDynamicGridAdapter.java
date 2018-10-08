@@ -46,7 +46,7 @@ public abstract class AbstractDynamicGridAdapter extends BaseAdapter implements 
      *
      * @param items
      */
-    protected void addAllStableId(List<?> items) {
+    protected synchronized void addAllStableId(List<?> items) {
         for (Object item : items) {
             addStableId(item);
         }

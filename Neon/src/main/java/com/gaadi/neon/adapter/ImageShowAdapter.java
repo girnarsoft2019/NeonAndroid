@@ -125,14 +125,15 @@ public class ImageShowAdapter extends BaseDynamicGridAdapter {
             }
         });
 */
-            Glide.with(context).load(NeonImagesHandler.getSingleonInstance().getImagesCollection().get(position).getFilePath())
-                    .crossFade()
-                    .placeholder(R.drawable.default_placeholder)
-                    .centerCrop()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(holder.image);
+            if (NeonImagesHandler.getSingleonInstance().getImagesCollection().size() > 0) {
+                Glide.with(context).load(NeonImagesHandler.getSingleonInstance().getImagesCollection().get(position).getFilePath())
+                        .crossFade()
+                        .placeholder(R.drawable.default_placeholder)
+                        .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(holder.image);
+            }
         }
-
 
         return convertView;
     }

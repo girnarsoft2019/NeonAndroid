@@ -35,8 +35,8 @@ import com.gaadi.neon.interfaces.FragmentListener;
 import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.FileInfo;
-import com.gaadi.neon.util.NeonUtils;
 import com.gaadi.neon.util.NeonImagesHandler;
+import com.gaadi.neon.util.NeonUtils;
 import com.scanlibrary.R;
 import com.soundcloud.android.crop.Crop;
 
@@ -107,7 +107,12 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPageNumber = getArguments().getInt(ARG_PAGE);
-        tagModels = NeonImagesHandler.getSingleonInstance().getGenericParam().getImageTagsModel();
+        if (NeonImagesHandler.getSingletonInstance() != null &&
+                NeonImagesHandler.getSingletonInstance().getGenericParam() != null &&
+                NeonImagesHandler.getSingletonInstance().getGenericParam().getImageTagsModel().size() > 0
+                ) {
+            tagModels = NeonImagesHandler.getSingletonInstance().getGenericParam().getImageTagsModel();
+        }
 
     }
 

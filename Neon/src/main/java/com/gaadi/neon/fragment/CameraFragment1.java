@@ -146,11 +146,15 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     }
 
     public void clickPicture() {
-        if (readyToTakePicture) {
-            if (mCamera != null) {
-                mCamera.takePicture(null, null, this);
+        try {
+            if (readyToTakePicture) {
+                if (mCamera != null) {
+                    mCamera.takePicture(null, null, this);
+                }
+                readyToTakePicture = false;
             }
-            readyToTakePicture = false;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -734,7 +738,10 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     }
 
     public int setPhotoOrientation(Activity activity, int cameraId) {
-        if (NeonImagesHandler.getSingleonInstance().getCameraParam().getCameraOrientation() == CameraOrientation.portrait) {
+        if (NeonImagesHandler.getSingleonInstance() != null &&
+                NeonImagesHandler.getSingleonInstance().getCameraParam() != null &&
+                NeonImagesHandler.getSingleonInstance().getCameraParam().getCameraOrientation() != null
+                && NeonImagesHandler.getSingleonInstance().getCameraParam().getCameraOrientation() == CameraOrientation.portrait) {
             if (localCameraFacing == CameraFacing.front) {
                 return 180;
             } else {
@@ -927,9 +934,10 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
         @Override
         protected void onPostExecute(File file) {
             super.onPostExecute(file);
-            if (progressDialog != null)
-                progressDialog.dismiss();
-            if (file != null) {
+            try {
+                if (progressDialog != null)
+                    progressDialog.dismiss();
+                if (file != null) {
                 /*if(getActivity() instanceof NeonBaseNeutralActivity) {
                     mPictureTakenListener.onPictureTaken(file.getAbsolutePath());
                     readyToTakePicture = true;
@@ -937,31 +945,34 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                 }
                 mCamera.startPreview();*/
 
-                // Modify for live Photos
+                    // Modify for live Photos
 
-                if (NeonImagesHandler.getSingletonInstance().getLivePhotosListener() != null) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Intent viewPagerIntent = new Intent(context, ImageReviewActivity.class);
-                            viewPagerIntent.putExtra(Constants.IMAGE_REVIEW_POSITION, NeonImagesHandler.getSingletonInstance().getImagesCollection().size() - 1);
-                            startActivity(viewPagerIntent);
-                        }
-                    }, 200);
+                    if (NeonImagesHandler.getSingletonInstance().getLivePhotosListener() != null) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent viewPagerIntent = new Intent(context, ImageReviewActivity.class);
+                                viewPagerIntent.putExtra(Constants.IMAGE_REVIEW_POSITION, NeonImagesHandler.getSingletonInstance().getImagesCollection().size() - 1);
+                                startActivity(viewPagerIntent);
+                            }
+                        }, 200);
+                    }
+
+                    mPictureTakenListener.onPictureTaken(file.getAbsolutePath());
+
+                    // readyToTakePicture = true;
+                } else {
+                    Toast.makeText(context, getString(R.string.camera_error), Toast.LENGTH_SHORT).show();
+                    //readyToTakePicture = true;
+
                 }
 
-                mPictureTakenListener.onPictureTaken(file.getAbsolutePath());
-
-                // readyToTakePicture = true;
-            } else {
-                Toast.makeText(context, getString(R.string.camera_error), Toast.LENGTH_SHORT).show();
-                //readyToTakePicture = true;
-
-            }
-
-            readyToTakePicture = true;
-            if (mCamera != null) {
-                mCamera.startPreview();
+                readyToTakePicture = true;
+                if (mCamera != null) {
+                    mCamera.startPreview();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
