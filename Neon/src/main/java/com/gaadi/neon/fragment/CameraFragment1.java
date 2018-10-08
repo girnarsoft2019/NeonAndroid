@@ -169,12 +169,12 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
         binder = DataBindingUtil.inflate(getActivity().getLayoutInflater(), R.layout.neon_camera_fragment_layout, container, false);
         mActivity = getActivity();
         cameraParam = NeonImagesHandler.getSingleonInstance().getCameraParam();
+        if (cameraParam != null && cameraParam.getCameraFacing() != null) {
+            localCameraFacing = cameraParam.getCameraFacing();
+        }
         if (cameraParam != null) {
             initialize();
             customize();
-            if (cameraParam.getCameraFacing() != null) {
-                localCameraFacing = cameraParam.getCameraFacing();
-            }
         } else {
             Toast.makeText(getContext(), getString(R.string.pass_params), Toast.LENGTH_SHORT).show();
         }
