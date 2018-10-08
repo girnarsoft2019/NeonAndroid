@@ -187,7 +187,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
             mCamera.autoFocus(null);
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e("Exception ", "" + e.getMessage());
         }
     }
