@@ -83,21 +83,24 @@ public class ImagesFoldersAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 Intent filesIntent;
-                switch (NeonImagesHandler.getSingleonInstance().getGalleryParam().getGalleryViewType()){
-                    case Grid_Structure:
-                        filesIntent = new Intent(context, GridFilesActivity.class);
-                        break;
+                if (NeonImagesHandler.getSingletonInstance().getGalleryParam() != null
+                        && NeonImagesHandler.getSingletonInstance().getGalleryParam().getGalleryViewType() != null) {
+                    switch (NeonImagesHandler.getSingletonInstance().getGalleryParam().getGalleryViewType()) {
+                        case Grid_Structure:
+                            filesIntent = new Intent(context, GridFilesActivity.class);
+                            break;
 
-                    case Horizontal_Structure:
-                        filesIntent = new Intent(context, HorizontalFilesActivity.class);
-                        break;
+                        case Horizontal_Structure:
+                            filesIntent = new Intent(context, HorizontalFilesActivity.class);
+                            break;
 
-                    default:
-                        filesIntent = new Intent(context, GridFilesActivity.class);
+                        default:
+                            filesIntent = new Intent(context, GridFilesActivity.class);
+                    }
+                    filesIntent.putExtra(Constants.BucketName, bucketInfo.getBucketName());
+                    filesIntent.putExtra(Constants.BucketId, bucketInfo.getBucketId());
+                    context.startActivityForResult(filesIntent, Constants.destroyPreviousActivity);
                 }
-                filesIntent.putExtra(Constants.BucketName,bucketInfo.getBucketName());
-                filesIntent.putExtra(Constants.BucketId,bucketInfo.getBucketId());
-                context.startActivityForResult(filesIntent,Constants.destroyPreviousActivity);
             }
         });
         return convertView;
