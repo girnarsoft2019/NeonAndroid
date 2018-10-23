@@ -1,26 +1,20 @@
 package com.gaadi.neon.activity;
 
-import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gaadi.neon.adapter.ImagesReviewViewPagerAdapter;
-import com.gaadi.neon.enumerations.LibraryMode;
 import com.gaadi.neon.events.ImageEditEvent;
 import com.gaadi.neon.interfaces.FragmentListener;
 import com.gaadi.neon.model.NeonResponse;
 import com.gaadi.neon.util.Constants;
-import com.gaadi.neon.util.FindLocations;
 import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
 
@@ -66,8 +60,11 @@ public class ImageReviewActivity extends NeonBaseActivity implements View.OnClic
         if (position == 0) {
             viewPagerLeftBtn.setVisibility(View.GONE);
         }
-        if (position == NeonImagesHandler.getSingletonInstance().getImagesCollection().size() - 1) {
-            viewPagerRightBtn.setVisibility(View.GONE);
+        if (NeonImagesHandler.getSingletonInstance().getImagesCollection() != null &&
+                NeonImagesHandler.getSingletonInstance().getImagesCollection().size() > 0) {
+            if (position == NeonImagesHandler.getSingletonInstance().getImagesCollection().size() - 1) {
+                viewPagerRightBtn.setVisibility(View.GONE);
+            }
         }
 
         if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()!=null){

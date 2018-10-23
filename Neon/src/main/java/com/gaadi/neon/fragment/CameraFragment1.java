@@ -172,7 +172,10 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binder = DataBindingUtil.inflate(getActivity().getLayoutInflater(), R.layout.neon_camera_fragment_layout, container, false);
-        localCameraFacing = NeonImagesHandler.getSingleonInstance().getCameraParam().getCameraFacing();
+        if (NeonImagesHandler.getSingleonInstance().getCameraParam() != null &&
+                NeonImagesHandler.getSingleonInstance().getCameraParam().getCameraFacing() != null) {
+            localCameraFacing = NeonImagesHandler.getSingleonInstance().getCameraParam().getCameraFacing();
+        }
         mActivity = getActivity();
         cameraParam = NeonImagesHandler.getSingleonInstance().getCameraParam();
         if (cameraParam != null) {
