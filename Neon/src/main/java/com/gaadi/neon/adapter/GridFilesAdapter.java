@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -16,6 +17,7 @@ import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -26,9 +28,9 @@ import java.util.ArrayList;
 public class GridFilesAdapter extends BaseAdapter {
 
     private AppCompatActivity context;
-    private ArrayList<FileInfo>fileInfos;
+    private ArrayList<FileInfo> fileInfos;
 
-    public GridFilesAdapter(AppCompatActivity _context, ArrayList<FileInfo> _fileInfos){
+    public GridFilesAdapter(AppCompatActivity _context, ArrayList<FileInfo> _fileInfos) {
         context = _context;
         fileInfos = _fileInfos;
     }
@@ -60,8 +62,8 @@ public class GridFilesAdapter extends BaseAdapter {
             filesHolder.selection_view = (ImageView) convertView.findViewById(R.id.selection_view);
             filesHolder.transparentLayer = (ImageView) convertView.findViewById(R.id.vTransparentLayer);
             convertView.setTag(filesHolder);
-        }else{
-            Log.e("tag","came");
+        } else {
+            Log.e("tag", "came");
         }
         filesHolder = (FilesHolder) convertView.getTag();
 
@@ -71,10 +73,10 @@ public class GridFilesAdapter extends BaseAdapter {
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(filesHolder.selectedImage);
 
-        if(NeonImagesHandler.getSingleonInstance().checkImageAvailableForPath(fileInfos.get(position))){
+        if (NeonImagesHandler.getSingleonInstance().checkImageAvailableForPath(fileInfos.get(position))) {
             filesHolder.selection_view.setVisibility(View.VISIBLE);
             filesHolder.transparentLayer.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             filesHolder.selection_view.setVisibility(View.GONE);
             filesHolder.transparentLayer.setVisibility(View.GONE);
         }
@@ -82,18 +84,29 @@ public class GridFilesAdapter extends BaseAdapter {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(NeonImagesHandler.getSingletonInstance().checkImageAvailableForPath(fileInfos.get(position))){
-                    if(NeonImagesHandler.getSingletonInstance().removeFromCollection(fileInfos.get(position))){
+                if (NeonImagesHandler.getSingletonInstance().checkImageAvailableForPath(fileInfos.get(position))) {
+                    if (NeonImagesHandler.getSingletonInstance().removeFromCollection(fileInfos.get(position))) {
                         finalFilesHolder.selection_view.setVisibility(View.GONE);
                         finalFilesHolder.transparentLayer.setVisibility(View.GONE);
-                        ((GridFilesActivity)context).removeImageFromRecentCollection(fileInfos.get(position));
+                        ((GridFilesActivity) context).removeImageFromRecentCollection(fileInfos.get(position));
                     }
-                }else{
-                    if(NeonImagesHandler.getSingletonInstance().putInImageCollection(fileInfos.get(position),context)) {
-                        finalFilesHolder.selection_view.setVisibility(View.VISIBLE);
-                        finalFilesHolder.transparentLayer.setVisibility(View.VISIBLE);
-                        ((GridFilesActivity)context).addImageToRecentelySelected(fileInfos.get(position));
+                } else {
+                    File file = new File(fileInfos.get(position).getFilePath());
+                    long size = file.length() / 1024;
+                    if (size <= 25) {
+                        Toast.makeText(context, "Image size should be greater than 25 Kb", Toast.LENGTH_SHORT).show();
+
+                    } else if (size >= (1024 * 20)) {
+                        Toast.makeText(context, "Image size should be less than 20 Mb ", Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        if (NeonImagesHandler.getSingletonInstance().putInImageCollection(fileInfos.get(position), context)) {
+                            finalFilesHolder.selection_view.setVisibility(View.VISIBLE);
+                            finalFilesHolder.transparentLayer.setVisibility(View.VISIBLE);
+                            ((GridFilesActivity) context).addImageToRecentelySelected(fileInfos.get(position));
+                        }
                     }
+
                 }
             }
         });
