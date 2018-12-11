@@ -8,14 +8,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.gaadi.neon.activity.gallery.GridFilesActivity;
+import com.gaadi.neon.util.Constants;
+import com.gaadi.neon.util.ExifInterfaceHandling;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -89,10 +94,33 @@ public class GridFilesAdapter extends BaseAdapter {
                         ((GridFilesActivity)context).removeImageFromRecentCollection(fileInfos.get(position));
                     }
                 }else{
-                    if(NeonImagesHandler.getSingletonInstance().putInImageCollection(fileInfos.get(position),context)) {
-                        finalFilesHolder.selection_view.setVisibility(View.VISIBLE);
-                        finalFilesHolder.transparentLayer.setVisibility(View.VISIBLE);
-                        ((GridFilesActivity)context).addImageToRecentelySelected(fileInfos.get(position));
+                    if(NeonImagesHandler.getSingletonInstance().getGenericParam() != null && NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters() != null && NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getFolderRestrictive()){
+                        String appName = Constants.getAppName(context);
+                        File file = new File(fileInfos.get(position).getFilePath());
+                        if(file.exists()){
+                            try {
+                                ExifInterfaceHandling exifInterfaceHandling = new ExifInterfaceHandling(file);
+                                String artist = exifInterfaceHandling.getAttribute(ExifInterfaceHandling.TAG_ARTIST);
+                                if (artist != null && (String.valueOf(appName)).equals(artist)) {
+                                    if(NeonImagesHandler.getSingletonInstance().putInImageCollection(fileInfos.get(position),context)) {
+                                        finalFilesHolder.selection_view.setVisibility(View.VISIBLE);
+                                        finalFilesHolder.transparentLayer.setVisibility(View.VISIBLE);
+                                        ((GridFilesActivity)context).addImageToRecentelySelected(fileInfos.get(position));
+                                    }
+                                }else {
+                                    Toast.makeText(context, "Not allowed", Toast.LENGTH_SHORT).show();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                    }else {
+                        if(NeonImagesHandler.getSingletonInstance().putInImageCollection(fileInfos.get(position),context)) {
+                            finalFilesHolder.selection_view.setVisibility(View.VISIBLE);
+                            finalFilesHolder.transparentLayer.setVisibility(View.VISIBLE);
+                            ((GridFilesActivity)context).addImageToRecentelySelected(fileInfos.get(position));
+                        }
                     }
                 }
             }

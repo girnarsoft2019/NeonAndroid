@@ -29,7 +29,7 @@ public class ExifInterfaceHandling extends ExifInterface {
     // Public Methods
     // ------------------------------------------------------------------------
 
-    public void setLocation(Location location) {
+    public void setLocation(Location location, String appName) {
         try {
 
             //setLatLong(location.getLatitude(),location.getLongitude());
@@ -41,6 +41,18 @@ public class ExifInterfaceHandling extends ExifInterface {
 //            this.setAttribute(TAG_GPS_DATESTAMP , dateStamp);
 //            this.setAttribute(TAG_GPS_TIMESTAMP, timeStamp);
             this.setAttribute(TAG_DATETIME, String.valueOf(date.getTime()) );
+            this.setAttribute(TAG_ARTIST , appName);
+
+            saveAttributes();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void setAppName(String appName) {
+        try {
+
+            this.setAttribute(TAG_ARTIST , appName);
 
             saveAttributes();
         }catch (IOException e){

@@ -30,6 +30,7 @@ import com.gaadi.neon.interfaces.OnPermissionResultListener;
 import com.gaadi.neon.model.ImageTagModel;
 import com.gaadi.neon.model.PhotosMode;
 import com.gaadi.neon.util.AnimationUtils;
+import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.CustomParameters;
 import com.gaadi.neon.util.ExifInterfaceHandling;
 import com.gaadi.neon.util.FileInfo;
@@ -81,7 +82,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
             NeonImagesHandler.getSingletonInstance().setLivePhotoNextTagListener(this);
         }
         if (cameraParams == null || cameraParams.getCustomParameters() == null || cameraParams.getCustomParameters().getLocationRestrictive()) {
-            Log.e("Rajeev", "onCreate: Activity" );
+            Log.e("Rajeev", "onCreate: Activity");
             FindLocations.getInstance().init(this);
             FindLocations.getInstance().checkPermissions(this);
         }
@@ -107,7 +108,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
                                                     if (cameraParams != null && cameraParams.getCustomParameters() != null) {
                                                         locationRestrictive = cameraParams.getCustomParameters().getLocationRestrictive();
                                                     }
-                                                    Log.e("Rajeev", "From Activity: "+locationRestrictive );
+                                                    Log.e("Rajeev", "From Activity: " + locationRestrictive);
 
                                                     CameraFragment1 fragment = CameraFragment1.getInstance(locationRestrictive);
                                                     FragmentManager manager = getSupportFragmentManager();
@@ -164,9 +165,9 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.buttonDone) {
-            try{
+            try {
                 if (!NeonImagesHandler.getSingletonInstance().isNeutralEnabled()) {
-                    if(NeonImagesHandler.getSingletonInstance().getCameraParam() != null){
+                    if (NeonImagesHandler.getSingletonInstance().getCameraParam() != null) {
                         if (NeonImagesHandler.getSingletonInstance().getCameraParam().enableImageEditing()
                                 || NeonImagesHandler.getSingletonInstance().getCameraParam().getTagEnabled()) {
                             Intent intent = new Intent(this, ImageShow.class);
@@ -184,8 +185,8 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
                     setResult(RESULT_OK);
                     finish();
                 }
-            }catch (Exception e ){
-               e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
 
@@ -451,10 +452,13 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
             binder.imageHolderView.setVisibility(View.VISIBLE);
         }
         boolean locationRestriction = cameraParams == null || cameraParams.getCustomParameters() == null || cameraParams.getCustomParameters().getLocationRestrictive();
-        Log.e("Activity", "onPictureTaken: "+locationRestriction );
+        Log.e("Activity", "onPictureTaken: " + locationRestriction);
         boolean isUpdated = true;
+
         if (locationRestriction) {
             isUpdated = updateExifInfo(fileInfo);
+        } else {
+            isUpdated = updateExifInfoAppName(fileInfo);
         }
         if (isUpdated) {
             NeonImagesHandler.getSingletonInstance().putInImageCollection(fileInfo, this);
@@ -509,8 +513,9 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
                 Toast.makeText(this, NeonImagesHandler.getSingletonInstance().getCurrentTag() + " File does not exist", Toast.LENGTH_SHORT).show();
                 return false;
             } else {
+                String appName = Constants.getAppName(this);
                 ExifInterfaceHandling exifInterfaceHandling = new ExifInterfaceHandling(file);
-                exifInterfaceHandling.setLocation(location);
+                exifInterfaceHandling.setLocation(location, appName);
                 if ((String.valueOf(location.getLatitude())).equals(exifInterfaceHandling.getAttribute(ExifInterfaceHandling.TAG_GPS_LATITUDE_REF))) {
                     return true;
                 }
@@ -533,6 +538,26 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
                 }
             }
         }
+    }
+
+    private boolean updateExifInfoAppName(FileInfo fileInfo) {
+        try {
+            final File file = new File(fileInfo.getFilePath());
+            if (!file.exists()) {
+                return false;
+            } else {
+                String appName = Constants.getAppName(this);
+                ExifInterfaceHandling exifInterfaceHandling = new ExifInterfaceHandling(file);
+                exifInterfaceHandling.setAppName(appName);
+                if ((String.valueOf(appName)).equals(exifInterfaceHandling.getAttribute(ExifInterfaceHandling.TAG_ARTIST))) {
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+
     }
 
 }

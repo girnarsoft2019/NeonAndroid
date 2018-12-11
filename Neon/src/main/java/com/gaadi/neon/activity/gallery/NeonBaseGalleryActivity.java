@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.gaadi.neon.activity.NeonBaseActivity;
 import com.gaadi.neon.model.BucketModel;
+import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
@@ -33,7 +34,20 @@ public abstract class NeonBaseGalleryActivity extends NeonBaseActivity {
 
         Cursor mCursor;
         if (NeonImagesHandler.getSingletonInstance().getGalleryParam() != null && NeonImagesHandler.getSingletonInstance().getGalleryParam().isRestrictedExtensionJpgPngEnabled()) {
-            mCursor = getContentResolver().query(uri, PROJECTION_BUCKET, MediaStore.Images.Media.MIME_TYPE + " in (?, ?)", new String[]{"image/jpeg", "image/png"}, orderBy);
+            boolean folderRestriction = false;
+            String appName = "";
+            if (NeonImagesHandler.getSingletonInstance().getGenericParam() != null && NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters() != null && NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getFolderRestrictive()) {
+                appName = Constants.getAppName(this);
+                if (appName != null && appName.length() > 0) {
+                    folderRestriction = true;
+                }
+            }
+            if (folderRestriction) {
+                mCursor = getContentResolver().query(uri, PROJECTION_BUCKET, MediaStore.Images.Media.BUCKET_DISPLAY_NAME + " =? and " + MediaStore.Images.Media.MIME_TYPE + " in (?, ?)", new String[]{appName, "image/jpeg", "image/png"}, orderBy);
+            } else {
+                mCursor = getContentResolver().query(uri, PROJECTION_BUCKET, MediaStore.Images.Media.MIME_TYPE + " in (?, ?)", new String[]{"image/jpeg", "image/png"}, orderBy);
+            }
+
         } else {
             mCursor = getContentResolver().query(uri, PROJECTION_BUCKET, null, null, orderBy);
         }
@@ -45,7 +59,7 @@ public abstract class NeonBaseGalleryActivity extends NeonBaseActivity {
         mCursor.moveToFirst();
 
 
-        if(mCursor.getCount() > 0){
+        if (mCursor.getCount() > 0) {
             do {
                 String bucketId = mCursor.getString(mCursor.getColumnIndex(MediaStore.Images.ImageColumns.BUCKET_ID));
 
@@ -60,16 +74,27 @@ public abstract class NeonBaseGalleryActivity extends NeonBaseActivity {
                 } else {
                     buckets.get(index).setFileCount(buckets.get(index).getFileCount() + 1);
                 }
-            }while (mCursor.moveToNext());
+            } while (mCursor.moveToNext());
         }
         mCursor.close();
 
         return buckets;
     }
 
-    /**Pass bucketId if need all images from all buckets*/
+    /**
+     * Pass bucketId if need all images from all buckets
+     */
     protected ArrayList<FileInfo> getFileFromBucketId(String bucketId) {
         ArrayList<FileInfo> fileInfos = new ArrayList<>();
+
+        boolean folderRestriction = false;
+        String appName = "";
+        if (NeonImagesHandler.getSingletonInstance().getGenericParam() != null && NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters() != null && NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getFolderRestrictive()) {
+            appName = Constants.getAppName(this);
+            if (appName != null && appName.length() > 0) {
+                folderRestriction = true;
+            }
+        }
 
         String[] PROJECTION_FILES = {MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
                 MediaStore.Images.ImageColumns.BUCKET_ID, MediaStore.Images.ImageColumns.DATA,
@@ -77,12 +102,27 @@ public abstract class NeonBaseGalleryActivity extends NeonBaseActivity {
 
         String orderBy = MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC";
 
-        String selection = MediaStore.Images.Media.BUCKET_ID + " =? and " + MediaStore.Images.Media.SIZE + " >? and "
-                + MediaStore.Images.Media.MIME_TYPE + " in (?, ?)";
-        String[] selectionArgs = new String[]{bucketId, String.valueOf(0), "image/jpeg", "image/png"};
-        if(bucketId == null){
-            selection = null;
-            selectionArgs = null;
+        String selection; // = MediaStore.Images.Media.BUCKET_ID + " =? and " + MediaStore.Images.Media.SIZE + " >? and " + MediaStore.Images.Media.MIME_TYPE + " in (?, ?)";
+        String[] selectionArgs; // = new String[]{bucketId, String.valueOf(0), "image/jpeg", "image/png"};
+        if (bucketId == null) {
+            if(folderRestriction){
+                selection = MediaStore.Images.Media.BUCKET_DISPLAY_NAME + " =? and " + MediaStore.Images.Media.SIZE + " >? and "
+                        + MediaStore.Images.Media.MIME_TYPE + " in (?, ?)";
+                selectionArgs = new String[]{appName, String.valueOf(0), "image/jpeg", "image/png"};
+            }else {
+                selection = null;
+                selectionArgs = null;
+            }
+        }else {
+            if(folderRestriction){
+                selection = MediaStore.Images.Media.BUCKET_ID + " =? and " + MediaStore.Images.Media.BUCKET_DISPLAY_NAME + " =? and " + MediaStore.Images.Media.SIZE + " >? and "
+                        + MediaStore.Images.Media.MIME_TYPE + " in (?, ?)";
+                selectionArgs = new String[]{bucketId, appName, String.valueOf(0), "image/jpeg", "image/png"};
+            }else {
+                selection = MediaStore.Images.Media.BUCKET_ID + " =? and " + MediaStore.Images.Media.SIZE + " >? and "
+                        + MediaStore.Images.Media.MIME_TYPE + " in (?, ?)";
+                selectionArgs = new String[]{bucketId, String.valueOf(0), "image/jpeg", "image/png"};
+            }
         }
         Cursor mCursor = getContentResolver().query(uri, PROJECTION_FILES, selection, selectionArgs, orderBy);
         if (mCursor == null) {
@@ -92,15 +132,15 @@ public abstract class NeonBaseGalleryActivity extends NeonBaseActivity {
         }
         mCursor.moveToFirst();
 
-        if(mCursor.getCount()>0){
-            do{
+        if (mCursor.getCount() > 0) {
+            do {
                 FileInfo singleFileInfo = new FileInfo();
                 singleFileInfo.setSource(FileInfo.SOURCE.PHONE_GALLERY);
                 singleFileInfo.setFilePath(mCursor.getString(mCursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA)));
                 singleFileInfo.setDateTimeTaken(mCursor.getString(mCursor.getColumnIndex(MediaStore.Images.ImageColumns.DATE_TAKEN)));
                 singleFileInfo.setType(FileInfo.FILE_TYPE.IMAGE);
                 fileInfos.add(singleFileInfo);
-            }while (mCursor.moveToNext());
+            } while (mCursor.moveToNext());
         }
         mCursor.close();
 

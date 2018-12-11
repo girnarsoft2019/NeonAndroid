@@ -67,4 +67,12 @@ public class Constants {
             return null;
         return mediaFile;
     }
+
+    public static String getAppName(Context context){
+        String appName = context.getString(R.string.app_name);
+        if (appName.length() > 0) {
+            appName = appName.replace(" ", "");
+        }
+        return appName;
+    }
 }

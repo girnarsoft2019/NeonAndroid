@@ -506,7 +506,9 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
                 @Override
                 public CustomParameters getCustomParameters() {
-                    return null;
+                    CustomParameters.CustomParametersBuilder builder = new CustomParameters.CustomParametersBuilder();
+                    builder.setFolderRestrictive(true);
+                    return builder.build();
                 }
             }), this);
         } catch (Exception e) {
@@ -648,7 +650,9 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
                 @Override
                 public CustomParameters getCustomParameters() {
-                    return null;
+                    CustomParameters.CustomParametersBuilder builder = new CustomParameters.CustomParametersBuilder();
+                    builder.setFolderRestrictive(true);
+                    return builder.build();
                 }
             }), this);
         } catch (Exception e) {
