@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.d(TAG, "onCreate: "+PhotosLibrary.isCamScannerInstalled(this, "camScanner"));
     }
 
     public void cameraPriorityClicked(View view) {
@@ -203,8 +202,6 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
             public CustomParameters getCustomParameters() {
                 CustomParameters.CustomParametersBuilder builder = new CustomParameters.CustomParametersBuilder();
                 builder.setLocationRestrictive(false);
-                builder.setCamScannerActive(true);
-                builder.setCamScannerAPIKey("MRHrRa4H7EQby773KW66d6b1");
                 return builder.build();
             }
 

@@ -181,9 +181,4 @@ public class PhotosLibrary {
         CSOpenAPIParam param = new CSOpenAPIParam(filePath, outputImagePath, null, null, 1.0f);
         return csOpenAPI.scanImage(activity, requestCode, param);
     }
-
-    public static boolean isCamScannerInstalled(Context context, String camScannerApiKey) {
-        CSOpenAPI camScannerApi = CSOpenApiFactory.createCSOpenApi(context, camScannerApiKey, null);
-        return camScannerApi.isCamScannerInstalled();
-    }
 }

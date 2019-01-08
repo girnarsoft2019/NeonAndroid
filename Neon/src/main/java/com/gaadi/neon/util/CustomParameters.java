@@ -10,15 +10,11 @@ public class CustomParameters {
     private boolean hideCameraButtonInNeutral = false;
     private boolean hideGalleryButtonInNeutral = false;
     private boolean locationRestrictive = true;
-    private boolean camScannerActive = false;
-    private String camScannerAPIKey = "";
 
     private CustomParameters(CustomParametersBuilder builder) {
         this.hideCameraButtonInNeutral = builder.hideCameraButtonInNeutral;
         this.hideGalleryButtonInNeutral = builder.hideGalleryButtonInNeutral;
         this.locationRestrictive = builder.locationRestrictive;
-        this.camScannerActive = builder.camScannerActive;
-        this.camScannerAPIKey = builder.camScannerAPIKey;
     }
 
     public boolean gethideCameraButtonInNeutral() {
@@ -33,22 +29,12 @@ public class CustomParameters {
         return locationRestrictive;
     }
 
-    public boolean isCamScannerActive() {
-        return camScannerActive;
-    }
-
-    public String getCamScannerAPIKey() {
-        return camScannerAPIKey;
-    }
-
 
     public static class CustomParametersBuilder {
 
         private boolean hideCameraButtonInNeutral;
         private boolean hideGalleryButtonInNeutral;
         private boolean locationRestrictive = true;
-        private boolean camScannerActive;
-        private String camScannerAPIKey = "";
 
 
         public CustomParametersBuilder sethideCameraButtonInNeutral(boolean hide) {
@@ -63,16 +49,6 @@ public class CustomParameters {
 
         public CustomParametersBuilder setLocationRestrictive(boolean locationRestrictive) {
             this.locationRestrictive = locationRestrictive;
-            return this;
-        }
-
-        public CustomParametersBuilder setCamScannerActive(boolean camScannerActive) {
-            this.camScannerActive = camScannerActive;
-            return this;
-        }
-
-        public CustomParametersBuilder setCamScannerAPIKey(String camScannerAPIKey) {
-            this.camScannerAPIKey = camScannerAPIKey;
             return this;
         }
 
