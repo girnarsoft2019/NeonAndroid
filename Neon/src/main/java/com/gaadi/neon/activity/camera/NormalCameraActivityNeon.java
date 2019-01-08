@@ -1,6 +1,5 @@
 package com.gaadi.neon.activity.camera;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
@@ -8,9 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Location;
 import android.media.ThumbnailUtils;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -41,18 +38,11 @@ import com.gaadi.neon.util.FindLocations;
 import com.gaadi.neon.util.ManifestPermission;
 import com.gaadi.neon.util.NeonException;
 import com.gaadi.neon.util.NeonImagesHandler;
-import com.gaadi.neon.util.NeonUtils;
 import com.gaadi.neon.util.PermissionType;
-import com.intsig.csopen.sdk.CSOpenAPI;
-import com.intsig.csopen.sdk.CSOpenAPIParam;
-import com.intsig.csopen.sdk.CSOpenApiFactory;
-import com.intsig.csopen.sdk.CSOpenApiHandler;
 import com.scanlibrary.R;
 import com.scanlibrary.databinding.NormalCameraActivityLayoutBinding;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,10 +65,6 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
     private TextView tvTag, tvNext, tvPrevious;
     private ImageView buttonGallery;
     private Location location;
-    private final int REQ_CODE_CALL_CAMSCANNER = 168;
-    private String mOutputImagePath;
-    private String mInputImagePath;
-    private CSOpenAPI camScannerApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
