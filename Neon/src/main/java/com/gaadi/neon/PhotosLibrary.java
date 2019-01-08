@@ -8,7 +8,6 @@ import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.gaadi.neon.activity.camera.NormalCamera2ActivityNeon;
 import com.gaadi.neon.activity.camera.NormalCameraActivityNeon;
 import com.gaadi.neon.activity.finance.OneStepActivity;
 import com.gaadi.neon.activity.gallery.GridFilesActivity;
@@ -111,13 +110,6 @@ public class PhotosLibrary {
             case gallery_preview_camera:
                 Intent intent = new Intent(activity, NormalCameraActivityNeon.class);
                 activity.startActivity(intent);
-                /*if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                    Intent intent = new Intent(activity, NormalCameraActivityNeon.class);
-                    activity.startActivity(intent);
-                } else {
-                    Intent intent = new Intent(activity, NormalCamera2ActivityNeon.class);
-                    activity.startActivity(intent);
-                }*/
 
                 break;
         }

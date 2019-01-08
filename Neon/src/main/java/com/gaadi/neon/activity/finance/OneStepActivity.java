@@ -37,8 +37,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.gaadi.neon.PhotosLibrary;
-import com.gaadi.neon.activity.camera.NormalCamera2ActivityNeon;
-import com.gaadi.neon.activity.camera.NormalCameraActivityNeon;
 import com.gaadi.neon.adapter.FlashModeAdapter;
 import com.gaadi.neon.enumerations.CameraFacing;
 import com.gaadi.neon.enumerations.CameraOrientation;
@@ -46,7 +44,6 @@ import com.gaadi.neon.enumerations.CameraType;
 import com.gaadi.neon.enumerations.GalleryType;
 import com.gaadi.neon.enumerations.LibraryMode;
 import com.gaadi.neon.enumerations.ResponseCode;
-import com.gaadi.neon.fragment.Camera2Fragment;
 import com.gaadi.neon.fragment.CameraFragment1;
 import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.interfaces.IGalleryParam;
@@ -77,7 +74,8 @@ import java.util.HashSet;
 import java.util.List;
 
 
-public class OneStepActivity extends AppCompatActivity implements CameraFragment1.SetOnPictureTaken, Camera2Fragment.SetOnPictureTaken, OnImageCollectionListener {
+public class OneStepActivity extends AppCompatActivity implements CameraFragment1.SetOnPictureTaken, OnImageCollectionListener {
+    private final int REQ_CODE_CALL_CAMSCANNER = 168;
     //private CameraFragment1 camFragment;
     private ImageView ivGallery, ivClickPicture, ivFlash, ivPdf;
     private RecyclerView rvFlash;
@@ -97,13 +95,10 @@ public class OneStepActivity extends AppCompatActivity implements CameraFragment
     private String path;
     private String docCat;
     private String docSubCat;
-
-    private final int REQ_CODE_CALL_CAMSCANNER = 168;
     private CSOpenAPI camScannerApi;
     private String camScannerApiKey;
     private String mOutputImagePath;
     private String mInputImagePath;
-    private boolean lollipopOrAbove;
 
     public OneStepActivity() {
     }
@@ -112,20 +107,10 @@ public class OneStepActivity extends AppCompatActivity implements CameraFragment
         return (CameraFragment1) getSupportFragmentManager().findFragmentById(R.id.content_frame);
     }
 
-    private Camera2Fragment getCamera2FragmentInstance() {
-        return (Camera2Fragment) getSupportFragmentManager().findFragmentById(R.id.content_frame);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_finance_one_step_upload);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            lollipopOrAbove = false;
-        } else {
-            //true for camera2
-            lollipopOrAbove = false;
-        }
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
         ivPdf = (ImageView) findViewById(R.id.ivPdf);
@@ -152,15 +137,9 @@ public class OneStepActivity extends AppCompatActivity implements CameraFragment
         new Handler().post(new Runnable() {
             @Override
             public void run() {
-                if (lollipopOrAbove) {
-                    Camera2Fragment fragment = Camera2Fragment.getInstance(false);
-                    FragmentManager manager = getSupportFragmentManager();
-                    manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-                } else {
-                    CameraFragment1 fragment = CameraFragment1.getInstance(false);
-                    FragmentManager manager = getSupportFragmentManager();
-                    manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
-                }
+                CameraFragment1 fragment = CameraFragment1.getInstance(false);
+                FragmentManager manager = getSupportFragmentManager();
+                manager.beginTransaction().replace(R.id.content_frame, fragment).commit();
 
             }
         });
@@ -215,11 +194,7 @@ public class OneStepActivity extends AppCompatActivity implements CameraFragment
             public void onClick(View v) {
                 tvNext.setClickable(false);
                 ivClickPicture.setClickable(false);
-                if (lollipopOrAbove) {
-                    getCamera2FragmentInstance().clickPicture();
-                } else {
-                    getCameraFragmentInstance().clickPicture();
-                }
+                getCameraFragmentInstance().clickPicture();
 
             }
         });
@@ -239,32 +214,15 @@ public class OneStepActivity extends AppCompatActivity implements CameraFragment
                             switch (position) {
                                 case 0:
                                     ivFlash.setBackgroundResource(R.drawable.flash_off_circle);
-                                    if (lollipopOrAbove) {
-                                        getCamera2FragmentInstance().setFlash("off");
-                                    } else {
-                                        getCameraFragmentInstance().setFlash("off");
-                                    }
-
+                                    getCameraFragmentInstance().setFlash("off");
                                     break;
                                 case 1:
                                     ivFlash.setBackgroundResource(R.drawable.flash_circle);
-                                    if (lollipopOrAbove) {
-                                        getCamera2FragmentInstance().setFlash("on");
-                                    } else {
-                                        getCameraFragmentInstance().setFlash("on");
-                                    }
-
-
+                                    getCameraFragmentInstance().setFlash("on");
                                     break;
                                 case 2:
                                     ivFlash.setBackgroundResource(R.drawable.flash_auto_circle);
-                                    if (lollipopOrAbove) {
-                                        getCamera2FragmentInstance().setFlash("auto");
-                                    } else {
-                                        getCameraFragmentInstance().setFlash("auto");
-                                    }
-
-
+                                    getCameraFragmentInstance().setFlash("auto");
                                     break;
                             }
                         }
@@ -337,7 +295,7 @@ public class OneStepActivity extends AppCompatActivity implements CameraFragment
         docCat = getIntent().getStringExtra(Constants.CATEGORY);
         docSubCat = getIntent().getStringExtra(Constants.SUB_CATEGORY);
         camScannerApiKey = getIntent().getStringExtra(Constants.CAM_SCANNER_API_KEY);
-        Log.d("Rajeev", "extractData: "+camScannerApiKey);
+        Log.d("Rajeev", "extractData: " + camScannerApiKey);
     }
 
     private void openGallery() {
@@ -654,7 +612,7 @@ public class OneStepActivity extends AppCompatActivity implements CameraFragment
                     Log.d("Rajeev", "onSuccess: " + Uri.fromFile(file));
                     sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
                     afterPictureTaken(mOutputImagePath);
-                    NeonUtils.deleteFile(OneStepActivity.this,mInputImagePath);
+                    NeonUtils.deleteFile(OneStepActivity.this, mInputImagePath);
                 }
 
                 @Override

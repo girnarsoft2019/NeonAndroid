@@ -90,12 +90,6 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         }
         customize();
         bindCameraFragment();
-        /*String appName = getResources().getString(R.string.app_name).replace(" ","");
-        String path= Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+appName;
-        mOutputImagePath = path +File.separator+"IMG_"+System.currentTimeMillis()+ "_scanned.jpg";*/
-        if(cameraParams != null && cameraParams.getCustomParameters() != null){
-            camScannerApi = CSOpenApiFactory.createCSOpenApi(this, cameraParams.getCustomParameters().getCamScannerAPIKey(), null);
-            }
         if (NeonImagesHandler.getSingletonInstance().getLivePhotosListener() != null) {
             NeonImagesHandler.getSingletonInstance().setLivePhotoNextTagListener(this);
         }
@@ -442,70 +436,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
 
     @Override
     public void onPictureTaken(String filePath) {
-        mInputImagePath = filePath;
-        Log.d("NormalCamera", "onPictureTaken: ");
-        if(cameraParams != null && cameraParams.getCustomParameters() != null && cameraParams.getCustomParameters().isCamScannerActive() && !cameraParams.getCustomParameters().getCamScannerAPIKey().equals("")){
-            if(camScannerApi != null && camScannerApi.isCamScannerInstalled()){
-                String appName = getResources().getString(R.string.app_name).replace(" ","");
-                String path= Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+appName;
-                mOutputImagePath = path +File.separator+"IMG_"+System.currentTimeMillis()+ "_scanned.jpg";
-                boolean res = PhotosLibrary.go2CamScanner(this, filePath, mOutputImagePath, REQ_CODE_CALL_CAMSCANNER, camScannerApi);
-                Log.d("NormalCamera", "go2CamScanner  "+res);
-                if(!res)
-                    afterPictureTaken(filePath);
-            }else {
-                Toast.makeText(NormalCameraActivityNeon.this, "CamScanner not found!!!", Toast.LENGTH_SHORT).show();
-                afterPictureTaken(filePath);
-            }
-        }else {
-            Log.d("NormalCamera", "WithoutCamScanner");
             afterPictureTaken(filePath);
-        }
-       /* if(mApi.isCamScannerInstalled()){
-            boolean res = PhotosLibrary.go2CamScanner(filePath, this, mOutputImagePath,REQ_CODE_CALL_CAMSCANNER, mApi);
-            Log.d("Rajeev", "go2CamScanner  "+res);
-        }else {
-            Toast.makeText(NormalCameraActivityNeon.this, "CamScanner not found", Toast.LENGTH_SHORT).show();
-            afterPictureTaken(filePath);
-            *//*FileInfo fileInfo = new FileInfo();
-            fileInfo.setFilePath(filePath);
-        fileInfo.setFileName(filePath.substring(filePath.lastIndexOf("/") + 1));
-        fileInfo.setSource(FileInfo.SOURCE.PHONE_CAMERA);
-        if (cameraParams.getTagEnabled()) {
-            fileInfo.setFileTag(tagModels.get(currentTag));
-        }
-        if (binder.imageHolderView.getVisibility() != View.VISIBLE) {
-            binder.imageHolderView.setVisibility(View.VISIBLE);
-        }
-        boolean locationRestriction = cameraParams == null || cameraParams.getCustomParameters() == null || cameraParams.getCustomParameters().getLocationRestrictive();
-        boolean isUpdated = true;
-        if (locationRestriction) {
-            isUpdated = updateExifInfo(fileInfo);
-        }
-        if (isUpdated) {
-            NeonImagesHandler.getSingletonInstance().putInImageCollection(fileInfo, this);
-
-            if (NeonImagesHandler.getSingletonInstance().getLivePhotosListener() == null) {
-
-                if (NeonImagesHandler.getSingletonInstance().getCameraParam().getCameraViewType() == CameraType.gallery_preview_camera) {
-                    ImageView image = new ImageView(this);
-                    Bitmap thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(filePath), 200, 200);
-                    image.setImageBitmap(thumbnail);
-                    binder.imageHolderView.addView(image);
-                }
-
-                if (cameraParams.getTagEnabled()) {
-                    ImageTagModel imageTagModel = tagModels.get(currentTag);
-                    if (imageTagModel.getNumberOfPhotos() > 0 && NeonImagesHandler.getSingletonInstance().getNumberOfPhotosCollected(imageTagModel) >= imageTagModel.getNumberOfPhotos()) {
-                        onClick(binder.tvSkip);
-                    }
-                }
-            }
-        } else {
-            Toast.makeText(this, "Unable to find location, Please try again later.", Toast.LENGTH_SHORT).show();
-        }*//*
-
-        }*/
     }
 
     public void afterPictureTaken(String filePath){
@@ -599,37 +530,6 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
                 if (imageTagModel.getNumberOfPhotos() > 0 && NeonImagesHandler.getSingletonInstance().getNumberOfPhotosCollected(imageTagModel) >= imageTagModel.getNumberOfPhotos()) {
                     onClick(binder.tvSkip);
                 }
-            }
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.d("NormalCamera", "onActivityResult: ");
-        if (resultCode == Activity.RESULT_OK){
-            if (requestCode == REQ_CODE_CALL_CAMSCANNER){
-                camScannerApi.handleResult(requestCode, resultCode, data, new CSOpenApiHandler() {
-                    @Override
-                    public void onSuccess() {
-                        Log.d("NormalCamera", "onSuccess: "+mOutputImagePath);
-                        File file = new File(mOutputImagePath);
-                        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
-                        afterPictureTaken(mOutputImagePath);
-                        NeonUtils.deleteFile(NormalCameraActivityNeon.this, mInputImagePath);
-                    }
-
-                    @Override
-                    public void onError(int i) {
-                        Log.d("NormalCamera", "onError: "+i);
-                        Toast.makeText(NormalCameraActivityNeon.this, "Error Code: "+i, Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onCancel() {
-                        Log.d("NormalCamera", "onCancel: ");
-                    }
-                });
             }
         }
     }

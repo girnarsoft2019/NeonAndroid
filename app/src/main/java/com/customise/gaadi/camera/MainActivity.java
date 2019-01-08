@@ -2,7 +2,6 @@ package com.customise.gaadi.camera;
 
 import android.location.Location;
 import android.media.ExifInterface;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -29,7 +28,6 @@ import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.FindLocations;
 import com.gaadi.neon.util.NeonException;
 import com.gaadi.neon.util.NeonImagesHandler;
-import com.gaadi.neon.util.PhotosLibrary2;
 import com.gaadi.neon.util.OneStepImageHandler.OneStepActionListener;
 
 import java.io.File;
@@ -219,20 +217,6 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
         } catch (NeonException e) {
             e.printStackTrace();
         }
-
-        /*try {
-            if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                PhotosLibrary.collectPhotos(1, this, NeonImagesHandler.getSingleonInstance().getLibraryMode(),
-                        PhotosMode.setCameraMode().setParams(cameraParam), this);
-            }else{
-                PhotosLibrary2.collectPhotos(1, this, NeonImagesHandler.getSingleonInstance().getLibraryMode(),
-                        PhotosMode.setCameraMode().setParams(cameraParam), this);
-            }
-        } catch (NullPointerException e) {
-
-        } catch (NeonException e) {
-
-        }*/
 
     }
 
