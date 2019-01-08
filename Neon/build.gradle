@@ -47,6 +47,7 @@ dependencies {
     compile 'com.soundcloud.android:android-crop:1.0.1@aar'
     compile 'com.android.support:exifinterface:25.3.1'
     compile 'com.google.android.gms:play-services-location:10.2.4'
+    compile files('libs/csopensdk.jar')
 }
 ext {
     bintrayRepo = 'maven'

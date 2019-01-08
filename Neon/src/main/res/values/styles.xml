@@ -11,5 +11,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="textStyleWhite">
+        <item name="android:color">@color/white</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAppearance">@style/TextAppearance.FontPath</item>
+    </style>
+
 
 </resources>
