@@ -48,9 +48,16 @@ public class ImageShowFragment extends Fragment {
         binder.imageShowGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Intent viewPagerIntent = new Intent(getActivity(), ImageReviewActivity.class);
-                viewPagerIntent.putExtra(Constants.IMAGE_REVIEW_POSITION, position);
-                getActivity().startActivity(viewPagerIntent);
+                if (NeonImagesHandler.getSingletonInstance() != null &&
+                        NeonImagesHandler.getSingletonInstance().getGenericParam() != null &&
+                        NeonImagesHandler.getSingletonInstance().getGenericParam().getImageTagsModel() != null &&
+                        NeonImagesHandler.getSingletonInstance().getGenericParam().getImageTagsModel().size() > 0)
+                {
+                    Intent viewPagerIntent = new Intent(getActivity(), ImageReviewActivity.class);
+                    viewPagerIntent.putExtra(Constants.IMAGE_REVIEW_POSITION, position);
+                    getActivity().startActivity(viewPagerIntent);
+                }
+
             }
         });
         binder.imageShowGrid.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {

@@ -12,11 +12,14 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.gaadi.neon.interfaces.UpdateSelection;
 import com.gaadi.neon.util.ApplicationController;
 import com.scanlibrary.R;
 
 import java.util.HashSet;
+
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
 /**
  * Created by Lakshay
@@ -88,12 +91,18 @@ public class SelectFilesAdapter extends CursorAdapter implements View.OnClickLis
 
         filesHolder.transparentLayer.setTag(path);
         filesHolder.selection_view.setTag(cursor.getPosition());
-
+        RequestOptions options = new RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .centerCrop()
+                .placeholder(R.drawable.default_placeholder);
         Glide.with(context).load(path)
+                .apply(options)
+                .into(filesHolder.selectedImage);
+        /*Glide.with(context).load(path)
                 .placeholder(R.drawable.default_placeholder)
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .into(filesHolder.selectedImage);
+                .into(filesHolder.selectedImage);*/
 
         if ((ApplicationController.selectedFiles != null && ApplicationController.selectedFiles.contains(path))) {
             filesHolder.transparentLayer.setVisibility(View.VISIBLE);

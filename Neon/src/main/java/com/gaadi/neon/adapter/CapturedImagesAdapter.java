@@ -10,12 +10,15 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.gaadi.neon.util.FileInfo;
 import com.scanlibrary.R;
 
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
 /**
  * Created by Lakshay on 19-02-2015.
@@ -106,12 +109,19 @@ public class CapturedImagesAdapter extends BaseAdapter implements View.OnClickLi
                 notifyDataSetChanged();
             }
         });
-
+        RequestOptions options = new RequestOptions()
+                .placeholder(R.drawable.image_load_default_small)
+                .diskCacheStrategy(DiskCacheStrategy.ALL);
         Glide.with(mContext).load("file://" + imageInfoArrayList.get(position).getFilePath())
+                .apply(options)
+                .transition(withCrossFade())
+                .into(holder.capturedImage);
+
+        /*Glide.with(mContext).load("file://" + imageInfoArrayList.get(position).getFilePath())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .crossFade()
                 .placeholder(R.drawable.image_load_default_small)
-                .into(holder.capturedImage);
+                .into(holder.capturedImage);*/
         return convertView;
     }
 

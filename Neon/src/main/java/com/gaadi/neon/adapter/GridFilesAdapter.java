@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.gaadi.neon.activity.gallery.GridFilesActivity;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.ExifInterfaceHandling;
@@ -22,6 +23,8 @@ import com.scanlibrary.R;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
 /**
  * @author princebatra
@@ -70,11 +73,18 @@ public class GridFilesAdapter extends BaseAdapter {
         }
         filesHolder = (FilesHolder) convertView.getTag();
 
+        RequestOptions options = new RequestOptions()
+                .placeholder(R.drawable.default_placeholder)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .centerCrop();
         Glide.with(context).load(fileInfos.get(position).getFilePath())
+                .apply(options)
+                .into(filesHolder.selectedImage);
+        /*Glide.with(context).load(fileInfos.get(position).getFilePath())
                 .placeholder(R.drawable.default_placeholder)
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .into(filesHolder.selectedImage);
+                .into(filesHolder.selectedImage);*/
 
         if(NeonImagesHandler.getSingleonInstance().checkImageAvailableForPath(fileInfos.get(position))){
             filesHolder.selection_view.setVisibility(View.VISIBLE);

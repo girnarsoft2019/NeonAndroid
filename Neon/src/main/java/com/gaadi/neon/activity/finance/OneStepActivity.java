@@ -35,6 +35,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.adapter.FlashModeAdapter;
@@ -72,6 +74,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
 
 public class OneStepActivity extends AppCompatActivity implements CameraFragment1.SetOnPictureTaken, OnImageCollectionListener {
@@ -269,7 +273,22 @@ public class OneStepActivity extends AppCompatActivity implements CameraFragment
             final int dataColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             String data = cursor.getString(dataColumn);
             cursor.close();
-            Glide.with(OneStepActivity.this)
+
+            RequestOptions options = new RequestOptions()
+                    .centerCrop();
+            Glide.with(this).asBitmap()
+                    .load("file://" + data)
+                    .apply(options)
+                    .into(new BitmapImageViewTarget(ivGallery) {
+
+                        @Override
+                        protected void setResource(Bitmap resource) {
+                            RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), resource);
+                            circularBitmapDrawable.setCircular(true);
+                            ivGallery.setImageDrawable(circularBitmapDrawable);
+                        }
+                    });
+            /*Glide.with(OneStepActivity.this)
                     .load("file://" + data)
                     .asBitmap()
                     .centerCrop()
@@ -281,7 +300,7 @@ public class OneStepActivity extends AppCompatActivity implements CameraFragment
                             circularBitmapDrawable.setCircular(true);
                             ivGallery.setImageDrawable(circularBitmapDrawable);
                         }
-                    });
+                    });*/
         }
     }
 
@@ -520,7 +539,19 @@ public class OneStepActivity extends AppCompatActivity implements CameraFragment
         }
         NeonImagesHandler.getSingletonInstance().setCameraParam(cameraParam);
         NeonImagesHandler.getSingletonInstance().putInImageCollection(fileInfo, this);
-        Glide.with(OneStepActivity.this)
+        RequestOptions options = new RequestOptions().centerCrop();
+        Glide.with(OneStepActivity.this).asBitmap().load("file://" + fileInfo.getFilePath())
+                .apply(options)
+                .into(new BitmapImageViewTarget(ivGallery) {
+
+                    @Override
+                    protected void setResource(Bitmap resource) {
+                        RoundedBitmapDrawable circularBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), resource);
+                        circularBitmapDrawable.setCircular(true);
+                        ivGallery.setImageDrawable(circularBitmapDrawable);
+                    }
+                });
+        /*Glide.with(OneStepActivity.this)
                 .load("file://" + fileInfo.getFilePath())
                 .asBitmap()
                 .centerCrop()
@@ -532,7 +563,7 @@ public class OneStepActivity extends AppCompatActivity implements CameraFragment
                         circularBitmapDrawable.setCircular(true);
                         ivGallery.setImageDrawable(circularBitmapDrawable);
                     }
-                });
+                });*/
 
         mSelectedImages.add(filePath);
     }

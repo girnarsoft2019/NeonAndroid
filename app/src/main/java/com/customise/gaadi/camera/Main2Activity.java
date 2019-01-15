@@ -10,8 +10,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+//import com.bumptech.glide.Glide;
+//import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -55,12 +55,12 @@ public class Main2Activity extends AppCompatActivity {
             @Override
             protected void onPostExecute(String parser) {
                 progressDialog.dismiss();
-                Glide.with(Main2Activity.this).load("https://" + parser)
+                /*Glide.with(Main2Activity.this).load("https://" + parser)
                         .crossFade()
                         .placeholder(com.scanlibrary.R.drawable.default_placeholder)
                         .centerCrop()
                         .error(R.drawable.gcloud_placeholder)
-                        .into(imageView);
+                        .into(imageView);*/
 
                 Toast.makeText(Main2Activity.this,parser,Toast.LENGTH_SHORT).show();
             }

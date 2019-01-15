@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.gaadi.neon.activity.gallery.GridFilesActivity;
 import com.gaadi.neon.activity.gallery.HorizontalFilesActivity;
 import com.gaadi.neon.model.BucketModel;
@@ -18,6 +19,8 @@ import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
 import java.util.ArrayList;
+
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
 /**
  * Created by Lakshay on 27-02-2015.
@@ -72,13 +75,20 @@ public class ImagesFoldersAdapter extends BaseAdapter {
             holder.countFiles.setVisibility(View.INVISIBLE);
         }
         holder.FolderName.setText(folders.get(position).getBucketName());
+        RequestOptions options = new RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .centerCrop()
+                .placeholder(R.drawable.default_placeholder);
+        Glide.with(context).load("file://" + folders.get(position).getBucketCoverImagePath())
+                .apply(options)
+                .into(holder.imageView);
 
-        Glide.with(context)
+        /*Glide.with(context)
                 .load("file://" + folders.get(position).getBucketCoverImagePath())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .placeholder(R.drawable.default_placeholder)
                 .centerCrop()
-                .into(holder.imageView);
+                .into(holder.imageView);*/
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

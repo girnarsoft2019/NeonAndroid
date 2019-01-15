@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.gaadi.neon.dynamicgrid.BaseDynamicGridAdapter;
 import com.gaadi.neon.interfaces.UpdateSelection;
 import com.gaadi.neon.util.ApplicationController;
@@ -17,6 +18,8 @@ import com.gaadi.neon.util.FileInfo;
 import com.scanlibrary.R;
 
 import java.util.ArrayList;
+
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
 /**
  * Created by Lakshay
@@ -68,12 +71,20 @@ public class PhotosGridAdapter extends BaseDynamicGridAdapter implements View.On
         holder.removeImage.setOnClickListener(this);
 
         FileInfo fileInfo = (FileInfo) getItem(position);
+        RequestOptions options = new RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .centerCrop()
+                .placeholder((imgLoadDefSmall > 0) ? imgLoadDefSmall : R.drawable.default_placeholder);
         Glide.with(context).load(fileInfo.getFilePath())
+                .apply(options)
+                .transition(withCrossFade())
+                .into(holder.image);
+        /*Glide.with(context).load(fileInfo.getFilePath())
                 .crossFade()
                 .placeholder((imgLoadDefSmall > 0) ? imgLoadDefSmall : R.drawable.default_placeholder)
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(holder.image);
+                .into(holder.image);*/
         return convertView;
     }
 

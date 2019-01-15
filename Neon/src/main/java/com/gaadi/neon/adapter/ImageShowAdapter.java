@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.gaadi.neon.activity.neutral.NeonNeutralActivity;
 import com.gaadi.neon.dynamicgrid.BaseDynamicGridAdapter;
 import com.gaadi.neon.util.FileInfo;
@@ -16,6 +17,8 @@ import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
 
 import java.util.List;
+
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
 /**
  * @author princebatra
@@ -126,12 +129,20 @@ public class ImageShowAdapter extends BaseDynamicGridAdapter {
         });
 */
             if (NeonImagesHandler.getSingleonInstance().getImagesCollection().size() > 0) {
+                RequestOptions options = new RequestOptions()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .centerCrop()
+                        .placeholder(R.drawable.default_placeholder);
                 Glide.with(context).load(NeonImagesHandler.getSingleonInstance().getImagesCollection().get(position).getFilePath())
+                        .apply(options)
+                        .transition(withCrossFade())
+                        .into(holder.image);
+                /*Glide.with(context).load(NeonImagesHandler.getSingleonInstance().getImagesCollection().get(position).getFilePath())
                         .crossFade()
                         .placeholder(R.drawable.default_placeholder)
                         .centerCrop()
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(holder.image);
+                        .into(holder.image);*/
             }
         }
 

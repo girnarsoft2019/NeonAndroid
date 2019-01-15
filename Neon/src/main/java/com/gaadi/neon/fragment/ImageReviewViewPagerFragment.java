@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.gaadi.neon.adapter.ImageTagsAdapter;
 import com.gaadi.neon.events.ImageEditEvent;
 import com.gaadi.neon.interfaces.FragmentListener;
@@ -43,6 +44,8 @@ import com.soundcloud.android.crop.Crop;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
 /**
  * @author dipanshugarg
@@ -172,11 +175,19 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
             txtVwTagSpinner.setText(imageModel.getFileTag().getTagName());
         }
 
+        RequestOptions options = new RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .placeholder(R.drawable.default_placeholder);
         Glide.with(mContext).load(imageModel.getFilePath())
+                .apply(options)
+                .into(draweeView);
+
+        /*Glide.with(mContext).load(imageModel.getFilePath())
                 .placeholder(R.drawable.default_placeholder)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
-                .into(draweeView);
+                .into(draweeView);*/
     }
 
     @Override
@@ -362,11 +373,18 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
     public void onActivityResult(int requestCode, int resultCode, Intent result) {
         if (requestCode == Crop.REQUEST_CROP && resultCode == Activity.RESULT_OK) {
             imageModel.setFilePath(cropFilePath.getAbsolutePath());
-            Glide.with(mContext).load(imageModel.getFilePath())
+            RequestOptions options = new RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .placeholder(R.drawable.default_placeholder);
+            Glide.with(this).load(imageModel.getFilePath())
+                    .apply(options)
+                    .into(draweeView);
+            /*Glide.with(mContext).load(imageModel.getFilePath())
                     .placeholder(R.drawable.default_placeholder)
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .skipMemoryCache(true)
-                    .into(draweeView);
+                    .into(draweeView);*/
         }
     }
 

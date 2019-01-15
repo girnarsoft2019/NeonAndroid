@@ -37,6 +37,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.gaadi.neon.activity.GalleryActivity;
 import com.gaadi.neon.adapter.FlashModeRecyclerHorizontalAdapter;
 import com.gaadi.neon.util.CameraPreview;
@@ -56,6 +57,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
 /**
  * Created by Lakshay
@@ -753,12 +756,21 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
             }
         });
 
+        RequestOptions options = new RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .centerCrop()
+                .placeholder(R.drawable.image_load_default_small);
         Glide.with(this).load("file://" + info.getFilePath())
+                .apply(options)
+                .transition(withCrossFade())
+                .into((ImageView) outerView.findViewById(R.id.ivCaptured));
+
+        /*Glide.with(this).load("file://" + info.getFilePath())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .crossFade()
                 .centerCrop()
                 .placeholder(R.drawable.image_load_default_small)
-                .into((ImageView) outerView.findViewById(R.id.ivCaptured));/**/
+                .into((ImageView) outerView.findViewById(R.id.ivCaptured));*/
         return outerView;
     }
 

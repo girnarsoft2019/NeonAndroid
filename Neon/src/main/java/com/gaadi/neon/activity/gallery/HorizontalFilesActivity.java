@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.gaadi.neon.activity.camera.NormalCameraActivityNeon;
 import com.gaadi.neon.enumerations.CameraFacing;
 import com.gaadi.neon.enumerations.CameraOrientation;
@@ -38,6 +39,8 @@ import com.scanlibrary.databinding.HorizontalGalleryLayoutBinding;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
 /**
  * @author princebatra
@@ -278,11 +281,19 @@ public class HorizontalFilesActivity extends NeonBaseGalleryActivity implements 
 
     @Override
     public void onClick(FileInfo fileInfo) {
+        RequestOptions options = new RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .centerCrop()
+                .placeholder(R.drawable.default_placeholder);
         Glide.with(this).load(fileInfo.getFilePath())
+                .apply(options)
+                .transition(withCrossFade())
+                .into(binder.fullScreenImage);
+        /*Glide.with(this).load(fileInfo.getFilePath())
                 .placeholder(R.drawable.default_placeholder)
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .into(binder.fullScreenImage);
+                .into(binder.fullScreenImage);*/
 
     }
 }
