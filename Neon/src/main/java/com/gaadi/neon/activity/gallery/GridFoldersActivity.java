@@ -1,10 +1,10 @@
 package com.gaadi.neon.activity.gallery;
 
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.GridView;
 import android.widget.Toast;
 
 import com.gaadi.neon.PhotosLibrary;
@@ -26,7 +26,6 @@ import com.gaadi.neon.util.NeonException;
 import com.gaadi.neon.util.NeonImagesHandler;
 import com.gaadi.neon.util.PermissionType;
 import com.scanlibrary.R;
-import com.scanlibrary.databinding.ActivityGridFoldersBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +35,7 @@ public class GridFoldersActivity extends NeonBaseGalleryActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getLayoutInflater().inflate(R.layout.activity_grid_folders, frameLayout);
         bindXml();
         setTitle(R.string.gallery);
     }
@@ -189,9 +189,9 @@ public class GridFoldersActivity extends NeonBaseGalleryActivity {
                 @Override
                 public void onResult(boolean permissionGranted) {
                     if (permissionGranted) {
-                        ActivityGridFoldersBinding binder = DataBindingUtil.inflate(getLayoutInflater(), R.layout.activity_grid_folders, frameLayout, true);
                         ImagesFoldersAdapter adapter = new ImagesFoldersAdapter(GridFoldersActivity.this, getImageBuckets());
-                        binder.gvFolders.setAdapter(adapter);
+                        GridView gvFolders = findViewById(R.id.gvFolders);
+                        gvFolders.setAdapter(adapter);
                     } else {
                         if (NeonImagesHandler.getSingletonInstance().isNeutralEnabled()) {
                             finish();

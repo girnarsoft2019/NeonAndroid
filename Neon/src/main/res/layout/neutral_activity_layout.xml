@@ -1,117 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
 
-    <data>
-        <variable name="handlers" type="com.gaadi.neon.activity.neutral.NeonNeutralActivity"/>
-    </data>
-
-
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
         android:orientation="vertical">
 
-        <RelativeLayout
+
+        <LinearLayout
+            android:id="@+id/llActions"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            android:orientation="vertical">
-
-
-
-            <LinearLayout
-                android:id="@+id/llActions"
-                android:layout_width="match_parent"
-                android:layout_height="85dp"
-                android:layout_below="@+id/headerLayout"
-                android:layout_margin="@dimen/neon_default_margin"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/addPhotoCamera"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginEnd="5dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/text_view_middle_selector_gray_black"
-                    android:drawablePadding="6dp"
-                    android:drawableTop="@drawable/take_photo"
-                    android:gravity="center"
-                    android:padding="5dp"
-                    android:onClick="@{handlers::onClick}"
-                    android:paddingLeft="3dp"
-                    android:paddingRight="3dp"
-                    android:text="@string/take_photo"
-                    android:textColor="@color/textColor" />
-
-
-                <TextView
-                    android:id="@+id/addPhotoGallary"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginStart="5dp"
-                    android:layout_weight="1"
-                    android:onClick="@{handlers::onClick}"
-                    android:background="@drawable/text_view_middle_selector_gray_black"
-                    android:drawablePadding="6dp"
-                    android:drawableTop="@drawable/gallery"
-                    android:gravity="center"
-                    android:padding="5dp"
-                    android:paddingLeft="3dp"
-                    android:paddingRight="3dp"
-                    android:text="@string/choose_gallery"
-                    android:textColor="@color/textColor" />
-
-
-            </LinearLayout>
-
-
-            <ImageView
-                android:id="@+id/lineShadow"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/llActions"
-                android:background="@drawable/header_gradient"
-                android:contentDescription="@string/emptyString"
-                android:paddingBottom="5dp" />
-
-            <ListView
-                android:layout_below="@+id/txtTagTitle"
-                android:id="@+id/tabList"
-                android:dividerHeight="0dp"
-                android:divider="@null"
-                android:layout_margin="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
-
-
-            <FrameLayout
-                android:orientation="vertical"
-                android:id="@+id/imageShowFragmentContainer"
-                android:layout_below="@id/lineShadow"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+            android:layout_height="85dp"
+            android:layout_below="@+id/headerLayout"
+            android:layout_margin="@dimen/neon_default_margin"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/txtTagTitle"
-                android:layout_below="@+id/lineShadow"
-                android:textStyle="bold"
-                android:text="Mandatory Images:"
+                android:id="@+id/addPhotoCamera"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/text_view_middle_selector_gray_black"
+                android:drawableTop="@drawable/take_photo"
+                android:drawablePadding="6dp"
+                android:gravity="center"
+                android:padding="5dp"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:text="@string/take_photo"
+                android:textColor="@color/textColor" />
+
+
+            <TextView
+                android:id="@+id/addPhotoGallary"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
                 android:layout_marginLeft="5dp"
-                android:visibility="gone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_weight="1"
+                android:background="@drawable/text_view_middle_selector_gray_black"
+                android:drawableTop="@drawable/gallery"
+                android:drawablePadding="6dp"
+                android:gravity="center"
+                android:padding="5dp"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"
+                android:text="@string/choose_gallery"
+                android:textColor="@color/textColor" />
 
 
+        </LinearLayout>
 
-        </RelativeLayout>
 
-    </FrameLayout>
+        <ImageView
+            android:id="@+id/lineShadow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/llActions"
+            android:background="@drawable/header_gradient"
+            android:contentDescription="@string/emptyString"
+            android:paddingBottom="5dp" />
 
-</layout>
+        <ListView
+            android:id="@+id/tabList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/txtTagTitle"
+            android:layout_margin="5dp"
+            android:divider="@null"
+            android:dividerHeight="0dp" />
+
+
+        <FrameLayout
+            android:id="@+id/imageShowFragmentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/lineShadow"
+            android:orientation="vertical" />
+
+        <TextView
+            android:id="@+id/txtTagTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lineShadow"
+            android:layout_marginLeft="5dp"
+            android:text="Mandatory Images:"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+
+    </RelativeLayout>
+
+</FrameLayout>

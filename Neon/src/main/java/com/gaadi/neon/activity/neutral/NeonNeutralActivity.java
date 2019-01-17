@@ -1,11 +1,13 @@
 package com.gaadi.neon.activity.neutral;
 
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.enumerations.CameraFacing;
@@ -22,7 +24,6 @@ import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.NeonException;
 import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
-import com.scanlibrary.databinding.NeutralActivityLayoutBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,14 +33,24 @@ import java.util.List;
  * @version 1.0
  * @since 3/2/17
  */
-public class NeonNeutralActivity extends NeonBaseNeutralActivity {
+public class NeonNeutralActivity extends NeonBaseNeutralActivity implements View.OnClickListener{
 
-    NeutralActivityLayoutBinding binder;
     ArrayAdapter<String> adapter;
+    private TextView txtTagTitle, addPhotoCamera, addPhotoGallary;
+    private ListView tabList;
+    private FrameLayout imageShowFragmentContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getLayoutInflater().inflate(R.layout.neutral_activity_layout, frameLayout);
+        txtTagTitle = findViewById(R.id.txtTagTitle);
+        tabList = findViewById(R.id.tabList);
+        imageShowFragmentContainer = findViewById(R.id.imageShowFragmentContainer);
+        addPhotoCamera = findViewById(R.id.addPhotoCamera);
+        addPhotoGallary = findViewById(R.id.addPhotoGallary);
+        addPhotoGallary.setOnClickListener(this);
+        addPhotoCamera.setOnClickListener(this);
         bindXml();
     }
 
@@ -49,8 +60,7 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
         if (NeonImagesHandler.getSingletonInstance().getImagesCollection() == null ||
                 NeonImagesHandler.getSingletonInstance().getImagesCollection().size() <= 0) {
             setTitle(R.string.photos);
-            binder.tabList.setVisibility(View.VISIBLE);
-            //binder.imageShowFragmentContainer.setVisibility(View.GONE);
+            tabList.setVisibility(View.VISIBLE);
             if (adapter == null) {
                 List<ImageTagModel> tagModels = new ArrayList<>();
                 if(NeonImagesHandler.getSingletonInstance().getNeutralParam() != null && NeonImagesHandler.getSingletonInstance().getNeutralParam().getImageTagsModel() != null)
@@ -60,9 +70,9 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
                 }
                 tagModels = getMandetoryTags(tagModels);
                 if (tagModels == null || tagModels.size() <= 0) {
-                    binder.txtTagTitle.setVisibility(View.GONE);
+                    txtTagTitle.setVisibility(View.GONE);
                 } else {
-                    binder.txtTagTitle.setVisibility(View.VISIBLE);
+                    txtTagTitle.setVisibility(View.VISIBLE);
                 }
                 String[] tags = new String[tagModels.size()];
                 for (int i = 0; i < tagModels.size(); i++) {
@@ -71,12 +81,11 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
                 }
                 adapter = new ArrayAdapter<>(this, R.layout.single_textview, R.id.tagText, tags);
             }
-            //binder.txtTagTitle.setVisibility(View.VISIBLE);
-            binder.tabList.setAdapter(adapter);
+            tabList.setAdapter(adapter);
         } else {
-            binder.tabList.setVisibility(View.GONE);
-            binder.txtTagTitle.setVisibility(View.GONE);
-            binder.imageShowFragmentContainer.setVisibility(View.VISIBLE);
+            tabList.setVisibility(View.GONE);
+            txtTagTitle.setVisibility(View.GONE);
+            imageShowFragmentContainer.setVisibility(View.VISIBLE);
             setTitle(getString(R.string.photos_count, NeonImagesHandler.getSingletonInstance().getImagesCollection().size()));
         }
     }
@@ -93,12 +102,10 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
     }
 
     private void bindXml() {
-        binder = DataBindingUtil.inflate(getLayoutInflater(), R.layout.neutral_activity_layout, frameLayout, true);
-        binder.setHandlers(this);
         if (NeonImagesHandler.getSingletonInstance().getNeutralParam() != null && NeonImagesHandler.getSingletonInstance().getNeutralParam().getCustomParameters() != null) {
-            binder.addPhotoCamera.setVisibility(NeonImagesHandler.getSingletonInstance().getNeutralParam().getCustomParameters()
+            addPhotoCamera.setVisibility(NeonImagesHandler.getSingletonInstance().getNeutralParam().getCustomParameters()
                     .gethideCameraButtonInNeutral() ? View.GONE : View.VISIBLE);
-            binder.addPhotoGallary.setVisibility(NeonImagesHandler.getSingletonInstance().getNeutralParam().getCustomParameters()
+            addPhotoGallary.setVisibility(NeonImagesHandler.getSingletonInstance().getNeutralParam().getCustomParameters()
                     .getHideGalleryButtonInNeutral() ? View.GONE : View.VISIBLE);
         }
         ImageShowFragment imageShowFragment = new ImageShowFragment();

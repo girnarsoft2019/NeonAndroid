@@ -1,6 +1,5 @@
 package com.gaadi.neon.activity;
 
-import android.databinding.DataBindingUtil;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -13,20 +12,19 @@ import com.gaadi.neon.model.PhotosMode;
 import com.gaadi.neon.util.NeonException;
 import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
-import com.scanlibrary.databinding.ActivityImageShowBinding;
 
 public class ImageShow extends NeonBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getLayoutInflater().inflate(R.layout.activity_image_show, frameLayout);
         setTitle(R.string.image_review);
         bindXml();
     }
 
 
     private void bindXml() {
-        ActivityImageShowBinding binder = DataBindingUtil.inflate(getLayoutInflater(), R.layout.activity_image_show,frameLayout,true);
         ImageShowFragment imageShowFragment = new ImageShowFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().add(R.id.imageShowFragmentContainer, imageShowFragment).commit();

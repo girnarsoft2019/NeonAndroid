@@ -12,7 +12,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -41,6 +40,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.gaadi.neon.activity.ImageReviewActivity;
@@ -58,8 +58,6 @@ import com.gaadi.neon.util.NeonImagesHandler;
 import com.gaadi.neon.util.NeonUtils;
 import com.gaadi.neon.util.PrefsUtils;
 import com.scanlibrary.R;
-import com.scanlibrary.databinding.NeonCameraFragmentLayoutBinding;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -71,12 +69,11 @@ import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("deprecation,unchecked")
-public class CameraFragment1 extends Fragment implements View.OnTouchListener, Camera.PictureCallback {
+public class CameraFragment1 extends Fragment implements View.OnTouchListener, Camera.PictureCallback, View.OnClickListener {
 
     private static final String TAG = "CameraFragment1";
     private static final int REQUEST_REVIEW = 100;
     private static final int SHAKE_THRESHOLD = 20;
-    public NeonCameraFragmentLayoutBinding binder;
     public Camera mCamera;
     private DrawingView drawingView;
     private ImageView currentFlashMode;
@@ -102,6 +99,8 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     private float[] mGravity;
     private long lastUpdate = 0;
     private float last_x, last_y, last_z;
+    private LinearLayout llFlash;
+    private ImageView buttonCaptureHorizontal, buttonCaptureVertical;
     SensorEventListener sensorEventListener = new SensorEventListener() {
         @Override
         public void onSensorChanged(SensorEvent event) {
@@ -171,7 +170,8 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binder = DataBindingUtil.inflate(getActivity().getLayoutInflater(), R.layout.neon_camera_fragment_layout, container, false);
+        ViewGroup rootView = (ViewGroup) inflater
+                .inflate(R.layout.neon_camera_fragment_layout, container, false);
         if (NeonImagesHandler.getSingleonInstance().getCameraParam() != null &&
                 NeonImagesHandler.getSingleonInstance().getCameraParam().getCameraFacing() != null) {
             localCameraFacing = NeonImagesHandler.getSingleonInstance().getCameraParam().getCameraFacing();
@@ -179,31 +179,37 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
         mActivity = getActivity();
         cameraParam = NeonImagesHandler.getSingleonInstance().getCameraParam();
         if (cameraParam != null) {
-            initialize();
+            initialize(rootView);
             customize();
         } else {
             Toast.makeText(getContext(), getString(R.string.pass_params), Toast.LENGTH_SHORT).show();
         }
         sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         fromCreate = true;
-        return binder.getRoot();
+        return rootView;
     }
 
-    private void initialize() {
+    private void initialize(ViewGroup rootView) {
         LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.HORIZONTAL, false);
 
-        currentFlashMode = binder.currentFlashMode;
-        rcvFlash = binder.flashListview;
-        mSwitchCamera = binder.switchCamera;
+        currentFlashMode = rootView.findViewById(R.id.currentFlashMode);
+        rcvFlash = rootView.findViewById(R.id.flash_listview);
+        mSwitchCamera = rootView.findViewById(R.id.switchCamera);
+        llFlash = rootView.findViewById(R.id.llFlash);
+        mCameraLayout = rootView.findViewById(R.id.camera_preview);
+        buttonCaptureHorizontal = rootView.findViewById(R.id.buttonCaptureHorizontal);
+        buttonCaptureVertical = rootView.findViewById(R.id.buttonCaptureVertical);
+        currentFlashMode.setOnClickListener(this);
+        buttonCaptureVertical.setOnClickListener(this);
+        buttonCaptureHorizontal.setOnClickListener(this);
+        mSwitchCamera.setOnClickListener(this);
 
         rcvFlash.setLayoutManager(layoutManager);
 
         //View to add rectangle on tap to focus
         drawingView = new DrawingView(mActivity);
 
-        binder.setHandlers(this);
-
-        binder.getRoot().setOnTouchListener(this);
+        rootView.setOnTouchListener(this);
 
 //        if (getArguments() != null)
 //            locationRestrictive = getArguments().getBoolean("locationRestrictive", true);
@@ -222,7 +228,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
 
     }
 
-    public void onClickFragmentsView(View v) {
+    public void onClick(View v) {
         if (v.getId() == R.id.buttonCaptureVertical || v.getId() == R.id.buttonCaptureHorizontal) {
             Log.e("Rajeev", "onClickFragmentsView: " + locationRestrictive);
             if (locationRestrictive) {
@@ -271,7 +277,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
         setOrientation(mActivity, orientation);
 
         if (!cameraParam.getFlashEnabled()) {
-            binder.llFlash.setVisibility(View.INVISIBLE);
+            llFlash.setVisibility(View.INVISIBLE);
         }
         // enableCapturedReview = mPhotoParams.isEnableCapturedReview();
 
@@ -414,8 +420,6 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                 });
 
                 mCameraPreview.setOnTouchListener(this);
-
-                mCameraLayout = binder.cameraPreview;
                 mCameraLayout.addView(mCameraPreview);
 
                 //set the screen layout to fullscreen
@@ -544,12 +548,12 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
         if (orientation != null) {
             if (orientation == CameraOrientation.landscape) {
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                binder.buttonCaptureHorizontal.setVisibility(View.VISIBLE);
-                binder.buttonCaptureVertical.setVisibility(View.INVISIBLE);
+                buttonCaptureHorizontal.setVisibility(View.VISIBLE);
+                buttonCaptureVertical.setVisibility(View.INVISIBLE);
             } else if (orientation == CameraOrientation.portrait) {
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                binder.buttonCaptureHorizontal.setVisibility(View.INVISIBLE);
-                binder.buttonCaptureVertical.setVisibility(View.VISIBLE);
+                buttonCaptureHorizontal.setVisibility(View.INVISIBLE);
+                buttonCaptureVertical.setVisibility(View.VISIBLE);
             }
         } else {
             Log.e(Constants.TAG, "No orientation set");
@@ -696,8 +700,6 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                 });
 
                 mCameraPreview.setOnTouchListener(this);
-
-                mCameraLayout = binder.cameraPreview;
                 mCameraLayout.addView(mCameraPreview);
 
                 //set the screen layout to fullscreen

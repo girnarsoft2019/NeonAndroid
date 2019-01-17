@@ -2,19 +2,19 @@ package com.gaadi.neon.activity.gallery;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.gaadi.neon.activity.camera.NormalCameraActivityNeon;
 import com.gaadi.neon.enumerations.CameraFacing;
 import com.gaadi.neon.enumerations.CameraOrientation;
 import com.gaadi.neon.enumerations.CameraType;
@@ -35,7 +35,6 @@ import com.gaadi.neon.util.NeonException;
 import com.gaadi.neon.util.PermissionType;
 import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
-import com.scanlibrary.databinding.HorizontalGalleryLayoutBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,16 +47,16 @@ import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOption
  * @since 6/2/17
  */
 public class HorizontalFilesActivity extends NeonBaseGalleryActivity implements OnImageClickListener {
-
-    HorizontalGalleryLayoutBinding binder;
     ArrayList<FileInfo> fileInfos;
     MenuItem textViewDone, menuItemCamera;
     List<FileInfo> recentelyImageCollection;
+    private ImageView fullScreenImage;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getLayoutInflater().inflate(R.layout.horizontal_gallery_layout, frameLayout);
         recentelyImageCollection = new ArrayList<>();
         bindXml();
         String title = getIntent().getStringExtra(Constants.BucketName);
@@ -246,18 +245,19 @@ public class HorizontalFilesActivity extends NeonBaseGalleryActivity implements 
 
 
     private void bindXml() {
+        fullScreenImage = findViewById(R.id.fullScreenImage);
         try {
             askForPermissionIfNeeded(PermissionType.write_external_storage, new OnPermissionResultListener() {
                 @Override
                 public void onResult(boolean permissionGranted) {
                     if (permissionGranted) {
-                        binder = DataBindingUtil.inflate(getLayoutInflater(), R.layout.horizontal_gallery_layout, frameLayout, true);
+                        RecyclerView galleryHorizontalRv = findViewById(R.id.galleryHorizontalRv);
                         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(HorizontalFilesActivity.this, LinearLayoutManager.HORIZONTAL, false);
-                        binder.galleryHorizontalRv.setLayoutManager(linearLayoutManager);
+                        galleryHorizontalRv.setLayoutManager(linearLayoutManager);
                         fileInfos = getFileFromBucketId(getIntent().getStringExtra(Constants.BucketId));
                         if (fileInfos != null && fileInfos.size() > 0) {
                             GalleryHoriontalAdapter adapter = new GalleryHoriontalAdapter(HorizontalFilesActivity.this, fileInfos, HorizontalFilesActivity.this);
-                            binder.galleryHorizontalRv.setAdapter(adapter);
+                            galleryHorizontalRv.setAdapter(adapter);
                             onClick(fileInfos.get(0));
                         }
                     } else {
@@ -288,12 +288,12 @@ public class HorizontalFilesActivity extends NeonBaseGalleryActivity implements 
         Glide.with(this).load(fileInfo.getFilePath())
                 .apply(options)
                 .transition(withCrossFade())
-                .into(binder.fullScreenImage);
+                .into(fullScreenImage);
         /*Glide.with(this).load(fileInfo.getFilePath())
                 .placeholder(R.drawable.default_placeholder)
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .into(binder.fullScreenImage);*/
+                .into(fullScreenImage);*/
 
     }
 }

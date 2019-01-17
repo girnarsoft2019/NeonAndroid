@@ -1,25 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
 
-    <RelativeLayout
+    <GridView
+
+        android:id="@+id/gvFolderPhotos"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="5dp"
         android:background="@color/white"
-        android:orientation="vertical">
-        <GridView
+        android:columnWidth="@dimen/grid_column_width"
+        android:horizontalSpacing="@dimen/gv_horizontal_spacing"
+        android:numColumns="3"
+        android:verticalSpacing="@dimen/gv_vertical_spacing">
 
-            android:id="@+id/gvFolderPhotos"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:background="@color/white"
-            android:columnWidth="@dimen/grid_column_width"
-            android:horizontalSpacing="@dimen/gv_horizontal_spacing"
-            android:numColumns="3"
-            android:verticalSpacing="@dimen/gv_vertical_spacing">
-
-        </GridView>
-    </RelativeLayout>
-
-
-</layout>
+    </GridView>
+</RelativeLayout>

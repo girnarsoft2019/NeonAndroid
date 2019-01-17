@@ -1,7 +1,6 @@
 package com.gaadi.neon.fragment;
 
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,7 +20,6 @@ import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
-import com.scanlibrary.databinding.ImageShowLayoutBinding;
 
 import java.util.List;
 
@@ -33,8 +31,8 @@ import java.util.List;
 public class ImageShowFragment extends Fragment {
 
     ImageShowAdapter adapter;
-    ImageShowLayoutBinding binder;
     private boolean isProfileTagOnly;
+    private DynamicGridView imageShowGrid;
 
     @Nullable
     @Override
@@ -43,9 +41,11 @@ public class ImageShowFragment extends Fragment {
         if (iNeutralParam != null) {
             isProfileTagOnly = iNeutralParam.hasOnlyProfileTag();
         }
-        binder = DataBindingUtil.inflate(getActivity().getLayoutInflater(), R.layout.image_show_layout, null, false);
-        binder.btnDone.setOnClickListener(doneListener);
-        binder.imageShowGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        ViewGroup rootView = (ViewGroup) inflater
+                .inflate(R.layout.image_show_layout, container, false);
+        rootView.findViewById(R.id.btnDone).setOnClickListener(doneListener);
+        imageShowGrid = rootView.findViewById(R.id.image_show_grid);
+        imageShowGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 if (NeonImagesHandler.getSingletonInstance() != null &&
@@ -60,22 +60,22 @@ public class ImageShowFragment extends Fragment {
 
             }
         });
-        binder.imageShowGrid.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        imageShowGrid.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
-                binder.imageShowGrid.startEditMode(position);
+                imageShowGrid.startEditMode(position);
                 return true;
             }
         });
 
 
-        binder.imageShowGrid.setOnDropListener(new DynamicGridView.OnDropListener() {
+        imageShowGrid.setOnDropListener(new DynamicGridView.OnDropListener() {
             @Override
             public void onActionDrop() {
-                binder.imageShowGrid.stopEditMode();
+                imageShowGrid.stopEditMode();
             }
         });
-        binder.imageShowGrid.setOnDragListener(new DynamicGridView.OnDragListener() {
+        imageShowGrid.setOnDragListener(new DynamicGridView.OnDragListener() {
             @Override
             public void onDragStarted(int position) {
             }
@@ -92,7 +92,7 @@ public class ImageShowFragment extends Fragment {
             }
         });
 
-        return binder.getRoot();
+        return rootView;
     }
 
     @Override
@@ -103,10 +103,8 @@ public class ImageShowFragment extends Fragment {
             return;
         }
         adapter = new ImageShowAdapter(getActivity(), isProfileTagOnly);
-        binder.imageShowGrid.setAdapter(adapter);
+        imageShowGrid.setAdapter(adapter);
     }
-
-    //binder.imageShowGrid.startEditMode(position);
 
     View.OnClickListener doneListener = new View.OnClickListener() {
         @Override

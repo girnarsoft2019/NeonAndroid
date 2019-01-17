@@ -1,7 +1,6 @@
 package com.gaadi.neon.activity.camera;
 
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -13,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,7 +40,6 @@ import com.gaadi.neon.util.NeonException;
 import com.gaadi.neon.util.NeonImagesHandler;
 import com.gaadi.neon.util.PermissionType;
 import com.scanlibrary.R;
-import com.scanlibrary.databinding.NormalCameraActivityLayoutBinding;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,7 +52,7 @@ import java.util.List;
  * @since 25/1/17
  */
 public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements CameraFragment1.SetOnPictureTaken
-        , LivePhotoNextTagListener, FindLocations.ILocation
+        , LivePhotoNextTagListener, FindLocations.ILocation, View.OnClickListener
 
 {
 
@@ -61,20 +60,32 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
     RelativeLayout tagsLayout;
     List<ImageTagModel> tagModels;
     int currentTag;
-    NormalCameraActivityLayoutBinding binder;
-    private TextView tvTag, tvNext, tvPrevious;
+    private TextView tvTag, tvNext, tvPrevious, buttonDone;
     private ImageView buttonGallery;
     private Location location;
+    private LinearLayout imageHolderView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        bindXml();
+        setContentView(R.layout.normal_camera_activity_layout);
+        tagsLayout = findViewById(R.id.rlTags);
+        tvTag = findViewById(R.id.tvTag);
+        tvNext = findViewById(R.id.tvSkip);
+        tvPrevious = findViewById(R.id.tvPrev);
+        buttonGallery = findViewById(R.id.buttonGallery);
+        buttonDone = findViewById(R.id.buttonDone);
+        imageHolderView = findViewById(R.id.imageHolderView);
+        buttonDone.setOnClickListener(this);
+        buttonGallery.setOnClickListener(this);
+        tvNext.setOnClickListener(this);
+        tvPrevious.setOnClickListener(this);
+
         cameraParams = NeonImagesHandler.getSingletonInstance().getCameraParam();
         if (NeonImagesHandler.getSingletonInstance().getLivePhotosListener() != null) {
-            binder.buttonDone.setVisibility(View.INVISIBLE);
+            buttonDone.setVisibility(View.INVISIBLE);
         } else {
-            binder.buttonDone.setVisibility(View.VISIBLE);
+            buttonDone.setVisibility(View.VISIBLE);
         }
         customize();
         bindCameraFragment();
@@ -146,19 +157,6 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         } catch (ManifestPermission manifestPermission) {
             manifestPermission.printStackTrace();
         }
-    }
-
-    private void bindXml() {
-        binder = DataBindingUtil.setContentView(this, R.layout.normal_camera_activity_layout);
-        // tvImageName = binder.tvImageName;
-        tvTag = binder.tvTag;
-        tvNext = binder.tvSkip;
-        tvPrevious = binder.tvPrev;
-        buttonGallery = binder.buttonGallery;
-        tagsLayout = binder.rlTags;
-        binder.setHandlers(this);
-
-
     }
 
     public void onClick(View v) {
@@ -263,7 +261,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
                         NeonImagesHandler.getSingletonInstance().sendImageCollectionAndFinish(this, ResponseCode.Success);
                     }
                 } else {
-                    onClick(binder.buttonDone);
+                    onClick(buttonDone);
                 }
 
             } else {
@@ -451,8 +449,8 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         if (cameraParams.getTagEnabled()) {
             fileInfo.setFileTag(tagModels.get(currentTag));
         }
-        if (binder.imageHolderView.getVisibility() != View.VISIBLE) {
-            binder.imageHolderView.setVisibility(View.VISIBLE);
+        if (imageHolderView.getVisibility() != View.VISIBLE) {
+            imageHolderView.setVisibility(View.VISIBLE);
         }
         boolean locationRestriction = cameraParams == null || cameraParams.getCustomParameters() == null || cameraParams.getCustomParameters().getLocationRestrictive();
         Log.e("Activity", "onPictureTaken: " + locationRestriction);
@@ -472,13 +470,13 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
                     ImageView image = new ImageView(this);
                     Bitmap thumbnail = ThumbnailUtils.extractThumbnail(BitmapFactory.decodeFile(filePath), 200, 200);
                     image.setImageBitmap(thumbnail);
-                    binder.imageHolderView.addView(image);
+                    imageHolderView.addView(image);
                 }
 
                 if (cameraParams.getTagEnabled()) {
                     ImageTagModel imageTagModel = tagModels.get(currentTag);
                     if (imageTagModel.getNumberOfPhotos() > 0 && NeonImagesHandler.getSingletonInstance().getNumberOfPhotosCollected(imageTagModel) >= imageTagModel.getNumberOfPhotos()) {
-                        onClick(binder.tvSkip);
+                        onClick(tvNext);
                     }
                 }
             }
@@ -537,7 +535,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
             if (cameraParams.getTagEnabled()) {
                 ImageTagModel imageTagModel = tagModels.get(currentTag);
                 if (imageTagModel.getNumberOfPhotos() > 0 && NeonImagesHandler.getSingletonInstance().getNumberOfPhotosCollected(imageTagModel) >= imageTagModel.getNumberOfPhotos()) {
-                    onClick(binder.tvSkip);
+                    onClick(tvNext);
                 }
             }
         }

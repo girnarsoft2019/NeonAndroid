@@ -2,14 +2,12 @@ package com.gaadi.neon.activity.gallery;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.GridView;
 import android.widget.Toast;
-
-import com.gaadi.neon.activity.camera.NormalCameraActivityNeon;
 import com.gaadi.neon.enumerations.CameraFacing;
 import com.gaadi.neon.enumerations.CameraOrientation;
 import com.gaadi.neon.enumerations.CameraType;
@@ -29,7 +27,6 @@ import com.gaadi.neon.util.NeonException;
 import com.gaadi.neon.util.PermissionType;
 import com.gaadi.neon.util.NeonImagesHandler;
 import com.scanlibrary.R;
-import com.scanlibrary.databinding.ActivityGridFilesBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +38,7 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getLayoutInflater().inflate(R.layout.activity_grid_files, frameLayout);
         recentelyImageCollection = new ArrayList<>();
         bindXml();
         String title = getIntent().getStringExtra(Constants.BucketName);
@@ -239,9 +237,9 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
                 @Override
                 public void onResult(boolean permissionGranted) {
                     if (permissionGranted) {
-                        ActivityGridFilesBinding binder = DataBindingUtil.inflate(getLayoutInflater(), R.layout.activity_grid_files, frameLayout, true);
                         GridFilesAdapter adapter = new GridFilesAdapter(GridFilesActivity.this, getFileFromBucketId(getIntent().getStringExtra(Constants.BucketId)));
-                        binder.gvFolderPhotos.setAdapter(adapter);
+                        GridView gvFolderPhotos = findViewById(R.id.gvFolderPhotos);
+                        gvFolderPhotos.setAdapter(adapter);
                     } else {
                         if (NeonImagesHandler.getSingletonInstance().isNeutralEnabled()) {
                             finish();
