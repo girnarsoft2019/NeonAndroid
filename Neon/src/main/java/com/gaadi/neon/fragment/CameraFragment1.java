@@ -58,7 +58,6 @@ import com.gaadi.neon.util.FindLocations;
 import com.gaadi.neon.util.NeonImagesHandler;
 import com.gaadi.neon.util.NeonUtils;
 import com.gaadi.neon.util.PrefsUtils;
-import com.scanlibrary.BuildConfig;
 import com.scanlibrary.R;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
