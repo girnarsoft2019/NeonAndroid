@@ -87,7 +87,7 @@
         <!-- Nougat specific -->
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.gaadi.neon.provider"
+            android:authorities="@string/neon_file_provider_authority"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

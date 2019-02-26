@@ -253,8 +253,8 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
             cropFilePath = NeonUtils.getEmptyStoragePath(getActivity());
             //Uri inputUri = Uri.fromFile(new File(imageModel.getFilePath()));
             //Uri outputUri = Uri.fromFile(cropFilePath);
-            Uri inputUri = FileProvider.getUriForFile(getActivity(), "com.gaadi.neon.provider", new File(imageModel.getFilePath()));
-            Uri outputUri = FileProvider.getUriForFile(getActivity(), "com.gaadi.neon.provider", cropFilePath);
+            Uri inputUri = FileProvider.getUriForFile(getActivity(), NeonUtils.getFileProviderAuthority(getActivity()), new File(imageModel.getFilePath()));
+            Uri outputUri = FileProvider.getUriForFile(getActivity(), NeonUtils.getFileProviderAuthority(getActivity()), cropFilePath);
             Crop.of(inputUri, outputUri).start(getActivity(), ImageReviewViewPagerFragment.this);
         }
     }

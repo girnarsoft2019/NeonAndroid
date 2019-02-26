@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.gaadi.neon.util.Constants;
+import com.gaadi.neon.util.NeonUtils;
 import com.scanlibrary.R;
 
 import java.io.File;
@@ -91,7 +92,7 @@ public class ReviewImageActivity extends AppCompatActivity implements View.OnCli
         } else if (id == R.id.bCancel) {
             //Uri uri = Uri.parse(imagePath);
             Uri uri = FileProvider.getUriForFile(this,
-                    "com.gaadi.neon.provider",
+                    NeonUtils.getFileProviderAuthority(this),
                     new File(imagePath));
             File fdelete = new File(uri.getPath());
             if (fdelete.exists()) {

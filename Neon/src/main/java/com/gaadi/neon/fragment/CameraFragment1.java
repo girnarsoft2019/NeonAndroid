@@ -906,7 +906,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                 }
 
                 Uri pictureFileUri = FileProvider.getUriForFile(context,
-                        "com.gaadi.neon.provider",
+                        NeonUtils.getFileProviderAuthority(context),
                         pictureFile);
 
                 //Uri pictureFileUri = Uri.parse("file://" + pictureFile.getAbsolutePath());

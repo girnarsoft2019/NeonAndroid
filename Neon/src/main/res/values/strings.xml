@@ -66,4 +66,5 @@
     <string name="please_confirm">Please confirm</string>
     <string name="would_you_like_to_save_captured_images">Would you like to save the captured images</string>
     <string name="would_you_like_to_save_captured_pdf">Would you like to save the captured PDF file</string>
+    <string name="neon_file_provider_authority">com.scanlibrary.provider</string>
 </resources>

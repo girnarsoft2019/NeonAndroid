@@ -578,11 +578,15 @@ public class NeonUtils {
                    file.delete();
                    //context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
                    context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, FileProvider.getUriForFile(context,
-                           "com.gaadi.neon.provider",
+                           getFileProviderAuthority(context),
                            file)));
                }catch (Exception e){
                    e.printStackTrace();
                }
            }
+    }
+
+    public static String getFileProviderAuthority(Context context){
+            return context.getResources().getString(R.string.neon_file_provider_authority);
     }
 }

@@ -26,10 +26,12 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            resValue("string", "neon_file_provider_authority", "com.gaadi.neon.provider")
 //            signingConfig signingConfigs.config
         }
         debug {
             debuggable true
+            resValue("string", "neon_file_provider_authority", "com.gaadi.neon.provider")
 //            signingConfig signingConfigs.config
         }
     }
