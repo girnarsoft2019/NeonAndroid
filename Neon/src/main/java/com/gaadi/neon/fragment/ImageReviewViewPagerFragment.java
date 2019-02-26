@@ -13,6 +13,7 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -250,8 +251,10 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
             showTagsDropDown(v);
         } else if (v.getId() == R.id.imagereview_cropbtn) {
             cropFilePath = NeonUtils.getEmptyStoragePath(getActivity());
-            Uri inputUri = Uri.fromFile(new File(imageModel.getFilePath()));
-            Uri outputUri = Uri.fromFile(cropFilePath);
+            //Uri inputUri = Uri.fromFile(new File(imageModel.getFilePath()));
+            //Uri outputUri = Uri.fromFile(cropFilePath);
+            Uri inputUri = FileProvider.getUriForFile(getActivity(), "com.gaadi.neon.provider", new File(imageModel.getFilePath()));
+            Uri outputUri = FileProvider.getUriForFile(getActivity(), "com.gaadi.neon.provider", cropFilePath);
             Crop.of(inputUri, outputUri).start(getActivity(), ImageReviewViewPagerFragment.this);
         }
     }

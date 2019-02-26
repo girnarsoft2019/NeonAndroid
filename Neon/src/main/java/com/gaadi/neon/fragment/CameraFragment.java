@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -617,7 +618,10 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
                 fos.write(byteArray);
                 //fos.write(data);
                 fos.close();
-                Uri pictureFileUri = Uri.parse("file://" + pictureFile.getAbsolutePath());
+                //Uri pictureFileUri = Uri.parse("file://" + pictureFile.getAbsolutePath());
+                Uri pictureFileUri = FileProvider.getUriForFile(context,
+                        "com.gaadi.neon.provider",
+                        pictureFile);
                 mActivity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                         pictureFileUri));
 

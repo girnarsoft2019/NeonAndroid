@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -88,7 +89,10 @@ public class ReviewImageActivity extends AppCompatActivity implements View.OnCli
             setResult(RESULT_OK, intent);
             finish();
         } else if (id == R.id.bCancel) {
-            Uri uri = Uri.parse(imagePath);
+            //Uri uri = Uri.parse(imagePath);
+            Uri uri = FileProvider.getUriForFile(this,
+                    "com.gaadi.neon.provider",
+                    new File(imagePath));
             File fdelete = new File(uri.getPath());
             if (fdelete.exists()) {
                 if (fdelete.delete()) {

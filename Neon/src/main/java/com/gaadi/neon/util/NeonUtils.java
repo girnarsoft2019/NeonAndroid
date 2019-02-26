@@ -20,6 +20,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v4.os.EnvironmentCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -575,7 +576,10 @@ public class NeonUtils {
            if(file.exists()){
                try {
                    file.delete();
-                   context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
+                   //context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
+                   context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, FileProvider.getUriForFile(context,
+                           "com.gaadi.neon.provider",
+                           file)));
                }catch (Exception e){
                    e.printStackTrace();
                }

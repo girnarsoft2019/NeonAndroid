@@ -22,6 +22,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.FileProvider;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AlertDialog;
@@ -640,8 +641,11 @@ public class OneStepActivity extends AppCompatActivity implements CameraFragment
                 public void onSuccess() {
                     Log.d("Rajeev", "onSuccess: " + mOutputImagePath);
                     File file = new File(mOutputImagePath);
-                    Log.d("Rajeev", "onSuccess: " + Uri.fromFile(file));
-                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
+                    //Log.d("Rajeev", "onSuccess: " + Uri.fromFile(file));
+                    //sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
+                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, FileProvider.getUriForFile(OneStepActivity.this,
+                            "com.gaadi.neon.provider",
+                            file)));
                     afterPictureTaken(mOutputImagePath);
                     NeonUtils.deleteFile(OneStepActivity.this, mInputImagePath);
                 }

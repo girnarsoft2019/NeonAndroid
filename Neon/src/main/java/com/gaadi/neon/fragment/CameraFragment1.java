@@ -29,6 +29,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -57,6 +58,7 @@ import com.gaadi.neon.util.FindLocations;
 import com.gaadi.neon.util.NeonImagesHandler;
 import com.gaadi.neon.util.NeonUtils;
 import com.gaadi.neon.util.PrefsUtils;
+import com.scanlibrary.BuildConfig;
 import com.scanlibrary.R;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -835,7 +837,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
         }
 
 
-        public File savePictureToStorage() {
+        public File savePictureToStorage(Context context) {
             File pictureFile = Constants.getMediaOutputFile(getActivity(), Constants.TYPE_IMAGE);
             Log.d("HIMANSHU FILE=", pictureFile.getAbsolutePath());
             if (pictureFile == null)
@@ -904,7 +906,11 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                     NeonUtils.compressImage(setCompressBy, pictureFile.getAbsolutePath(), 1024, 900);
                 }
 
-                Uri pictureFileUri = Uri.parse("file://" + pictureFile.getAbsolutePath());
+                Uri pictureFileUri = FileProvider.getUriForFile(context,
+                        "com.gaadi.neon.provider",
+                        pictureFile);
+
+                //Uri pictureFileUri = Uri.parse("file://" + pictureFile.getAbsolutePath());
                 mActivity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                         pictureFileUri));
 
@@ -922,14 +928,14 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                 return pictureFile;
             } else {
                 pictureFile = null;
-                savePictureToStorage();
+                savePictureToStorage(context);
             }
             return pictureFile;
         }
 
         @Override
         protected File doInBackground(Void... params) {
-            File pictureFile = savePictureToStorage();
+            File pictureFile = savePictureToStorage(context);
             return pictureFile;
         }
 
