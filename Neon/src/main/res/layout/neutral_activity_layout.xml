@@ -68,23 +68,24 @@
             android:background="@drawable/header_gradient"
             android:contentDescription="@string/emptyString"
             android:paddingBottom="5dp" />
-
-        <ListView
-            android:id="@+id/tabList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/txtTagTitle"
-            android:layout_margin="5dp"
-            android:divider="@null"
-            android:dividerHeight="0dp" />
-
-
         <FrameLayout
             android:id="@+id/imageShowFragmentContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/lineShadow"
             android:orientation="vertical" />
+
+        <ListView
+            android:id="@+id/tabList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/txtTagTitle"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:divider="@null"
+            android:layout_marginBottom="60dp"
+            android:dividerHeight="0dp" />
 
         <TextView
             android:id="@+id/txtTagTitle"
