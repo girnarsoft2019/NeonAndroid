@@ -905,13 +905,10 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                     NeonUtils.compressImage(setCompressBy, pictureFile.getAbsolutePath(), 1024, 900);
                 }
 
-                Uri pictureFileUri = FileProvider.getUriForFile(context,
-                        NeonUtils.getFileProviderAuthority(context),
-                        pictureFile);
-
-                //Uri pictureFileUri = Uri.parse("file://" + pictureFile.getAbsolutePath());
+                /*Uri pictureFileUri = Uri.parse("file://" + pictureFile.getAbsolutePath());
                 mActivity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                        pictureFileUri));
+                        pictureFileUri));*/
+                NeonUtils.scanFile(context, pictureFile.getAbsolutePath());
 
             } catch (FileNotFoundException e) {
                 Log.d(TAG, "File not found: " + e.getMessage());

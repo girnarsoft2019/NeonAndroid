@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.hardware.Camera;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -40,13 +41,13 @@ import java.util.List;
 
 /**
  * Created by Lakshay
- * @since 17-03-2015.
  *
+ * @since 17-03-2015.
  */
 
 public class NeonUtils {
 
-        public static void createNotification(Context context, int smallIcon, String title, String content, Intent resultIntent, int imageUploadNotifId) {
+    public static void createNotification(Context context, int smallIcon, String title, String content, Intent resultIntent, int imageUploadNotifId) {
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
                 .setSmallIcon(smallIcon)
                 .setContentTitle(title)
@@ -189,7 +190,6 @@ public class NeonUtils {
     }
 
 
-
     public static ArrayList<FileInfo> removeFileInfo(ArrayList<FileInfo> source, FileInfo fileInfo) {
         for (FileInfo fileInfo1 : source) {
             if (fileInfo.getFilePath().equals(fileInfo1.getFilePath())) {
@@ -306,7 +306,7 @@ public class NeonUtils {
                                              final int requestCode, final String requestFor) {
         final ArrayList<String> permissionNeededForList = checkSelfPermission(context, permissions);
         String requestsFor = permissionNeededForList.get(permissionNeededForList.size() - 1);
-        permissionNeededForList.remove(permissionNeededForList.size()-1);
+        permissionNeededForList.remove(permissionNeededForList.size() - 1);
         if (permissionNeededForList.isEmpty()) {
             return true;
         }
@@ -345,7 +345,7 @@ public class NeonUtils {
     private static ArrayList<String> checkSelfPermission(Context context, String[] permissions) {
         ArrayList<String> list = new ArrayList<>();
         StringBuilder requestsFor = new StringBuilder();
-        for (String permission: permissions) {
+        for (String permission : permissions) {
             if (ActivityCompat.checkSelfPermission(context, permission)
                     != PackageManager.PERMISSION_GRANTED) {
                 list.add(permission);
@@ -375,7 +375,7 @@ public class NeonUtils {
 
     public static int isFrontCameraAvailable() {
         Camera.CameraInfo ci = new Camera.CameraInfo();
-        for (int i = 0 ; i < Camera.getNumberOfCameras(); i++) {
+        for (int i = 0; i < Camera.getNumberOfCameras(); i++) {
             Camera.getCameraInfo(i, ci);
             if (ci.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
                 return Camera.CameraInfo.CAMERA_FACING_FRONT;
@@ -395,8 +395,8 @@ public class NeonUtils {
         int pixel;
 
         // scan through all pixels
-        for(int x = 0; x < width; ++x) {
-            for(int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            for (int y = 0; y < height; ++y) {
                 // get pixel color
                 pixel = src.getPixel(x, y);
                 A = Color.alpha(pixel);
@@ -406,16 +406,25 @@ public class NeonUtils {
 
                 // increase/decrease each channel
                 R += value;
-                if(R > 255) { R = 255; }
-                else if(R < 0) { R = 0; }
+                if (R > 255) {
+                    R = 255;
+                } else if (R < 0) {
+                    R = 0;
+                }
 
                 G += value;
-                if(G > 255) { G = 255; }
-                else if(G < 0) { G = 0; }
+                if (G > 255) {
+                    G = 255;
+                } else if (G < 0) {
+                    G = 0;
+                }
 
                 B += value;
-                if(B > 255) { B = 255; }
-                else if(B < 0) { B = 0; }
+                if (B > 255) {
+                    B = 255;
+                } else if (B < 0) {
+                    B = 0;
+                }
 
                 // apply new pixel color to output bitmap
                 bmOut.setPixel(x, y, Color.argb(A, R, G, B));
@@ -439,14 +448,13 @@ public class NeonUtils {
                 break;
             }
         }
-        File externalDir = new File(selectedPath , ctx.getString(R.string.app_name));
+        File externalDir = new File(selectedPath, ctx.getString(R.string.app_name));
         if (!externalDir.exists()) {
             if (!externalDir.mkdir()) {
                 //Toast.makeText(ctx,"FAILED externalDir.mkdir() TO CREATE DIRECTORY",Toast.LENGTH_SHORT).show();
                 Log.d("MyCameraApp", "failed to create directory");
                 return null;
-            }
-            else{
+            } else {
                 //Toast.makeText(ctx,"SUCCESS to create folder",Toast.LENGTH_SHORT).show();
             }
         }
@@ -461,18 +469,16 @@ public class NeonUtils {
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES).toString());
         final List<String> result = new ArrayList<>();
-        if(!mediaStorageDir.exists()){
-            if(!mediaStorageDir.mkdir()){
-                Log.e("CommonUtils","Pictures Directory not found");
-            }
-            else{
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdir()) {
+                Log.e("CommonUtils", "Pictures Directory not found");
+            } else {
                 result.add(mediaStorageDir.getAbsolutePath());
             }
-        }
-        else{
+        } else {
             result.add(mediaStorageDir.getAbsolutePath());
         }
-        final File[] externalCacheDirs = ContextCompat.getExternalFilesDirs(context,null);
+        final File[] externalCacheDirs = ContextCompat.getExternalFilesDirs(context, null);
         if (externalCacheDirs == null || externalCacheDirs.length == 0)
             return null;
         if (externalCacheDirs.length == 1) {
@@ -485,8 +491,7 @@ public class NeonUtils {
                 return null;
         }
 
-        if (includePrimaryExternalStorage || externalCacheDirs.length == 1)
-        {
+        if (includePrimaryExternalStorage || externalCacheDirs.length == 1) {
             result.add(externalCacheDirs[0].getAbsolutePath());
             //result.add(getRootOfInnerSdCardFolder(externalCacheDirs[0]));
         }
@@ -505,8 +510,8 @@ public class NeonUtils {
         return result;
     }
 
-    public static Bitmap scaleBitmap(String path, int DESIREDWIDTH, int DESIREDHEIGHT){
-        Bitmap scaledBitmap=null;
+    public static Bitmap scaleBitmap(String path, int DESIREDWIDTH, int DESIREDHEIGHT) {
+        Bitmap scaledBitmap = null;
 
         try {
             Bitmap unscaledBitmap = ScalingUtilies.decodeFile(path, DESIREDWIDTH, DESIREDHEIGHT, ScalingUtilies.ScalingLogic.FIT);
@@ -514,14 +519,14 @@ public class NeonUtils {
             if (!(unscaledBitmap.getWidth() <= DESIREDWIDTH && unscaledBitmap.getHeight() <= DESIREDHEIGHT)) {
                 scaledBitmap = ScalingUtilies.createScaledBitmap(unscaledBitmap, DESIREDWIDTH, DESIREDHEIGHT, ScalingUtilies.ScalingLogic.FIT);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         return scaledBitmap;
     }
 
-    public static String compressImage(int compressionValue,String path, int DESIREDWIDTH, int DESIREDHEIGHT) {
+    public static String compressImage(int compressionValue, String path, int DESIREDWIDTH, int DESIREDHEIGHT) {
         String strMyImagePath = null;
         Bitmap scaledBitmap;
 
@@ -571,22 +576,43 @@ public class NeonUtils {
 
     }
 
-    public static void deleteFile(final Context context,String filePath){
-           File file = new File(filePath);
-           if(file.exists()){
-               try {
-                   file.delete();
-                   //context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
-                   context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, FileProvider.getUriForFile(context,
-                           getFileProviderAuthority(context),
-                           file)));
-               }catch (Exception e){
-                   e.printStackTrace();
-               }
-           }
+    public static void deleteFile(final Context context, String filePath) {
+        File file = new File(filePath);
+        if (file.exists()) {
+            try {
+                file.delete();
+                //context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
+                scanFile(context, filePath);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    public static String getFileProviderAuthority(Context context){
-            return context.getResources().getString(R.string.neon_file_provider_authority);
+    public static String getFileProviderAuthority(Context context) {
+        return context.getResources().getString(R.string.neon_file_provider_authority);
     }
+
+    public static void scanFile(Context context, String path) {
+        try {
+            MediaScannerConnection.scanFile(context,
+
+                    new String[]{path}, null,
+
+                    new MediaScannerConnection.OnScanCompletedListener() {
+
+                        public void onScanCompleted(String path, Uri uri) {
+
+                            Log.i("ExternalStorage", "Scanned " + path + ":");
+
+                        }
+
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
 }

@@ -640,12 +640,10 @@ public class OneStepActivity extends AppCompatActivity implements CameraFragment
                 @Override
                 public void onSuccess() {
                     Log.d("Rajeev", "onSuccess: " + mOutputImagePath);
-                    File file = new File(mOutputImagePath);
+                    //File file = new File(mOutputImagePath);
                     //Log.d("Rajeev", "onSuccess: " + Uri.fromFile(file));
                     //sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
-                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, FileProvider.getUriForFile(OneStepActivity.this,
-                            NeonUtils.getFileProviderAuthority(OneStepActivity.this),
-                            file)));
+                    NeonUtils.scanFile(OneStepActivity.this, mInputImagePath);
                     afterPictureTaken(mOutputImagePath);
                     NeonUtils.deleteFile(OneStepActivity.this, mInputImagePath);
                 }

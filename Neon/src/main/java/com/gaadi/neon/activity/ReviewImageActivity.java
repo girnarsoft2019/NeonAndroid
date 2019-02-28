@@ -102,7 +102,8 @@ public class ReviewImageActivity extends AppCompatActivity implements View.OnCli
                     System.out.println("file not Deleted :" + imagePath);
                 }
             }
-            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
+            //sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
+            NeonUtils.scanFile(this, uri.getPath());
             setResult(RESULT_CANCELED);
             finish();
         }

@@ -618,12 +618,10 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
                 fos.write(byteArray);
                 //fos.write(data);
                 fos.close();
-                //Uri pictureFileUri = Uri.parse("file://" + pictureFile.getAbsolutePath());
-                Uri pictureFileUri = FileProvider.getUriForFile(context,
-                        NeonUtils.getFileProviderAuthority(context),
-                        pictureFile);
+                /*Uri pictureFileUri = Uri.parse("file://" + pictureFile.getAbsolutePath());
                 mActivity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                        pictureFileUri));
+                        pictureFileUri));*/
+                NeonUtils.scanFile(context, pictureFile.getAbsolutePath());
 
             } catch (FileNotFoundException e) {
                 Log.d(TAG, "File not found: " + e.getMessage());
