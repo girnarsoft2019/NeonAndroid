@@ -837,7 +837,11 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
 
 
         public File savePictureToStorage(Context context) {
-            File pictureFile = Constants.getMediaOutputFile(getActivity(), Constants.TYPE_IMAGE);
+            String folderName = null;
+            if(NeonImagesHandler.getSingletonInstance().getCameraParam() != null && NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters() != null && NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters().getFolderName() != null){
+                folderName = NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters().getFolderName();
+            }
+            File pictureFile = Constants.getMediaOutputFile(getActivity(), Constants.TYPE_IMAGE, folderName);
             Log.d("HIMANSHU FILE=", pictureFile.getAbsolutePath());
             if (pictureFile == null)
                 return null;

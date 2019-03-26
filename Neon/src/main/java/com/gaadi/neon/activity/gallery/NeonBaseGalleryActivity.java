@@ -37,7 +37,11 @@ public abstract class NeonBaseGalleryActivity extends NeonBaseActivity {
             boolean folderRestriction = false;
             String appName = "";
             if (NeonImagesHandler.getSingletonInstance().getGenericParam() != null && NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters() != null && NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getFolderRestrictive()) {
-                appName = Constants.getAppName(this);
+                if(NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getFolderName() != null){
+                    appName = NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getFolderName();
+                }else {
+                    appName = Constants.getAppName(this);
+                }
                 if (appName != null && appName.length() > 0) {
                     folderRestriction = true;
                 }
@@ -90,7 +94,11 @@ public abstract class NeonBaseGalleryActivity extends NeonBaseActivity {
         boolean folderRestriction = false;
         String appName = "";
         if (NeonImagesHandler.getSingletonInstance().getGenericParam() != null && NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters() != null && NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getFolderRestrictive()) {
-            appName = Constants.getAppName(this);
+            if(NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getFolderName() != null){
+                appName = NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getFolderName();
+            }else {
+                appName = Constants.getAppName(this);
+            }
             if (appName != null && appName.length() > 0) {
                 folderRestriction = true;
             }

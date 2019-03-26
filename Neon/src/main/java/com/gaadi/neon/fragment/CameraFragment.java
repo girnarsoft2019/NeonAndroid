@@ -562,7 +562,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener, Vi
 
         @Override
         protected File doInBackground(Void... params) {
-            File pictureFile = Constants.getMediaOutputFile(getActivity(),Constants.TYPE_IMAGE);
+            File pictureFile = Constants.getMediaOutputFile(getActivity(),Constants.TYPE_IMAGE, null);
 
             if(pictureFile == null)
                 return null;
