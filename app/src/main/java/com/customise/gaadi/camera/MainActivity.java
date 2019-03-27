@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
     private static final String TAG = "MainActivity";
     List<FileInfo> allreadyImages;
-    private int numberOfTags = 20;
+    private int numberOfTags = 2;
     private Location location;
 
     @Override

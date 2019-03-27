@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.media.ExifInterface;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.gaadi.neon.enumerations.LibraryMode;
@@ -310,6 +311,36 @@ public class NeonImagesHandler {
                 }
             }
             neonResponse.setImageCollection(fileInfos);
+            /*
+            * if folder name is available then copy the selected image from gallery to that folder also
+            * if image is selected from the same folder then don't copy(by comparing the path)*/
+            if(fileInfos.size() > 0){
+                if (NeonImagesHandler.getSingletonInstance().getGenericParam() != null && NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters() != null && NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getFolderName() != null) {
+                    List<FileInfo> newFileInfos = new ArrayList<>();
+                    for (int i=0; i< fileInfos.size(); i++){
+                        if(fileInfos.get(i).getSource() == FileInfo.SOURCE.PHONE_GALLERY){
+                            String[] path = fileInfos.get(i).getFilePath().split("/");
+                            String imageName = null;
+                            if(path.length > 0){
+                                imageName = path[(path.length - 1)];
+                            }
+                            File newFile = NeonUtils.getImageOutputFile(activity, fileInfos.get(i).getFilePath(), NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getFolderName(), imageName, i);
+                            if(newFile != null){
+                                NeonUtils.copyFile(fileInfos.get(i).getFilePath(), newFile);
+                                NeonUtils.scanFile(activity, newFile.getAbsolutePath());
+                                FileInfo newFileInfo = fileInfos.get(i);
+                                newFileInfo.setFilePath(newFile.getAbsolutePath());
+                                newFileInfos.add(newFileInfo);
+                            }else {
+                                newFileInfos.add(fileInfos.get(i));
+                            }
+                        }else {
+                            newFileInfos.add(fileInfos.get(i));
+                        }
+                    }
+                    neonResponse.setImageCollection(newFileInfos);
+                }
+            }
             neonResponse.setImageTagsCollection(NeonImagesHandler.getSingletonInstance().getFileHashMap());
             if(NeonImagesHandler.getSingletonInstance()!=null){
                 if(NeonImagesHandler.getSingletonInstance().getImageResultListener()!=null){

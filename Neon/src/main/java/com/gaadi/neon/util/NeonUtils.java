@@ -33,7 +33,11 @@ import android.view.animation.Transformation;
 import com.scanlibrary.R;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -612,6 +616,87 @@ public class NeonUtils {
             e.printStackTrace();
         }
 
+    }
+
+    public static void copyFile(String sourcePath, File destFile) {
+        File sourceFile = new File(sourcePath);
+
+        if (!destFile.exists()) {
+            try {
+                destFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        FileChannel source = null;
+        FileChannel destination = null;
+
+        try {
+
+            /**
+             * getChannel() returns unique FileChannel object associated a file
+             * output stream.
+             */
+            source = new FileInputStream(sourceFile).getChannel();
+
+            destination = new FileOutputStream(destFile).getChannel();
+
+            if (destination != null && source != null) {
+                destination.transferFrom(source, 0, source.size());
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        finally {
+            if (source != null) {
+                try {
+                    source.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (destination != null) {
+                try {
+                    destination.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public static File getImageOutputFile(Context context, String originalPath, String folderName, String imageName, int index) {
+        if(imageName == null){
+            return null;
+        }
+        String appName = context.getString(R.string.app_name);
+        if (appName.length() > 0) {
+            appName = appName.replace(" ", "");
+        }
+        String path=Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+appName+File.separator+folderName;
+
+        String pathForCheck = path + File.separator + imageName;
+
+        if(originalPath.equals(pathForCheck)){
+            return null;
+        }
+
+        File mediaStorageDir = new File(path);
+
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d("MyCameraApp", "failed to create directory");
+            }
+        }
+        // Create a media file name
+        //String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss.SSS").format(new Date());
+        return new File(mediaStorageDir.getPath() + File.separator + "IMG_" + System.currentTimeMillis() + String.valueOf(index) + ".jpg");
     }
 
 
