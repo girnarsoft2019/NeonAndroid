@@ -33,7 +33,7 @@ import java.util.List;
  * @version 1.0
  * @since 3/2/17
  */
-public class NeonNeutralActivity extends NeonBaseNeutralActivity implements View.OnClickListener{
+public class NeonNeutralActivity extends NeonBaseNeutralActivity implements View.OnClickListener {
 
     ArrayAdapter<String> adapter;
     private TextView txtTagTitle, addPhotoCamera, addPhotoGallary;
@@ -59,11 +59,17 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity implements View
         super.onPostResume();
         if (NeonImagesHandler.getSingletonInstance().getImagesCollection() == null ||
                 NeonImagesHandler.getSingletonInstance().getImagesCollection().size() <= 0) {
-            setTitle(R.string.photos);
+            if (NeonImagesHandler.getSingletonInstance() != null && NeonImagesHandler.getSingletonInstance().getGenericParam() != null
+                    && NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters() != null &&
+                    NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getTitleName() != null) {
+                setTitle(NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getTitleName());
+            } else {
+                setTitle(R.string.photos);
+            }
             tabList.setVisibility(View.VISIBLE);
             if (adapter == null) {
                 List<ImageTagModel> tagModels = new ArrayList<>();
-                if(NeonImagesHandler.getSingletonInstance().getNeutralParam() != null && NeonImagesHandler.getSingletonInstance().getNeutralParam().getImageTagsModel() != null)
+                if (NeonImagesHandler.getSingletonInstance().getNeutralParam() != null && NeonImagesHandler.getSingletonInstance().getNeutralParam().getImageTagsModel() != null)
                     tagModels = NeonImagesHandler.getSingletonInstance().getNeutralParam().getImageTagsModel();
                 if (tagModels == null || tagModels.size() <= 0) {
                     return;
@@ -86,7 +92,14 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity implements View
             tabList.setVisibility(View.GONE);
             txtTagTitle.setVisibility(View.GONE);
             imageShowFragmentContainer.setVisibility(View.VISIBLE);
-            setTitle(getString(R.string.photos_count, NeonImagesHandler.getSingletonInstance().getImagesCollection().size()));
+            if (NeonImagesHandler.getSingletonInstance() != null &&
+                    NeonImagesHandler.getSingletonInstance().getGenericParam() != null &&
+                    NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters() != null &&
+                    NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getTitleName() != null) {
+                setTitle(NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getTitleName() + " (" + NeonImagesHandler.getSingletonInstance().getImagesCollection().size() + ")");
+            } else {
+                setTitle(getString(R.string.photos_count, NeonImagesHandler.getSingletonInstance().getImagesCollection().size()));
+            }
         }
     }
 
@@ -186,7 +199,7 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity implements View
                 }), NeonImagesHandler.getSingletonInstance().getImageResultListener());
             } catch (NeonException e) {
                 e.printStackTrace();
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         } else if (id == R.id.addPhotoGallary) {
@@ -249,7 +262,7 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity implements View
                 }), NeonImagesHandler.getSingletonInstance().getImageResultListener());
             } catch (NeonException e) {
                 e.printStackTrace();
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         } else if (id == android.R.id.home) {

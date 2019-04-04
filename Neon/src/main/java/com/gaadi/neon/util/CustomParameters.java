@@ -13,6 +13,7 @@ public class CustomParameters {
     private int setCompressBy;
     private boolean folderRestrictive;
     private String folderName;
+    private String titleName;
 
     private CustomParameters(CustomParametersBuilder builder) {
         this.hideCameraButtonInNeutral = builder.hideCameraButtonInNeutral;
@@ -21,6 +22,7 @@ public class CustomParameters {
         this.setCompressBy = builder.setCompressBy;
         this.folderRestrictive = builder.folderRestrictive;
         this.folderName = builder.folderName;
+        this.titleName = builder.titleName;
     }
 
     public boolean gethideCameraButtonInNeutral() {
@@ -47,6 +49,9 @@ public class CustomParameters {
         return folderName;
     }
 
+    public String getTitleName() {
+        return titleName;
+    }
 
     public static class CustomParametersBuilder {
 
@@ -56,10 +61,16 @@ public class CustomParameters {
         private int setCompressBy;
         private boolean folderRestrictive;
         private String folderName;
+        private String titleName;
 
 
         public CustomParametersBuilder sethideCameraButtonInNeutral(boolean hide) {
             this.hideCameraButtonInNeutral = hide;
+            return this;
+        }
+
+        public CustomParametersBuilder setTitleName(String title) {
+            this.titleName = title;
             return this;
         }
 
