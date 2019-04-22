@@ -105,31 +105,36 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     SensorEventListener sensorEventListener = new SensorEventListener() {
         @Override
         public void onSensorChanged(SensorEvent event) {
-            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-                mGravity = event.values.clone();
-                // Shake detection
-                float x = mGravity[0];
-                float y = mGravity[1];
-                float z = mGravity[2];
+            try {
+                if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+                    mGravity = event.values.clone();
+                    // Shake detection
+                    float x = mGravity[0];
+                    float y = mGravity[1];
+                    float z = mGravity[2];
 
-                long curTime = System.currentTimeMillis();
+                    long curTime = System.currentTimeMillis();
 
-                if ((curTime - lastUpdate) > 100) {
-                    long diffTime = (curTime - lastUpdate);
-                    lastUpdate = curTime;
+                    if ((curTime - lastUpdate) > 100) {
+                        long diffTime = (curTime - lastUpdate);
+                        lastUpdate = curTime;
 
-                    float speed = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 10000;
+                        float speed = Math.abs(x + y + z - last_x - last_y - last_z) / diffTime * 10000;
 
-                    if (speed > SHAKE_THRESHOLD && mCamera != null && mCamera.getParameters() != null) {
-                        handleFocus(null, mCamera.getParameters());
+                        if (speed > SHAKE_THRESHOLD && mCamera != null && mCamera.getParameters() != null) {
+                            handleFocus(null, mCamera.getParameters());
+                        }
+                        Log.e("tag", String.valueOf(speed));
+                        last_x = x;
+                        last_y = y;
+                        last_z = z;
                     }
-                    Log.e("tag", String.valueOf(speed));
-                    last_x = x;
-                    last_y = y;
-                    last_z = z;
-                }
 
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
         }
 
         @Override
@@ -185,7 +190,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
         } else {
             Toast.makeText(getContext(), getString(R.string.pass_params), Toast.LENGTH_SHORT).show();
         }
-        sensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+        sensorManager = (SensorManager) mActivity.getSystemService(Context.SENSOR_SERVICE);
         fromCreate = true;
         return rootView;
     }
@@ -238,7 +243,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                     clickPicture();
 
                 } else {
-                    Toast.makeText(getActivity(), "Failed to get location.Please try again later.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, "Failed to get location.Please try again later.", Toast.LENGTH_SHORT).show();
                 }
 
             } else {
@@ -317,11 +322,11 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                 = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
                 ViewGroup.LayoutParams.FILL_PARENT);
 
-        getActivity().addContentView(drawingView, layoutParamsDrawing);
+        mActivity.addContentView(drawingView, layoutParamsDrawing);
     }
 
     private void setFlashLayoutAndMode() {
-        String flashMode = PrefsUtils.getStringSharedPreference(getActivity(), Constants.FLASH_MODE, "");
+        String flashMode = PrefsUtils.getStringSharedPreference(mActivity, Constants.FLASH_MODE, "");
         if (flashMode.equals("")) {
             currentFlashMode.setImageResource(R.drawable.ic_flash_off);
         } else {
@@ -352,7 +357,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
         } else {
             currentFlashMode.setImageResource(R.drawable.ic_flash_off);
         }
-        PrefsUtils.setStringSharedPreference(getActivity(), Constants.FLASH_MODE, mode);
+        PrefsUtils.setStringSharedPreference(mActivity, Constants.FLASH_MODE, mode);
         mCamera.setParameters(parameters);
     }
 
@@ -446,7 +451,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     }
 
     private void createFlashModesDropDown() {
-        FlashModeRecyclerHorizontalAdapter flashModeAdapter = new FlashModeRecyclerHorizontalAdapter(getActivity(), supportedFlashModes);
+        FlashModeRecyclerHorizontalAdapter flashModeAdapter = new FlashModeRecyclerHorizontalAdapter(mActivity, supportedFlashModes);
         rcvFlash.setAdapter(flashModeAdapter);
         rcvFlash.setVisibility(View.VISIBLE);
         flashModeAdapter.setOnItemClickListener(new FlashModeRecyclerHorizontalAdapter.OnItemClickListener() {
@@ -838,11 +843,11 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
 
         public File savePictureToStorage(Context context) {
             String folderName = null;
-            if(NeonImagesHandler.getSingletonInstance().getCameraParam() != null && NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters() != null && NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters().getFolderName() != null){
+            if (NeonImagesHandler.getSingletonInstance().getCameraParam() != null && NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters() != null && NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters().getFolderName() != null) {
                 folderName = NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters().getFolderName();
             }
-            File pictureFile = Constants.getMediaOutputFile(getActivity(), Constants.TYPE_IMAGE, folderName);
-            Log.d("HIMANSHU FILE=", pictureFile.getAbsolutePath());
+            File pictureFile = Constants.getMediaOutputFile(mActivity, Constants.TYPE_IMAGE, folderName);
+            // Log.d("HIMANSHU FILE=", pictureFile.getAbsolutePath());
             if (pictureFile == null)
                 return null;
 

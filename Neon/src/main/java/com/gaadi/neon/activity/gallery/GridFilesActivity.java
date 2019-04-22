@@ -70,7 +70,11 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
         getMenuInflater().inflate(R.menu.menu_done_file, menu);
         MenuItem textViewDone = menu.findItem(R.id.menu_next);
         MenuItem menuItemCamera = menu.findItem(R.id.menuCamera);
-        menuItemCamera.setVisible(NeonImagesHandler.getSingleonInstance().getGalleryParam().galleryToCameraSwitchEnabled());
+        if(NeonImagesHandler.getSingleonInstance().getGalleryParam()!= null && NeonImagesHandler.getSingleonInstance().getGalleryParam().galleryToCameraSwitchEnabled()){
+            menuItemCamera.setVisible(NeonImagesHandler.getSingleonInstance().getGalleryParam().galleryToCameraSwitchEnabled());
+        } else {
+            menuItemCamera.setVisible(false);
+        }
         textViewDone.setVisible(true);
         return super.onCreateOptionsMenu(menu);
     }

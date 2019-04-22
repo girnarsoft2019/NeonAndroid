@@ -60,7 +60,7 @@ ext {
     siteUrl = 'https://github.com/lakshaygirdhar/neon'
     gitUrl = 'https://github.com/lakshaygirdhar/neon'
 
-    libraryVersion = '20.2.0'
+    libraryVersion = '20.2.1'
 
     developerId = 'lakshay'
     developerName = 'Lakshay Girdhar'

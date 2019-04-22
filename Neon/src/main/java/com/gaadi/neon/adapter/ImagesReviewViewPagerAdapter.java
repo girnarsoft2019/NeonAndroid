@@ -20,7 +20,7 @@ public class ImagesReviewViewPagerAdapter extends FragmentStatePagerAdapter {
 
     public ImagesReviewViewPagerAdapter(FragmentManager fm) {
         super(fm);
-        mFragmentManager=fm;
+        mFragmentManager = fm;
         updatePagerItems();
     }
 
@@ -30,7 +30,7 @@ public class ImagesReviewViewPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     public int getItemPosition(Object item) {
-        ImageReviewViewPagerFragment fragment = (ImageReviewViewPagerFragment)item;
+        ImageReviewViewPagerFragment fragment = (ImageReviewViewPagerFragment) item;
 
         int position = fragmentList.indexOf(fragment);
 
@@ -41,14 +41,16 @@ public class ImagesReviewViewPagerAdapter extends FragmentStatePagerAdapter {
         }
     }
 
-    private void updatePagerItems(){
+    private void updatePagerItems() {
 
-        if(fragmentList!=null)
+        if (fragmentList != null)
             fragmentList.clear();
         else
-            fragmentList=new ArrayList<>();
-        for (int i = 0; i < NeonImagesHandler.getSingletonInstance().getImagesCollection().size(); i++) {
-            fragmentList.add(ImageReviewViewPagerFragment.create(i, NeonImagesHandler.getSingletonInstance().getImagesCollection().get(i)));
+            fragmentList = new ArrayList<>();
+        if (NeonImagesHandler.getSingletonInstance().getImagesCollection() != null) {
+            for (int i = 0; i < NeonImagesHandler.getSingletonInstance().getImagesCollection().size(); i++) {
+                fragmentList.add(ImageReviewViewPagerFragment.create(i, NeonImagesHandler.getSingletonInstance().getImagesCollection().get(i)));
+            }
         }
     }
 

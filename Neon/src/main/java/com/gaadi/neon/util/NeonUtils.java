@@ -378,12 +378,16 @@ public class NeonUtils {
     }
 
     public static int isFrontCameraAvailable() {
-        Camera.CameraInfo ci = new Camera.CameraInfo();
-        for (int i = 0; i < Camera.getNumberOfCameras(); i++) {
-            Camera.getCameraInfo(i, ci);
-            if (ci.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-                return Camera.CameraInfo.CAMERA_FACING_FRONT;
+        try {
+            Camera.CameraInfo ci = new Camera.CameraInfo();
+            for (int i = 0; i < Camera.getNumberOfCameras(); i++) {
+                Camera.getCameraInfo(i, ci);
+                if (ci.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                    return Camera.CameraInfo.CAMERA_FACING_FRONT;
+                }
             }
+        } catch (Exception e){
+            e.printStackTrace();
         }
         return Camera.CameraInfo.CAMERA_FACING_BACK; // No front-facing camera found
     }

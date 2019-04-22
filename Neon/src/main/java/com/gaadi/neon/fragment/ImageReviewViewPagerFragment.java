@@ -375,14 +375,16 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent result) {
         if (requestCode == Crop.REQUEST_CROP && resultCode == Activity.RESULT_OK) {
-            imageModel.setFilePath(cropFilePath.getAbsolutePath());
-            RequestOptions options = new RequestOptions()
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .skipMemoryCache(true)
-                    .placeholder(R.drawable.default_placeholder);
-            Glide.with(this).load(imageModel.getFilePath())
-                    .apply(options)
-                    .into(draweeView);
+            if (cropFilePath != null) {
+                imageModel.setFilePath(cropFilePath.getAbsolutePath());
+                RequestOptions options = new RequestOptions()
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true)
+                        .placeholder(R.drawable.default_placeholder);
+                Glide.with(this).load(imageModel.getFilePath())
+                        .apply(options)
+                        .into(draweeView);
+            }
             /*Glide.with(mContext).load(imageModel.getFilePath())
                     .placeholder(R.drawable.default_placeholder)
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
