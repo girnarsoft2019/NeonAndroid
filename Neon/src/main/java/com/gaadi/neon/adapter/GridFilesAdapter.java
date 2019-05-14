@@ -1,6 +1,7 @@
 package com.gaadi.neon.adapter;
 
 import android.content.Context;
+import android.support.media.ExifInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,17 +15,17 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.gaadi.neon.activity.gallery.GridFilesActivity;
+import com.gaadi.neon.model.ImageInfo;
 import com.gaadi.neon.util.Constants;
 import com.gaadi.neon.util.ExifInterfaceHandling;
 import com.gaadi.neon.util.FileInfo;
 import com.gaadi.neon.util.NeonImagesHandler;
+import com.google.gson.Gson;
 import com.scanlibrary.R;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
-import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
 /**
  * @author princebatra
@@ -34,9 +35,9 @@ import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOption
 public class GridFilesAdapter extends BaseAdapter {
 
     private AppCompatActivity context;
-    private ArrayList<FileInfo>fileInfos;
+    private ArrayList<FileInfo> fileInfos;
 
-    public GridFilesAdapter(AppCompatActivity _context, ArrayList<FileInfo> _fileInfos){
+    public GridFilesAdapter(AppCompatActivity _context, ArrayList<FileInfo> _fileInfos) {
         context = _context;
         fileInfos = _fileInfos;
     }
@@ -68,8 +69,8 @@ public class GridFilesAdapter extends BaseAdapter {
             filesHolder.selection_view = (ImageView) convertView.findViewById(R.id.selection_view);
             filesHolder.transparentLayer = (ImageView) convertView.findViewById(R.id.vTransparentLayer);
             convertView.setTag(filesHolder);
-        }else{
-            Log.e("tag","came");
+        } else {
+            Log.e("tag", "came");
         }
         filesHolder = (FilesHolder) convertView.getTag();
 
@@ -86,10 +87,10 @@ public class GridFilesAdapter extends BaseAdapter {
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(filesHolder.selectedImage);*/
 
-        if(NeonImagesHandler.getSingleonInstance().checkImageAvailableForPath(fileInfos.get(position))){
+        if (NeonImagesHandler.getSingleonInstance().checkImageAvailableForPath(fileInfos.get(position))) {
             filesHolder.selection_view.setVisibility(View.VISIBLE);
             filesHolder.transparentLayer.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             filesHolder.selection_view.setVisibility(View.GONE);
             filesHolder.transparentLayer.setVisibility(View.GONE);
         }
@@ -97,27 +98,27 @@ public class GridFilesAdapter extends BaseAdapter {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(NeonImagesHandler.getSingletonInstance().checkImageAvailableForPath(fileInfos.get(position))){
-                    if(NeonImagesHandler.getSingletonInstance().removeFromCollection(fileInfos.get(position))){
+                if (NeonImagesHandler.getSingletonInstance().checkImageAvailableForPath(fileInfos.get(position))) {
+                    if (NeonImagesHandler.getSingletonInstance().removeFromCollection(fileInfos.get(position))) {
                         finalFilesHolder.selection_view.setVisibility(View.GONE);
                         finalFilesHolder.transparentLayer.setVisibility(View.GONE);
-                        ((GridFilesActivity)context).removeImageFromRecentCollection(fileInfos.get(position));
+                        ((GridFilesActivity) context).removeImageFromRecentCollection(fileInfos.get(position));
                     }
-                }else{
-                    if(NeonImagesHandler.getSingletonInstance().getGenericParam() != null && NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters() != null && NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getFolderRestrictive()){
+                } else {
+                    if (NeonImagesHandler.getSingletonInstance().getGenericParam() != null && NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters() != null && NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getFolderRestrictive()) {
                         String appName = Constants.getAppName(context);
                         File file = new File(fileInfos.get(position).getFilePath());
-                        if(file.exists()){
+                        if (file.exists()) {
                             try {
                                 ExifInterfaceHandling exifInterfaceHandling = new ExifInterfaceHandling(file);
                                 String artist = exifInterfaceHandling.getAttribute(ExifInterfaceHandling.TAG_ARTIST);
                                 if (artist != null && (String.valueOf(appName)).equals(artist)) {
-                                    if(NeonImagesHandler.getSingletonInstance().putInImageCollection(fileInfos.get(position),context)) {
+                                    if (NeonImagesHandler.getSingletonInstance().putInImageCollection(fileInfos.get(position), context)) {
                                         finalFilesHolder.selection_view.setVisibility(View.VISIBLE);
                                         finalFilesHolder.transparentLayer.setVisibility(View.VISIBLE);
-                                        ((GridFilesActivity)context).addImageToRecentelySelected(fileInfos.get(position));
+                                        ((GridFilesActivity) context).addImageToRecentelySelected(fileInfos.get(position));
                                     }
-                                }else {
+                                } else {
                                     Toast.makeText(context, "Not allowed", Toast.LENGTH_SHORT).show();
                                 }
                             } catch (Exception e) {
@@ -125,11 +126,39 @@ public class GridFilesAdapter extends BaseAdapter {
                             }
                         }
 
-                    }else {
-                        if(NeonImagesHandler.getSingletonInstance().putInImageCollection(fileInfos.get(position),context)) {
+                    } else if (NeonImagesHandler.getSingletonInstance().getGenericParam() != null && NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters() != null && NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getVccIdAvailable() != null) {
+                        String appName = Constants.getAppName(context);
+                        File file = new File(fileInfos.get(position).getFilePath());
+                        if (file.exists()) {
+                            try {
+                                ExifInterfaceHandling exifInterfaceHandling = new ExifInterfaceHandling(file);
+                                if (exifInterfaceHandling.getAttribute(ExifInterface.TAG_USER_COMMENT) != null) {
+                                    Gson gson = new Gson();
+                                    ImageInfo imageInfo = gson.fromJson(exifInterfaceHandling.getAttribute(ExifInterface.TAG_USER_COMMENT), ImageInfo.class);
+                                    String artist = exifInterfaceHandling.getAttribute(ExifInterfaceHandling.TAG_ARTIST);
+                                    if (artist != null && (String.valueOf(appName)).equals(artist) && imageInfo.getVccId().equals(NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getVccIdAvailable())) {
+                                        if (NeonImagesHandler.getSingletonInstance().putInImageCollection(fileInfos.get(position), context)) {
+                                            finalFilesHolder.selection_view.setVisibility(View.VISIBLE);
+                                            finalFilesHolder.transparentLayer.setVisibility(View.VISIBLE);
+                                            ((GridFilesActivity) context).addImageToRecentelySelected(fileInfos.get(position));
+                                        }
+                                    } else {
+                                        Toast.makeText(context, "Not allowed", Toast.LENGTH_SHORT).show();
+                                    }
+                                } else {
+                                    Toast.makeText(context, "Not allowed", Toast.LENGTH_SHORT).show();
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                    } else {
+                        if (NeonImagesHandler.getSingletonInstance().putInImageCollection(fileInfos.get(position), context)) {
                             finalFilesHolder.selection_view.setVisibility(View.VISIBLE);
                             finalFilesHolder.transparentLayer.setVisibility(View.VISIBLE);
-                            ((GridFilesActivity)context).addImageToRecentelySelected(fileInfos.get(position));
+                            ((GridFilesActivity) context).addImageToRecentelySelected(fileInfos.get(position));
                         }
                     }
                 }

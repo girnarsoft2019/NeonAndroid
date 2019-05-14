@@ -14,6 +14,7 @@ public class CustomParameters {
     private boolean folderRestrictive;
     private String folderName;
     private String titleName;
+    private String vccIdAvailable;
 
     private CustomParameters(CustomParametersBuilder builder) {
         this.hideCameraButtonInNeutral = builder.hideCameraButtonInNeutral;
@@ -23,6 +24,7 @@ public class CustomParameters {
         this.folderRestrictive = builder.folderRestrictive;
         this.folderName = builder.folderName;
         this.titleName = builder.titleName;
+        this.vccIdAvailable = builder.vccIdAvailable;
     }
 
     public boolean gethideCameraButtonInNeutral() {
@@ -53,6 +55,10 @@ public class CustomParameters {
         return titleName;
     }
 
+    public String getVccIdAvailable(){
+        return  vccIdAvailable;
+    }
+
     public static class CustomParametersBuilder {
 
         private boolean hideCameraButtonInNeutral;
@@ -62,6 +68,7 @@ public class CustomParameters {
         private boolean folderRestrictive;
         private String folderName;
         private String titleName;
+        private String vccIdAvailable;
 
 
         public CustomParametersBuilder sethideCameraButtonInNeutral(boolean hide) {
@@ -71,6 +78,11 @@ public class CustomParameters {
 
         public CustomParametersBuilder setTitleName(String title) {
             this.titleName = title;
+            return this;
+        }
+
+        public CustomParametersBuilder setVccIdAvailable(String vccId){
+            this.vccIdAvailable = vccId;
             return this;
         }
 
