@@ -105,28 +105,7 @@ public class GridFilesAdapter extends BaseAdapter {
                         ((GridFilesActivity) context).removeImageFromRecentCollection(fileInfos.get(position));
                     }
                 } else {
-                    if (NeonImagesHandler.getSingletonInstance().getGenericParam() != null && NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters() != null && NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getFolderRestrictive()) {
-                        String appName = Constants.getAppName(context);
-                        File file = new File(fileInfos.get(position).getFilePath());
-                        if (file.exists()) {
-                            try {
-                                ExifInterfaceHandling exifInterfaceHandling = new ExifInterfaceHandling(file);
-                                String artist = exifInterfaceHandling.getAttribute(ExifInterfaceHandling.TAG_ARTIST);
-                                if (artist != null && (String.valueOf(appName)).equals(artist)) {
-                                    if (NeonImagesHandler.getSingletonInstance().putInImageCollection(fileInfos.get(position), context)) {
-                                        finalFilesHolder.selection_view.setVisibility(View.VISIBLE);
-                                        finalFilesHolder.transparentLayer.setVisibility(View.VISIBLE);
-                                        ((GridFilesActivity) context).addImageToRecentelySelected(fileInfos.get(position));
-                                    }
-                                } else {
-                                    Toast.makeText(context, "Not allowed", Toast.LENGTH_SHORT).show();
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                    } else if (NeonImagesHandler.getSingletonInstance().getGenericParam() != null && NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters() != null && NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getVccIdAvailable() != null) {
+                    if (NeonImagesHandler.getSingletonInstance().getGenericParam() != null && NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters() != null && NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getVccIdAvailable() != null) {
                         String appName = Constants.getAppName(context);
                         File file = new File(fileInfos.get(position).getFilePath());
                         if (file.exists()) {
@@ -149,6 +128,27 @@ public class GridFilesAdapter extends BaseAdapter {
                                     Toast.makeText(context, "Not allowed", Toast.LENGTH_SHORT).show();
                                 }
 
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                    } else if (NeonImagesHandler.getSingletonInstance().getGenericParam() != null && NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters() != null && NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getFolderRestrictive()) {
+                        String appName = Constants.getAppName(context);
+                        File file = new File(fileInfos.get(position).getFilePath());
+                        if (file.exists()) {
+                            try {
+                                ExifInterfaceHandling exifInterfaceHandling = new ExifInterfaceHandling(file);
+                                String artist = exifInterfaceHandling.getAttribute(ExifInterfaceHandling.TAG_ARTIST);
+                                if (artist != null && (String.valueOf(appName)).equals(artist)) {
+                                    if (NeonImagesHandler.getSingletonInstance().putInImageCollection(fileInfos.get(position), context)) {
+                                        finalFilesHolder.selection_view.setVisibility(View.VISIBLE);
+                                        finalFilesHolder.transparentLayer.setVisibility(View.VISIBLE);
+                                        ((GridFilesActivity) context).addImageToRecentelySelected(fileInfos.get(position));
+                                    }
+                                } else {
+                                    Toast.makeText(context, "Not allowed", Toast.LENGTH_SHORT).show();
+                                }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
