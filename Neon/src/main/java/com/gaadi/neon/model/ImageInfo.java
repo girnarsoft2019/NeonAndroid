@@ -28,6 +28,24 @@ public class ImageInfo {
     private String certification_ID;
     private String subBookingID;
     private boolean onlyImage;
+    private String[] pendingReqTag;
+    private boolean dummyEntry;
+
+    public boolean isDummyEntry() {
+        return dummyEntry;
+    }
+
+    public void setDummyEntry(boolean dummyEntry) {
+        this.dummyEntry = dummyEntry;
+    }
+
+    public String[] getPendingReqTag() {
+        return pendingReqTag;
+    }
+
+    public void setPendingReqTag(String[] pendingReqTag) {
+        this.pendingReqTag = pendingReqTag;
+    }
 
     public String getId() {
         return id;
