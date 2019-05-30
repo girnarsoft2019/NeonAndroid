@@ -100,11 +100,14 @@ public class ImageShowAdapter extends BaseDynamicGridAdapter {
                 public void onClick(View v) {
                     if (NeonImagesHandler.getSingleonInstance().removeFromCollection(position)) {
                         notifyDataSetChanged();
-                        if ((NeonImagesHandler.getSingleonInstance().getImagesCollection() == null ||
+                        if (context instanceof NeonNeutralActivity) {
+                            ((NeonNeutralActivity) context).onPostResume();
+                        }
+                      /*  if ((NeonImagesHandler.getSingleonInstance().getImagesCollection() == null ||
                                 NeonImagesHandler.getSingleonInstance().getImagesCollection().size() <= 0) &&
                                 context instanceof NeonNeutralActivity) {
                             ((NeonNeutralActivity) context).onPostResume();
-                        }
+                        }*/
                     } else {
                         Toast.makeText(context, "Failed to delete.Please try again later.", Toast.LENGTH_SHORT).show();
                     }
