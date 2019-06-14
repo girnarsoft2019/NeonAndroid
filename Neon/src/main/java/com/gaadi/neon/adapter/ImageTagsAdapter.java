@@ -63,7 +63,7 @@ public class ImageTagsAdapter extends ArrayAdapter<ImageTagModel> {
 
             mHolder = new ImageTagsModelsHolder();
             mHolder.text = (TextView) convertView.findViewById(R.id.colorValue);
-            mHolder.colorLayoutRoot = (View) convertView.findViewById(R.id.colorLayoutRoot);
+            mHolder.colorLayoutRoot = (View) convertView.findViewById(R.id.colorLayout);
             mHolder.iv_color = (ImageView) convertView.findViewById(R.id.color);
             convertView.setTag(mHolder);
 
@@ -114,7 +114,7 @@ public class ImageTagsAdapter extends ArrayAdapter<ImageTagModel> {
 
             mHolder = new ImageTagsModelsHolder();
             mHolder.text = (TextView) convertView.findViewById(R.id.colorValue);
-            mHolder.colorLayoutRoot = (View) convertView.findViewById(R.id.colorLayoutRoot);
+            mHolder.colorLayoutRoot = (View) convertView.findViewById(R.id.colorLayout);
             mHolder.iv_color = (ImageView) convertView.findViewById(R.id.color);
 
             convertView.setTag(mHolder);

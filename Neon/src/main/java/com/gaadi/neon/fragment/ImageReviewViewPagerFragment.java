@@ -181,35 +181,37 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
     }
 
     private void showTagsDropDown(View v) {
-        final ListPopupWindow listPopupWindow = new ListPopupWindow(getActivity());
-        listPopupWindow.setModal(true);
-        listPopupWindow.setWidth(ListPopupWindow.WRAP_CONTENT);
-        ImageTagsAdapter imageTagsAdapter = new ImageTagsAdapter(getActivity(), imageModel);
-        listPopupWindow.setAdapter(imageTagsAdapter);
-        listPopupWindow.setAnchorView(v);
-        listPopupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ImageTagModel singleModel = tagModels.get(position);
-                if (singleModel.getNumberOfPhotos() > 0 && NeonImagesHandler.getSingleonInstance().getNumberOfPhotosCollected(singleModel) >= singleModel.getNumberOfPhotos()) {
-                    Toast.makeText(getActivity(), getActivity().getString(R.string.max_tag_count_error, singleModel.getNumberOfPhotos()) + singleModel.getTagName(), Toast.LENGTH_SHORT).show();
-                    return;
+        if(NeonImagesHandler.getSingleonInstance().getGenericParam() != null && NeonImagesHandler.getSingleonInstance().getGenericParam().getImageTagsModel() != null){
+            final ListPopupWindow listPopupWindow = new ListPopupWindow(getActivity());
+            listPopupWindow.setModal(true);
+            listPopupWindow.setWidth(ListPopupWindow.WRAP_CONTENT);
+            ImageTagsAdapter imageTagsAdapter = new ImageTagsAdapter(getActivity(), imageModel);
+            listPopupWindow.setAdapter(imageTagsAdapter);
+            listPopupWindow.setAnchorView(v);
+            listPopupWindow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    ImageTagModel singleModel = tagModels.get(position);
+                    if (singleModel.getNumberOfPhotos() > 0 && NeonImagesHandler.getSingleonInstance().getNumberOfPhotosCollected(singleModel) >= singleModel.getNumberOfPhotos()) {
+                        Toast.makeText(getActivity(), getActivity().getString(R.string.max_tag_count_error, singleModel.getNumberOfPhotos()) + singleModel.getTagName(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    imageModel.setFileTag(new ImageTagModel(singleModel.getTagName(), singleModel.getTagId(), singleModel.isMandatory(), singleModel.getNumberOfPhotos()));
+                    ImageEditEvent event = new ImageEditEvent();
+                    event.setModel(imageModel);
+                    ((FragmentListener) getActivity()).getFragmentChanges(event);
+                    listPopupWindow.dismiss();
+                    txtVwTagSpinner.setText(singleModel.getTagName());
                 }
-                imageModel.setFileTag(new ImageTagModel(singleModel.getTagName(), singleModel.getTagId(), singleModel.isMandatory(), singleModel.getNumberOfPhotos()));
-                ImageEditEvent event = new ImageEditEvent();
-                event.setModel(imageModel);
-                ((FragmentListener) getActivity()).getFragmentChanges(event);
-                listPopupWindow.dismiss();
-                txtVwTagSpinner.setText(singleModel.getTagName());
-            }
-        });
+            });
 
-        txtVwTagSpinner.post(new Runnable() {
-            @Override
-            public void run() {
-                listPopupWindow.show();
-            }
-        });
+            txtVwTagSpinner.post(new Runnable() {
+                @Override
+                public void run() {
+                    listPopupWindow.show();
+                }
+            });
+        }
     }
 
 
