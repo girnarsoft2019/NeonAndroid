@@ -3,6 +3,7 @@ package com.gaadi.neon.activity.neutral;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -12,6 +13,7 @@ import com.gaadi.neon.enumerations.CameraFacing;
 import com.gaadi.neon.enumerations.CameraOrientation;
 import com.gaadi.neon.enumerations.CameraType;
 import com.gaadi.neon.enumerations.GalleryType;
+import com.gaadi.neon.enumerations.ResponseCode;
 import com.gaadi.neon.fragment.ImageShowFragment;
 import com.gaadi.neon.interfaces.ICameraParam;
 import com.gaadi.neon.interfaces.IGalleryParam;
@@ -64,7 +66,7 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
                 }
                 String[] tags = new String[tagModels.size()];
                 for (int i = 0; i < tagModels.size(); i++) {
-                    tags[i] = "* " + tagModels.get(i).getTagName();
+                    tags[i] = "  •  " + tagModels.get(i).getTagName();
 
                 }
                 adapter = new ArrayAdapter<>(this, R.layout.single_textview, R.id.tagText, tags);
@@ -251,9 +253,20 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
         if (id == android.R.id.home) {
             onBackPressed();
             return true;
+        } else if (id == R.id.submit) {
+            if (NeonImagesHandler.getSingletonInstance().validateNeonExit(this)) {
+                NeonImagesHandler.getSingletonInstance().sendImageCollectionAndFinish(this, ResponseCode.Success);
+            }
+            return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.submit, menu);
+        return true;
     }
 
     @Override

@@ -18,6 +18,7 @@
     <color name="gaadi_blue">#263242</color>
     <color name="hintStrokeColor">#80CECECE</color>
     <color name="green">#86be65</color>
+    <color name="tagColor">#80000000</color>
 
     <color name="colorPrimary">#DC592B</color>
 

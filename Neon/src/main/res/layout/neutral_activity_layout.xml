@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-        <variable name="handlers" type="com.gaadi.neon.activity.neutral.NeonNeutralActivity"/>
+
+        <variable
+            name="handlers"
+            type="com.gaadi.neon.activity.neutral.NeonNeutralActivity" />
     </data>
 
 
@@ -20,94 +22,110 @@
             android:orientation="vertical">
 
 
-
             <LinearLayout
                 android:id="@+id/llActions"
                 android:layout_width="match_parent"
                 android:layout_height="85dp"
                 android:layout_below="@+id/headerLayout"
-                android:layout_margin="@dimen/neon_default_margin"
+                android:layout_margin="@dimen/vertical_space_images"
                 android:layout_marginTop="5dp"
                 android:orientation="horizontal">
 
-                <TextView
+                <LinearLayout
                     android:id="@+id/addPhotoCamera"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginEnd="5dp"
                     android:layout_weight="1"
-                    android:background="@drawable/text_view_middle_selector_gray_black"
-                    android:drawablePadding="6dp"
-                    android:drawableTop="@drawable/take_photo"
-                    android:gravity="center"
-                    android:padding="5dp"
                     android:onClick="@{handlers::onClick}"
-                    android:paddingLeft="3dp"
-                    android:paddingRight="3dp"
-                    android:text="@string/take_photo"
-                    android:textColor="@color/textColor" />
+                    android:orientation="horizontal"
+                    android:paddingLeft="15dp">
 
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@null"
+                        android:src="@drawable/camera_icon" />
 
-                <TextView
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:paddingLeft="10dp"
+                        android:text="@string/camera"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/addPhotoGallary"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginStart="5dp"
                     android:layout_weight="1"
                     android:onClick="@{handlers::onClick}"
-                    android:background="@drawable/text_view_middle_selector_gray_black"
-                    android:drawablePadding="6dp"
-                    android:drawableTop="@drawable/gallery"
-                    android:gravity="center"
-                    android:padding="5dp"
-                    android:paddingLeft="3dp"
-                    android:paddingRight="3dp"
-                    android:text="@string/choose_gallery"
-                    android:textColor="@color/textColor" />
+                    android:orientation="horizontal">
 
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@null"
+                        android:src="@drawable/add_gallery_icon" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:paddingLeft="10dp"
+                        android:text="@string/gallery"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+                </LinearLayout>
 
             </LinearLayout>
 
-
-            <ImageView
+            <View
                 android:id="@+id/lineShadow"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="1dp"
                 android:layout_below="@+id/llActions"
-                android:background="@drawable/header_gradient"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/tranparent_black"
                 android:contentDescription="@string/emptyString"
                 android:paddingBottom="5dp" />
 
-            <ListView
-                android:layout_below="@+id/txtTagTitle"
-                android:id="@+id/tabList"
-                android:dividerHeight="0dp"
-                android:divider="@null"
-                android:layout_margin="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
 
+            <ListView
+                android:id="@+id/tabList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/txtTagTitle"
+                android:layout_margin="5dp"
+                android:divider="@null"
+                android:dividerHeight="0dp" />
 
 
             <FrameLayout
-                android:orientation="vertical"
                 android:id="@+id/imageShowFragmentContainer"
-                android:layout_below="@id/lineShadow"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:layout_below="@id/lineShadow"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical" />
 
             <TextView
                 android:id="@+id/txtTagTitle"
-                android:layout_below="@+id/lineShadow"
-                android:textStyle="bold"
-                android:text="Mandatory Images:"
-                android:layout_marginLeft="5dp"
-                android:visibility="gone"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/lineShadow"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/mandatory_images"
+                android:textColor="@color/black"
+                android:textSize="15dp"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
 
         </RelativeLayout>

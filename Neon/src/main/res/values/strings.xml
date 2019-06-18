@@ -63,4 +63,7 @@
     <string name="no_tags_sent">Please set tags for images</string>
     <color name="gray">#808080</color>
     <string name="title_activity_image_review">ImageReviewActivity</string>
+    <string name="mandatory_images">Mandatory Images</string>
+    <string name="submit">Submit</string>
+    <string name="camera">Camera</string>
 </resources>
