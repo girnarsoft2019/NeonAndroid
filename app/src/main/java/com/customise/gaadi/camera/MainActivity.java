@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
                 @Override
                 public CameraType getCameraViewType() {
-                    return CameraType.normal_camera;
+                    return CameraType.gallery_preview_camera;
                 }
 
                 @Override
@@ -181,8 +181,13 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 @Override
                 public List<ImageTagModel> getImageTagsModel() {
                     ArrayList<ImageTagModel> list = new ArrayList<ImageTagModel>();
+                    Location location = null;
                     for (int i = 0; i < numberOfTags; i++) {
-                        list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true, 1));
+                        if(i % 2 == 0){
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true, 1, location, R.drawable.back));
+                        } else {
+                            list.add(new ImageTagModel("Tag" + i, String.valueOf(i), true, 1));
+                        }
                     }
                     return list;
                 }
@@ -199,7 +204,9 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
 
                 @Override
                 public CustomParameters getCustomParameters() {
-                    return null;
+                    CustomParameters.CustomParametersBuilder builder = new CustomParameters.CustomParametersBuilder();
+                    builder.showTagImagePreview(true);
+                    return builder.build();
                 }
 
 

@@ -116,22 +116,35 @@
 
         </LinearLayout>
 
-
-        <HorizontalScrollView
-            android:layout_below="@+id/rlTags"
-            android:id="@+id/hsvPreview"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rlTags"
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:id="@+id/imageHolderView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/tranparent_black"
-                android:orientation="horizontal"
-                android:visibility="visible"/>
-        </HorizontalScrollView>
+            <ImageView
+                android:id="@+id/tag_preview"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="5dp"
+                android:visibility="gone"
+                android:src="@drawable/camera"
+                android:contentDescription="@null"/>
 
+            <HorizontalScrollView
+                android:id="@+id/hsvPreview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/imageHolderView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/tranparent_black"
+                    android:orientation="horizontal"
+                    android:visibility="visible" />
+            </HorizontalScrollView>
+        </LinearLayout>
 
     </RelativeLayout>
 

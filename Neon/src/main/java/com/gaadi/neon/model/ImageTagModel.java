@@ -16,6 +16,7 @@ public class ImageTagModel implements Serializable {
     private String tagId;
     private int numberOfPhotos;
     private Location location;
+    private int tagImages = 0;
 
     public ImageTagModel() {
     }
@@ -41,6 +42,22 @@ public class ImageTagModel implements Serializable {
         location=_location;
     }
 
+    public ImageTagModel(String _tagName, String _tagId, boolean _mandatory,int _numberOfPhotos,Location _location, int tagImages) {
+        this.tagName = _tagName;
+        this.mandatory = _mandatory;
+        this.tagId = _tagId;
+        this.numberOfPhotos = _numberOfPhotos;
+        this.location = _location;
+        this.tagImages = tagImages;
+    }
+
+    public int getTagImages() {
+        return tagImages;
+    }
+
+    public void setTagImages(int tagImages) {
+        this.tagImages = tagImages;
+    }
 
     public String getTagName() {
         return tagName;

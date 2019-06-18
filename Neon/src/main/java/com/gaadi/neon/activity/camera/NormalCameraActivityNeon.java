@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.media.ThumbnailUtils;
 import android.os.Bundle;
@@ -50,9 +51,7 @@ import java.util.List;
  * @since 25/1/17
  */
 public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements CameraFragment1.SetOnPictureTaken
-        , LivePhotoNextTagListener, FindLocations.ILocation
-
-{
+        , LivePhotoNextTagListener, FindLocations.ILocation {
 
     ICameraParam cameraParams;
     RelativeLayout tagsLayout;
@@ -60,7 +59,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
     int currentTag;
     NormalCameraActivityLayoutBinding binder;
     private TextView tvTag, tvNext, tvPrevious;
-    private ImageView buttonGallery;
+    private ImageView buttonGallery, showTagPreview;
     private Location location;
 
     @Override
@@ -82,7 +81,20 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
             FindLocations.getInstance().init(this);
             FindLocations.getInstance().checkPermissions(this);
         }
+        showTagImages();
+    }
 
+    public void showTagImages() {
+        ImageTagModel imageTagModel = tagModels.get(currentTag);
+        if ((cameraParams != null && cameraParams.getCustomParameters() != null) && cameraParams.getCustomParameters().showTagImage()) {
+            if (imageTagModel.getTagImages() != 0) {
+                showTagPreview.setVisibility(View.VISIBLE);
+                Drawable res = getResources().getDrawable(imageTagModel.getTagImages());
+                showTagPreview.setImageDrawable(res);
+            } else {
+                showTagPreview.setVisibility(View.GONE);
+            }
+        }
     }
 
     private void bindCameraFragment() {
@@ -152,6 +164,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         tvPrevious = binder.tvPrev;
         buttonGallery = binder.buttonGallery;
         tagsLayout = binder.rlTags;
+        showTagPreview = binder.tagPreview;
         binder.setHandlers(this);
 
 
@@ -256,9 +269,11 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
 
             } else {
                 setTag(getNextTag(), true);
+                showTagImages();
             }
         } else if (id == R.id.tvPrev) {
             setTag(getPreviousTag(), false);
+            showTagImages();
         }
     }
 
@@ -382,8 +397,8 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         }
 
 
-        if(cameraParams != null)
-        buttonGallery.setVisibility(cameraParams.cameraToGallerySwitchEnabled() ? View.VISIBLE : View.INVISIBLE);
+        if (cameraParams != null)
+            buttonGallery.setVisibility(cameraParams.cameraToGallerySwitchEnabled() ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void initialiazeCurrentTag() {
