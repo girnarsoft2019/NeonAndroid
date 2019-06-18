@@ -85,14 +85,16 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
     }
 
     public void showTagImages() {
-        ImageTagModel imageTagModel = tagModels.get(currentTag);
-        if ((cameraParams != null && cameraParams.getCustomParameters() != null) && cameraParams.getCustomParameters().showTagImage()) {
-            if (imageTagModel.getTagImages() != 0) {
-                showTagPreview.setVisibility(View.VISIBLE);
-                Drawable res = getResources().getDrawable(imageTagModel.getTagImages());
-                showTagPreview.setImageDrawable(res);
-            } else {
-                showTagPreview.setVisibility(View.GONE);
+        if(tagModels != null && tagModels.size() != 0){
+            ImageTagModel imageTagModel = tagModels.get(currentTag);
+            if ((cameraParams != null && cameraParams.getCustomParameters() != null) && cameraParams.getCustomParameters().showTagImage()) {
+                if (imageTagModel.getTagImages() != 0) {
+                    showTagPreview.setVisibility(View.VISIBLE);
+                    Drawable res = getResources().getDrawable(imageTagModel.getTagImages());
+                    showTagPreview.setImageDrawable(res);
+                } else {
+                    showTagPreview.setVisibility(View.GONE);
+                }
             }
         }
     }
