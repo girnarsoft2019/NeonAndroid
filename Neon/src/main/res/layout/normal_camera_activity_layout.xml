@@ -124,7 +124,7 @@
 
             <ImageView
                 android:id="@+id/tag_preview"
-                android:layout_width="60dp"
+                android:layout_width="100dp"
                 android:layout_height="60dp"
                 android:layout_marginTop="5dp"
                 android:visibility="gone"

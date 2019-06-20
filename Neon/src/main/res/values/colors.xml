@@ -34,4 +34,6 @@
     <color name="red">#FF0000</color>
 
     <color name="colorAccent">#FF4081</color>
+    <color name="neon_buttons_text_color">#000000</color>
+
 </resources>

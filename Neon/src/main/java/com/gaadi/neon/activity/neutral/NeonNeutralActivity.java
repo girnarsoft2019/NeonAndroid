@@ -52,7 +52,7 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
                 NeonImagesHandler.getSingletonInstance().getImagesCollection().size() <= 0) {
             setTitle(R.string.photos);
             binder.tabList.setVisibility(View.VISIBLE);
-            //binder.imageShowFragmentContainer.setVisibility(View.GONE);
+            binder.imageShowFragmentContainer.setVisibility(View.GONE);
             if (adapter == null) {
                 List<ImageTagModel> tagModels = NeonImagesHandler.getSingletonInstance().getNeutralParam().getImageTagsModel();
                 if (tagModels == null || tagModels.size() <= 0) {
@@ -253,20 +253,9 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
         if (id == android.R.id.home) {
             onBackPressed();
             return true;
-        } else if (id == R.id.submit) {
-            if (NeonImagesHandler.getSingletonInstance().validateNeonExit(this)) {
-                NeonImagesHandler.getSingletonInstance().sendImageCollectionAndFinish(this, ResponseCode.Success);
-            }
-            return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.submit, menu);
-        return true;
     }
 
     @Override
