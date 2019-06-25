@@ -205,7 +205,8 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 @Override
                 public CustomParameters getCustomParameters() {
                     CustomParameters.CustomParametersBuilder builder = new CustomParameters.CustomParametersBuilder();
-                    builder.showTagImagePreview(true);
+                    builder.showTagImagePreview(false);
+                    builder.hideTagImageReview(true);
                     return builder.build();
                 }
 

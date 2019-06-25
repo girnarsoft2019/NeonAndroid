@@ -176,8 +176,9 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         int id = v.getId();
         if (id == R.id.buttonDone) {
             if (!NeonImagesHandler.getSingletonInstance().isNeutralEnabled()) {
-                if (NeonImagesHandler.getSingletonInstance().getCameraParam().enableImageEditing()
-                        || NeonImagesHandler.getSingletonInstance().getCameraParam().getTagEnabled()) {
+                if ((NeonImagesHandler.getSingletonInstance().getCameraParam().enableImageEditing()
+                        || NeonImagesHandler.getSingletonInstance().getCameraParam().getTagEnabled()) &&
+                        !NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters().hideTagImageReview()) {
                     Intent intent = new Intent(this, ImageShow.class);
                     startActivity(intent);
                     finish();
@@ -185,6 +186,18 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
                     if (NeonImagesHandler.getSingletonInstance().validateNeonExit(this)) {
                         NeonImagesHandler.getSingletonInstance().sendImageCollectionAndFinish(this, ResponseCode.Success);
                         finish();
+                    } else {
+                        List<ImageTagModel> imageTagModels = NeonImagesHandler.getSingletonInstance().getGenericParam().getImageTagsModel();
+                        for (int j = 0; j < imageTagModels.size(); j++) {
+                            if (!imageTagModels.get(j).isMandatory()) {
+                                continue;
+                            }
+                            if (!NeonImagesHandler.getSingletonInstance().checkImagesAvailableForTag(imageTagModels.get(j))) {
+                                currentTag = j;
+                                setTag(imageTagModels.get(j), false);
+                                break;
+                            }
+                        }
                     }
                 }
             } else {

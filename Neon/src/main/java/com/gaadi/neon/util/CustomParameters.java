@@ -11,12 +11,14 @@ public class CustomParameters {
     private boolean hideGalleryButtonInNeutral = false;
     private boolean locationRestrictive = true;
     private boolean showTagImage;
+    private boolean hideTagImageReview;
 
     private CustomParameters(CustomParametersBuilder builder) {
         this.hideCameraButtonInNeutral = builder.hideCameraButtonInNeutral;
         this.hideGalleryButtonInNeutral = builder.hideGalleryButtonInNeutral;
         this.locationRestrictive = builder.locationRestrictive;
         this.showTagImage = builder.showTagImage;
+        this.hideTagImageReview = builder.hideTagImageReview;
     }
 
     public boolean gethideCameraButtonInNeutral() {
@@ -35,7 +37,9 @@ public class CustomParameters {
         return showTagImage;
     }
 
-
+    public boolean hideTagImageReview() {
+        return hideTagImageReview;
+    }
 
     public static class CustomParametersBuilder {
 
@@ -43,6 +47,7 @@ public class CustomParameters {
         private boolean hideGalleryButtonInNeutral;
         private boolean locationRestrictive = true;
         private boolean showTagImage;
+        private boolean hideTagImageReview;
 
         public CustomParametersBuilder sethideCameraButtonInNeutral(boolean hide) {
             this.hideCameraButtonInNeutral = hide;
@@ -61,6 +66,11 @@ public class CustomParameters {
 
         public CustomParametersBuilder showTagImagePreview(boolean tagShow) {
             this.showTagImage = tagShow;
+            return this;
+        }
+
+        public CustomParametersBuilder hideTagImageReview(boolean hideReview) {
+            this.hideTagImageReview = hideReview;
             return this;
         }
 
