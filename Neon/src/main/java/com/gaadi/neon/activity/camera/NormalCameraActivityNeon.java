@@ -195,6 +195,13 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
                             if (!NeonImagesHandler.getSingletonInstance().checkImagesAvailableForTag(imageTagModels.get(j))) {
                                 currentTag = j;
                                 setTag(imageTagModels.get(j), false);
+                                if (currentTag == tagModels.size() - 1) {
+                                    tvNext.setVisibility(View.VISIBLE);
+                                    tvNext.setText(getString(R.string.finish));
+                                } else {
+                                    tvNext.setVisibility(View.VISIBLE);
+                                    tvNext.setText(getString(R.string.next));
+                                }
                                 break;
                             }
                         }
