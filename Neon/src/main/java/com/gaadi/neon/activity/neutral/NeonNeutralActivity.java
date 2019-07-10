@@ -36,7 +36,7 @@ import java.util.List;
 public class NeonNeutralActivity extends NeonBaseNeutralActivity implements View.OnClickListener {
 
     ArrayAdapter<String> adapter;
-    private TextView txtTagTitle, addPhotoCamera, addPhotoGallary;
+    private TextView txtTagTitle, addPhotoCamera, addPhotoGallary, showMinCount;
     private ListView tabList;
     private FrameLayout imageShowFragmentContainer;
 
@@ -48,6 +48,7 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity implements View
         tabList = findViewById(R.id.tabList);
         imageShowFragmentContainer = findViewById(R.id.imageShowFragmentContainer);
         addPhotoCamera = findViewById(R.id.addPhotoCamera);
+        showMinCount = findViewById(R.id.show_min_count);
         addPhotoGallary = findViewById(R.id.addPhotoGallary);
         addPhotoGallary.setOnClickListener(this);
         addPhotoCamera.setOnClickListener(this);
@@ -69,6 +70,13 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity implements View
             tabList.setVisibility(View.VISIBLE);
             if (adapter == null) {
                 List<ImageTagModel> tagModels = new ArrayList<>();
+                if (NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getClickMinimumNumberOfImages() != null &&
+                        !NeonImagesHandler.getSingletonInstance().getNeutralParam().getTagEnabled()) {
+                    showMinCount.setVisibility(View.VISIBLE);
+                    showMinCount.setText(String.format("Number of minimum number of images required is %s", NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getClickMinimumNumberOfImages()));
+                }  else {
+                    showMinCount.setVisibility(View.GONE);
+                }
                 if (NeonImagesHandler.getSingletonInstance().getNeutralParam() != null && NeonImagesHandler.getSingletonInstance().getNeutralParam().getImageTagsModel() != null)
                     tagModels = NeonImagesHandler.getSingletonInstance().getNeutralParam().getImageTagsModel();
                 if (tagModels == null || tagModels.size() <= 0) {
@@ -91,6 +99,7 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity implements View
         } else {
             tabList.setVisibility(View.GONE);
             txtTagTitle.setVisibility(View.GONE);
+            showMinCount.setVisibility(View.GONE);
             imageShowFragmentContainer.setVisibility(View.VISIBLE);
             if (NeonImagesHandler.getSingletonInstance() != null &&
                     NeonImagesHandler.getSingletonInstance().getGenericParam() != null &&

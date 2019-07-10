@@ -15,6 +15,7 @@ public class CustomParameters {
     private String folderName;
     private String titleName;
     private String vccIdAvailable;
+    private String clickMinimumNumberOfImages;
 
     private CustomParameters(CustomParametersBuilder builder) {
         this.hideCameraButtonInNeutral = builder.hideCameraButtonInNeutral;
@@ -25,6 +26,7 @@ public class CustomParameters {
         this.folderName = builder.folderName;
         this.titleName = builder.titleName;
         this.vccIdAvailable = builder.vccIdAvailable;
+        this.clickMinimumNumberOfImages = builder.clickMinimumNumberOfImages;
     }
 
     public boolean gethideCameraButtonInNeutral() {
@@ -55,8 +57,12 @@ public class CustomParameters {
         return titleName;
     }
 
-    public String getVccIdAvailable(){
-        return  vccIdAvailable;
+    public String getVccIdAvailable() {
+        return vccIdAvailable;
+    }
+
+    public String getClickMinimumNumberOfImages() {
+        return clickMinimumNumberOfImages;
     }
 
     public static class CustomParametersBuilder {
@@ -69,6 +75,7 @@ public class CustomParameters {
         private String folderName;
         private String titleName;
         private String vccIdAvailable;
+        private String clickMinimumNumberOfImages;
 
 
         public CustomParametersBuilder sethideCameraButtonInNeutral(boolean hide) {
@@ -81,7 +88,7 @@ public class CustomParameters {
             return this;
         }
 
-        public CustomParametersBuilder setVccIdAvailable(String vccId){
+        public CustomParametersBuilder setVccIdAvailable(String vccId) {
             this.vccIdAvailable = vccId;
             return this;
         }
@@ -103,6 +110,11 @@ public class CustomParameters {
 
         public CustomParametersBuilder setFolderRestrictive(boolean folderRestrictive) {
             this.folderRestrictive = folderRestrictive;
+            return this;
+        }
+
+        public CustomParametersBuilder setMinimumNumberOfImages(String imagesCount) {
+            this.clickMinimumNumberOfImages = imagesCount;
             return this;
         }
 

@@ -22,14 +22,12 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -229,14 +227,11 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                 NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters().getCompressBy() != 0) {
             setCompressBy = NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters().getCompressBy();
         }
-        Log.e("Rajeev", "initialize: " + locationRestrictive);
-        Log.e("Dipanshu", "initialize: " + setCompressBy);
 
     }
 
     public void onClick(View v) {
         if (v.getId() == R.id.buttonCaptureVertical || v.getId() == R.id.buttonCaptureHorizontal) {
-            Log.e("Rajeev", "onClickFragmentsView: " + locationRestrictive);
             if (locationRestrictive) {
                 if (FindLocations.getInstance().checkPermissions(mActivity) &&
                         FindLocations.getInstance().getLocation() != null) {
