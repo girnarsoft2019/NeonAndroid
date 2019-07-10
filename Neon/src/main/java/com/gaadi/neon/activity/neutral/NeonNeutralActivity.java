@@ -70,10 +70,10 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity implements View
             tabList.setVisibility(View.VISIBLE);
             if (adapter == null) {
                 List<ImageTagModel> tagModels = new ArrayList<>();
-                if (NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getClickMinimumNumberOfImages() != null &&
+                if (NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getClickMinimumNumberOfImages() != 0 &&
                         !NeonImagesHandler.getSingletonInstance().getNeutralParam().getTagEnabled()) {
                     showMinCount.setVisibility(View.VISIBLE);
-                    showMinCount.setText(String.format("Number of minimum number of images required is %s", NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getClickMinimumNumberOfImages()));
+                    showMinCount.setText(String.format("Number of minimum number of images required is %s", String.valueOf(NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getClickMinimumNumberOfImages())));
                 }  else {
                     showMinCount.setVisibility(View.GONE);
                 }

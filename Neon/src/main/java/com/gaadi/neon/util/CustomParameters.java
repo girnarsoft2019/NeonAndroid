@@ -15,7 +15,7 @@ public class CustomParameters {
     private String folderName;
     private String titleName;
     private String vccIdAvailable;
-    private String clickMinimumNumberOfImages;
+    private int clickMinimumNumberOfImages;
 
     private CustomParameters(CustomParametersBuilder builder) {
         this.hideCameraButtonInNeutral = builder.hideCameraButtonInNeutral;
@@ -61,7 +61,7 @@ public class CustomParameters {
         return vccIdAvailable;
     }
 
-    public String getClickMinimumNumberOfImages() {
+    public int getClickMinimumNumberOfImages() {
         return clickMinimumNumberOfImages;
     }
 
@@ -75,7 +75,7 @@ public class CustomParameters {
         private String folderName;
         private String titleName;
         private String vccIdAvailable;
-        private String clickMinimumNumberOfImages;
+        private int clickMinimumNumberOfImages;
 
 
         public CustomParametersBuilder sethideCameraButtonInNeutral(boolean hide) {
@@ -113,7 +113,7 @@ public class CustomParameters {
             return this;
         }
 
-        public CustomParametersBuilder setMinimumNumberOfImages(String imagesCount) {
+        public CustomParametersBuilder setMinimumNumberOfImages(int imagesCount) {
             this.clickMinimumNumberOfImages = imagesCount;
             return this;
         }

@@ -413,29 +413,32 @@ public class NeonImagesHandler {
             if (NeonImagesHandler.getSingletonInstance() != null &&
                     NeonImagesHandler.getSingletonInstance().getGenericParam() != null &&
                     !NeonImagesHandler.getSingletonInstance().getGenericParam().getTagEnabled() &&
-                    NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getClickMinimumNumberOfImages() == null) {
+                    NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getClickMinimumNumberOfImages() == 0) {
                 return true;
             }
             List<FileInfo> fileInfos = NeonImagesHandler.getSingletonInstance().getImagesCollection();
             if (NeonImagesHandler.getSingletonInstance() != null &&
                     NeonImagesHandler.getSingletonInstance().getGenericParam() != null) {
-                String imagesCount = NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getClickMinimumNumberOfImages();
-                if (fileInfos != null && fileInfos.size() > 0 && imagesCount != null) {
-                    if (fileInfos.size() < Integer.valueOf(imagesCount)) {
+                int imagesCount = NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getClickMinimumNumberOfImages();
+                if (fileInfos != null && fileInfos.size() > 0 && imagesCount != 0) {
+                    if (fileInfos.size() < imagesCount) {
                         if (activity != null) {
                             Toast.makeText(activity, "Please click the minimum number of images  " + imagesCount, Toast.LENGTH_SHORT).show();
                         }
                         return false;
+                    } else {
+                        return true;
                     }
-                }
-            }
-            if (fileInfos != null && fileInfos.size() > 0) {
-                for (int i = 0; i < fileInfos.size(); i++) {
-                    if (fileInfos.get(i).getFileTag() == null) {
-                        if (activity != null) {
-                            Toast.makeText(activity, "Set tag for all images", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (fileInfos != null && fileInfos.size() > 0) {
+                        for (int i = 0; i < fileInfos.size(); i++) {
+                            if (fileInfos.get(i).getFileTag() == null) {
+                                if (activity != null) {
+                                    Toast.makeText(activity, "Set tag for all images", Toast.LENGTH_SHORT).show();
+                                }
+                                return false;
+                            }
                         }
-                        return false;
                     }
                 }
             }
