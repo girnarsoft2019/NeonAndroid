@@ -420,7 +420,10 @@ public class NeonImagesHandler {
             if (NeonImagesHandler.getSingletonInstance() != null &&
                     NeonImagesHandler.getSingletonInstance().getGenericParam() != null) {
                 int imagesCount = NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getClickMinimumNumberOfImages();
-                if (fileInfos != null && fileInfos.size() > 0 && imagesCount != 0) {
+                if (imagesCount > 0 && fileInfos == null) {
+                    Toast.makeText(activity, "Please click the minimum number of images  " + imagesCount, Toast.LENGTH_SHORT).show();
+                    return false;
+                } else if (fileInfos != null && fileInfos.size() > 0 && imagesCount != 0) {
                     if (fileInfos.size() < imagesCount) {
                         if (activity != null) {
                             Toast.makeText(activity, "Please click the minimum number of images  " + imagesCount, Toast.LENGTH_SHORT).show();
