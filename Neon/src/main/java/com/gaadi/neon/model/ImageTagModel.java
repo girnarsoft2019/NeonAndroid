@@ -16,6 +16,7 @@ public class ImageTagModel implements Serializable {
     private String tagId;
     private int numberOfPhotos;
     private Location location;
+    private String tagPreviewUrl;
 
     public ImageTagModel() {
     }
@@ -32,6 +33,14 @@ public class ImageTagModel implements Serializable {
         mandatory = _mandatory;
         numberOfPhotos = _numberOfPhotos;
     }
+    public ImageTagModel(String _tagName, String _tagId, boolean _mandatory,int _numberOfPhotos, String imageUrl) {
+        tagName = _tagName;
+        tagId = _tagId;
+        mandatory = _mandatory;
+        numberOfPhotos = _numberOfPhotos;
+        this.tagPreviewUrl = imageUrl;
+    }
+
 
     public ImageTagModel(String _tagName, String _tagId, boolean _mandatory,int _numberOfPhotos,Location _location) {
         tagName = _tagName;
@@ -41,6 +50,22 @@ public class ImageTagModel implements Serializable {
         location=_location;
     }
 
+    public ImageTagModel(String _tagName, String _tagId, boolean _mandatory,int _numberOfPhotos,Location _location, String imageUrl) {
+        this.tagName = _tagName;
+        this.mandatory = _mandatory;
+        this.tagId = _tagId;
+        this.numberOfPhotos = _numberOfPhotos;
+        this.location = _location;
+        this.tagPreviewUrl = imageUrl;
+    }
+
+    public String getTagPreviewUrl() {
+        return tagPreviewUrl;
+    }
+
+    public void setTagPreviewUrl(String tagPreviewUrl) {
+        this.tagPreviewUrl = tagPreviewUrl;
+    }
 
     public String getTagName() {
         return tagName;

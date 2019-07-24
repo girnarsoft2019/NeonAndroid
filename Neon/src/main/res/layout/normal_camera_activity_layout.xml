@@ -20,8 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/tvPrev"
@@ -113,21 +112,34 @@
 
     </LinearLayout>
 
-
-    <HorizontalScrollView
-        android:id="@+id/hsvPreview"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/rlTags">
+        android:layout_below="@+id/rlTags"
+        android:orientation="horizontal">
 
-        <LinearLayout
-            android:id="@+id/imageHolderView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/tranparent_black"
-            android:orientation="horizontal"
-            android:visibility="visible" />
-    </HorizontalScrollView>
+        <ImageView
+            android:id="@+id/tag_preview"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="5dp"
+            android:contentDescription="@null"
+            android:src="@drawable/camera"
+            android:visibility="gone" />
 
+        <HorizontalScrollView
+            android:id="@+id/hsvPreview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/imageHolderView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/tranparent_black"
+                android:orientation="horizontal"
+                android:visibility="visible" />
+        </HorizontalScrollView>
+    </LinearLayout>
 
 </RelativeLayout>

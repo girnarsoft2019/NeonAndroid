@@ -9,7 +9,7 @@ import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,6 +17,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.activity.ImageShow;
 import com.gaadi.neon.enumerations.CameraType;
@@ -46,22 +49,22 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
+
 /**
  * @author princebatra
  * @version 1.0
  * @since 25/1/17
  */
 public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements CameraFragment1.SetOnPictureTaken
-        , LivePhotoNextTagListener, FindLocations.ILocation, View.OnClickListener
-
-{
+        , LivePhotoNextTagListener, FindLocations.ILocation, View.OnClickListener {
 
     ICameraParam cameraParams;
     RelativeLayout tagsLayout;
     List<ImageTagModel> tagModels;
     int currentTag;
     private TextView tvTag, tvNext, tvPrevious, buttonDone;
-    private ImageView buttonGallery;
+    private ImageView buttonGallery, showTagPreview;
     private Location location;
     private LinearLayout imageHolderView;
 
@@ -76,6 +79,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         buttonGallery = findViewById(R.id.buttonGallery);
         buttonDone = findViewById(R.id.buttonDone);
         imageHolderView = findViewById(R.id.imageHolderView);
+        showTagPreview = findViewById(R.id.tag_preview);
         buttonDone.setOnClickListener(this);
         buttonGallery.setOnClickListener(this);
         tvNext.setOnClickListener(this);
@@ -93,9 +97,31 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
             NeonImagesHandler.getSingletonInstance().setLivePhotoNextTagListener(this);
         }
         if (cameraParams == null || cameraParams.getCustomParameters() == null || cameraParams.getCustomParameters().getLocationRestrictive()) {
-            Log.e("Rajeev", "onCreate: Activity");
             FindLocations.getInstance().init(this);
             FindLocations.getInstance().checkPermissions(this);
+        }
+        showTagImages();
+    }
+
+
+    public void showTagImages() {
+        if (tagModels != null && tagModels.size() != 0) {
+            ImageTagModel imageTagModel = tagModels.get(currentTag);
+            if ((cameraParams != null && cameraParams.getCustomParameters() != null) && cameraParams.getCustomParameters().showTagImage()) {
+                if (!TextUtils.isEmpty(imageTagModel.getTagPreviewUrl())) {
+                    showTagPreview.setVisibility(View.VISIBLE);
+                    RequestOptions options = new RequestOptions()
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .centerCrop()
+                            .placeholder(R.drawable.default_placeholder);
+                    Glide.with(this).load(imageTagModel.getTagPreviewUrl())
+                            .apply(options)
+                            .transition(withCrossFade())
+                            .into(showTagPreview);
+                } else {
+                    showTagPreview.setVisibility(View.GONE);
+                }
+            }
         }
     }
 
@@ -118,7 +144,6 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
                                                     if (cameraParams != null && cameraParams.getCustomParameters() != null) {
                                                         locationRestrictive = cameraParams.getCustomParameters().getLocationRestrictive();
                                                     }
-                                                    Log.e("Rajeev", "From Activity: " + locationRestrictive);
 
                                                     CameraFragment1 fragment = CameraFragment1.getInstance(locationRestrictive);
                                                     FragmentManager manager = getSupportFragmentManager();
@@ -266,9 +291,11 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
 
             } else {
                 setTag(getNextTag(), true);
+                showTagImages();
             }
         } else if (id == R.id.tvPrev) {
             setTag(getPreviousTag(), false);
+            showTagImages();
         }
     }
 
@@ -438,10 +465,10 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
 
     @Override
     public void onPictureTaken(String filePath) {
-            afterPictureTaken(filePath);
+        afterPictureTaken(filePath);
     }
 
-    public void afterPictureTaken(String filePath){
+    public void afterPictureTaken(String filePath) {
         FileInfo fileInfo = new FileInfo();
         fileInfo.setFilePath(filePath);
         fileInfo.setFileName(filePath.substring(filePath.lastIndexOf("/") + 1));
@@ -453,7 +480,6 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
             imageHolderView.setVisibility(View.VISIBLE);
         }
         boolean locationRestriction = cameraParams == null || cameraParams.getCustomParameters() == null || cameraParams.getCustomParameters().getLocationRestrictive();
-        Log.e("Activity", "onPictureTaken: " + locationRestriction);
         boolean isUpdated = true;
 
         if (locationRestriction) {

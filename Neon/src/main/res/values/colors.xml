@@ -20,6 +20,7 @@
     <color name="green">#86be65</color>
 
     <color name="colorPrimary">#DC592B</color>
+    <color name="tagColor">#80000000</color>
 
     <color name="neon_buttons_color">#DC592B</color>
     <color name="neon_toolbar_color">#DC592B</color>

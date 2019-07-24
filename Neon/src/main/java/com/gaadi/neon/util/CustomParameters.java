@@ -16,6 +16,7 @@ public class CustomParameters {
     private String titleName;
     private String vccIdAvailable;
     private int clickMinimumNumberOfImages;
+    private boolean showTagImage;
 
     private CustomParameters(CustomParametersBuilder builder) {
         this.hideCameraButtonInNeutral = builder.hideCameraButtonInNeutral;
@@ -27,6 +28,7 @@ public class CustomParameters {
         this.titleName = builder.titleName;
         this.vccIdAvailable = builder.vccIdAvailable;
         this.clickMinimumNumberOfImages = builder.clickMinimumNumberOfImages;
+        this.showTagImage = builder.showTagImage;
     }
 
     public boolean gethideCameraButtonInNeutral() {
@@ -65,6 +67,11 @@ public class CustomParameters {
         return clickMinimumNumberOfImages;
     }
 
+    public boolean showTagImage() {
+        return showTagImage;
+    }
+
+
     public static class CustomParametersBuilder {
 
         private boolean hideCameraButtonInNeutral;
@@ -76,6 +83,7 @@ public class CustomParameters {
         private String titleName;
         private String vccIdAvailable;
         private int clickMinimumNumberOfImages;
+        private boolean showTagImage;
 
 
         public CustomParametersBuilder sethideCameraButtonInNeutral(boolean hide) {
@@ -85,6 +93,11 @@ public class CustomParameters {
 
         public CustomParametersBuilder setTitleName(String title) {
             this.titleName = title;
+            return this;
+        }
+
+        public CustomParametersBuilder showTagImagePreview(boolean tagShow) {
+            this.showTagImage = tagShow;
             return this;
         }
 

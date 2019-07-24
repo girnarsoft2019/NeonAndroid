@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -36,8 +37,9 @@ import java.util.List;
 public class NeonNeutralActivity extends NeonBaseNeutralActivity implements View.OnClickListener {
 
     ArrayAdapter<String> adapter;
-    private TextView txtTagTitle, addPhotoCamera, addPhotoGallary, showMinCount;
+    private TextView txtTagTitle, showMinCount;
     private ListView tabList;
+    private LinearLayout addPhotoCamera, addPhotoGallary;
     private FrameLayout imageShowFragmentContainer;
 
     @Override
@@ -68,6 +70,7 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity implements View
                 setTitle(R.string.photos);
             }
             tabList.setVisibility(View.VISIBLE);
+            txtTagTitle.setVisibility(View.VISIBLE);
             if (adapter == null) {
                 List<ImageTagModel> tagModels = new ArrayList<>();
                 if (NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getClickMinimumNumberOfImages() != 0 &&
@@ -90,7 +93,7 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity implements View
                 }
                 String[] tags = new String[tagModels.size()];
                 for (int i = 0; i < tagModels.size(); i++) {
-                    tags[i] = "* " + tagModels.get(i).getTagName();
+                    tags[i] = " • " + tagModels.get(i).getTagName();
 
                 }
                 adapter = new ArrayAdapter<>(this, R.layout.single_textview, R.id.tagText, tags);
