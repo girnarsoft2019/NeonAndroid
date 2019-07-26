@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.enumerations.CameraFacing;
@@ -108,7 +109,10 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
 
     public void onClick(View v) {
         int id = v.getId();
-
+        if(NeonImagesHandler.getSingletonInstance().getImageRequiredTags().size() == 0){
+            Toast.makeText(this, getString(R.string.remove_image), Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (id == R.id.addPhotoCamera) {
             try {
                 PhotosLibrary.collectPhotos(NeonImagesHandler.getSingletonInstance().getRequestCode(), this, NeonImagesHandler.getSingletonInstance().getLibraryMode(), PhotosMode.setCameraMode().setParams(new ICameraParam() {
@@ -159,7 +163,7 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity {
 
                     @Override
                     public List<ImageTagModel> getImageTagsModel() {
-                        return NeonImagesHandler.getSingletonInstance().getNeutralParam().getImageTagsModel();
+                        return NeonImagesHandler.getSingletonInstance().getImageRequiredTags();
                     }
 
                     @Override

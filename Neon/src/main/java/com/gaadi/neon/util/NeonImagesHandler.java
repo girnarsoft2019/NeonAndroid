@@ -150,12 +150,12 @@ public class NeonImagesHandler {
         return imagesCollection;
     }
 
-    public void setImagesCollection(List<FileInfo> allreadyAdded) {
+    public void setImagesCollection(List<FileInfo> alreadyAddedList) {
         imagesCollection = new ArrayList<>();
-        if (allreadyAdded != null && allreadyAdded.size() > 0) {
-            for (int i = 0; i < allreadyAdded.size(); i++) {
+        if (alreadyAddedList != null && alreadyAddedList.size() > 0) {
+            for (int i = 0; i < alreadyAddedList.size(); i++) {
                 FileInfo cloneFile = new FileInfo();
-                FileInfo originalFile = allreadyAdded.get(i);
+                FileInfo originalFile = alreadyAddedList.get(i);
                 if (originalFile == null) {
                     continue;
                 }
@@ -188,6 +188,17 @@ public class NeonImagesHandler {
         return false;
     }
 
+    public List<ImageTagModel> getImageRequiredTags() {
+        List<ImageTagModel> imageTagList = getNeutralParam().getImageTagsModel();
+        List<ImageTagModel> imageRequiredTagList = new ArrayList<>();
+        for (ImageTagModel itm : imageTagList) {
+            if (getNumberOfPhotosCollected(itm) < itm.getNumberOfPhotos()) {
+                imageRequiredTagList.add(itm);
+            }
+        }
+        return imageRequiredTagList;
+    }
+
     public boolean checkImageAvailableForPath(FileInfo fileInfo) {
         if (imagesCollection == null || imagesCollection.size() <= 0) {
             return false;
@@ -217,7 +228,7 @@ public class NeonImagesHandler {
             imagesCollection = new ArrayList<>();
         }
 
-        if (getGenericParam()!= null && !getGenericParam().getTagEnabled()) {
+        if (getGenericParam() != null && !getGenericParam().getTagEnabled()) {
             if (getGenericParam().getNumberOfPhotos() > 0 &&
                     getImagesCollection() != null &&
                     getGenericParam().getNumberOfPhotos() == getImagesCollection().size()) {
@@ -284,8 +295,8 @@ public class NeonImagesHandler {
         neonResponse.setResponseCode(responseCode);
         neonResponse.setImageCollection(NeonImagesHandler.getSingletonInstance().getImagesCollection());
         neonResponse.setImageTagsCollection(NeonImagesHandler.getSingletonInstance().getFileHashMap());
-        if(NeonImagesHandler.getSingletonInstance()!=null){
-            if(NeonImagesHandler.getSingletonInstance().getImageResultListener()!=null){
+        if (NeonImagesHandler.getSingletonInstance() != null) {
+            if (NeonImagesHandler.getSingletonInstance().getImageResultListener() != null) {
                 NeonImagesHandler.getSingletonInstance().getImageResultListener().imageCollection(neonResponse);
                 NeonImagesHandler.getSingletonInstance().scheduleSingletonClearance();
             }
@@ -325,7 +336,7 @@ public class NeonImagesHandler {
 
     public void showBackOperationAlertIfNeededLive(final Activity activity) {
         if (NeonImagesHandler.getSingletonInstance().getLibraryMode() == LibraryMode.Restrict) {
-            if(!validateNeonExit(null)) {
+            if (!validateNeonExit(null)) {
                 new AlertDialog.Builder(activity).setTitle("Please upload " + NeonImagesHandler.getSingletonInstance().getCurrentTag() + " Photo")
                         .setCancelable(true).setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
@@ -333,12 +344,12 @@ public class NeonImagesHandler {
                         dialog.dismiss();
                     }
                 }).show();
-            }else{
+            } else {
                 sendImageCollectionAndFinish(activity, ResponseCode.Back);
             }
-        }else{
+        } else {
 
-            if(!validateNeonExit(null)){
+            if (!validateNeonExit(null)) {
                 showExitConfirmation(activity);
             }
 
@@ -349,8 +360,8 @@ public class NeonImagesHandler {
 
     public boolean validateNeonExit(Activity activity) {
         try {
-            if (NeonImagesHandler.getSingletonInstance()!=null &&
-                    NeonImagesHandler.getSingletonInstance().getGenericParam()!=null &&
+            if (NeonImagesHandler.getSingletonInstance() != null &&
+                    NeonImagesHandler.getSingletonInstance().getGenericParam() != null &&
                     !NeonImagesHandler.getSingletonInstance().getGenericParam().getTagEnabled()) {
                 return true;
             }
@@ -379,7 +390,7 @@ public class NeonImagesHandler {
                 }
             }
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
