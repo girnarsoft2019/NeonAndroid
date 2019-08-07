@@ -1,5 +1,6 @@
 package com.gaadi.neon.activity.camera;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,7 +43,11 @@ import com.gaadi.neon.util.FindLocations;
 import com.gaadi.neon.util.ManifestPermission;
 import com.gaadi.neon.util.NeonException;
 import com.gaadi.neon.util.NeonImagesHandler;
+import com.gaadi.neon.util.NeonUtils;
 import com.gaadi.neon.util.PermissionType;
+import com.intsig.csopen.sdk.CSOpenAPI;
+import com.intsig.csopen.sdk.CSOpenApiFactory;
+import com.intsig.csopen.sdk.CSOpenApiHandler;
 import com.scanlibrary.R;
 
 import java.io.File;
@@ -67,6 +73,10 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
     private ImageView buttonGallery, showTagPreview;
     private Location location;
     private LinearLayout imageHolderView;
+    private final int REQ_CODE_CALL_CAMSCANNER = 168;
+    private String mOutputImagePath;
+    private String mInputImagePath;
+    private CSOpenAPI camScannerApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +103,11 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         }
         customize();
         bindCameraFragment();
+
+        if(cameraParams != null && cameraParams.getCustomParameters() != null && cameraParams.getCustomParameters().getCamScannerAPIKey() != null && !cameraParams.getCustomParameters().getCamScannerAPIKey().equals("")){
+            camScannerApi = CSOpenApiFactory.createCSOpenApi(this, cameraParams.getCustomParameters().getCamScannerAPIKey(), null);
+        }
+
         if (NeonImagesHandler.getSingletonInstance().getLivePhotosListener() != null) {
             NeonImagesHandler.getSingletonInstance().setLivePhotoNextTagListener(this);
         }
@@ -465,7 +480,33 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
 
     @Override
     public void onPictureTaken(String filePath) {
-        afterPictureTaken(filePath);
+        Log.d("NormalCamera", "onPictureTaken: ");
+        mInputImagePath = filePath;
+        if (cameraParams != null && cameraParams.getCustomParameters() != null && cameraParams.getCustomParameters().getCamScannerAPIKey() != null && !cameraParams.getCustomParameters().getCamScannerAPIKey().equals("")) {
+            if (camScannerApi != null) {
+                if (camScannerApi.isCamScannerInstalled()) {
+
+                    String folderName = null;
+                    if (NeonImagesHandler.getSingletonInstance().getCameraParam() != null && NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters() != null && NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters().getFolderName() != null) {
+                        folderName = NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters().getFolderName();
+                    }
+                    mOutputImagePath = NeonUtils.getMediaOutputPath(NormalCameraActivityNeon.this, folderName);
+                    boolean res = PhotosLibrary.go2CamScanner(this, filePath, mOutputImagePath, REQ_CODE_CALL_CAMSCANNER, camScannerApi);
+                    Log.d("NormalCamera", "go2CamScanner  " + res);
+                    if (!res)
+                        afterPictureTaken(filePath);
+                } else {
+                    Log.d("NormalCamera", "CamScanner not found!!!");
+                    afterPictureTaken(filePath);
+                }
+            } else {
+                Log.d("NormalCamera", "CamScanner not initialised!!!");
+                afterPictureTaken(filePath);
+            }
+        } else {
+            Log.d("NormalCamera", "WithoutCamScanner");
+            afterPictureTaken(filePath);
+        }
     }
 
     public void afterPictureTaken(String filePath) {
@@ -587,4 +628,32 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("NormalCamera", "onActivityResult: ");
+        if (resultCode == Activity.RESULT_OK){
+            if (requestCode == REQ_CODE_CALL_CAMSCANNER){
+                camScannerApi.handleResult(requestCode, resultCode, data, new CSOpenApiHandler() {
+                    @Override
+                    public void onSuccess() {
+                        Log.d("NormalCamera", "onSuccess: "+mOutputImagePath);
+                        NeonUtils.scanFile(NormalCameraActivityNeon.this, mOutputImagePath);
+                        afterPictureTaken(mOutputImagePath);
+                        NeonUtils.deleteFile(NormalCameraActivityNeon.this, mInputImagePath);
+                    }
+                    @Override
+                    public void onError(int i) {
+                        Log.d("NormalCamera", "onError: "+i);
+                        afterPictureTaken(mInputImagePath);
+                    }
+                    @Override
+                    public void onCancel() {
+                        Log.d("NormalCamera", "onCancel: ");
+                        afterPictureTaken(mInputImagePath);
+                    }
+                });
+            }
+        }
+    }
 }

@@ -21,7 +21,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
 import android.support.v4.os.EnvironmentCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -386,7 +385,7 @@ public class NeonUtils {
                     return Camera.CameraInfo.CAMERA_FACING_FRONT;
                 }
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return Camera.CameraInfo.CAMERA_FACING_BACK; // No front-facing camera found
@@ -654,9 +653,7 @@ public class NeonUtils {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
-
-        finally {
+        } finally {
             if (source != null) {
                 try {
                     source.close();
@@ -675,18 +672,18 @@ public class NeonUtils {
     }
 
     public static File getImageOutputFile(Context context, String originalPath, String folderName, String imageName, int index) {
-        if(imageName == null){
+        if (imageName == null) {
             return null;
         }
         String appName = context.getString(R.string.app_name);
         if (appName.length() > 0) {
             appName = appName.replace(" ", "");
         }
-        String path=Environment.getExternalStorageDirectory().getAbsolutePath()+File.separator+appName+File.separator+folderName;
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + appName + File.separator + folderName;
 
         String pathForCheck = path + File.separator + imageName;
 
-        if(originalPath.equals(pathForCheck)){
+        if (originalPath.equals(pathForCheck)) {
             return null;
         }
 
@@ -701,6 +698,24 @@ public class NeonUtils {
         // Create a media file name
         //String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss.SSS").format(new Date());
         return new File(mediaStorageDir.getPath() + File.separator + "IMG_" + System.currentTimeMillis() + String.valueOf(index) + ".jpg");
+    }
+
+    public static String getMediaOutputPath(Context context, String folderName) {
+        String appName = context.getString(R.string.app_name);
+        if (appName.length() > 0) {
+            appName = appName.replace(" ", "");
+        }
+        String path;
+        if (folderName != null) {
+            path = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + appName + File.separator + folderName;
+        } else {
+            path = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + appName;
+        }
+        File mediaStorageDir = new File(path);
+        // Create a media file name
+        //String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss.SSS").format(new Date());
+        return mediaStorageDir.getPath() + File.separator +
+                "IMG_" + System.currentTimeMillis() + ".jpg";
     }
 
 

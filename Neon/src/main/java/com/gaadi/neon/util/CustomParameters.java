@@ -17,6 +17,7 @@ public class CustomParameters {
     private String vccIdAvailable;
     private int clickMinimumNumberOfImages;
     private boolean showTagImage;
+    private String camScannerAPIKey;
 
     private CustomParameters(CustomParametersBuilder builder) {
         this.hideCameraButtonInNeutral = builder.hideCameraButtonInNeutral;
@@ -29,6 +30,7 @@ public class CustomParameters {
         this.vccIdAvailable = builder.vccIdAvailable;
         this.clickMinimumNumberOfImages = builder.clickMinimumNumberOfImages;
         this.showTagImage = builder.showTagImage;
+        this.camScannerAPIKey = builder.camScannerAPIKey;
     }
 
     public boolean gethideCameraButtonInNeutral() {
@@ -53,6 +55,14 @@ public class CustomParameters {
 
     public String getFolderName() {
         return folderName;
+    }
+
+    public String getCamScannerAPIKey() {
+        return camScannerAPIKey;
+    }
+
+    public void setCamScannerAPIKey(String camScannerAPIKey) {
+        this.camScannerAPIKey = camScannerAPIKey;
     }
 
     public String getTitleName() {
@@ -84,6 +94,7 @@ public class CustomParameters {
         private String vccIdAvailable;
         private int clickMinimumNumberOfImages;
         private boolean showTagImage;
+        private String camScannerAPIKey = "";
 
 
         public CustomParametersBuilder sethideCameraButtonInNeutral(boolean hide) {
@@ -134,6 +145,11 @@ public class CustomParameters {
         public CustomParametersBuilder setFolderName(String folderName) {
             this.folderName = folderName;
             return this;
+        }
+
+        public CustomParametersBuilder setCamScannerAPIKey(String camScannerAPIKey){
+            this.camScannerAPIKey = camScannerAPIKey;
+            return  this;
         }
 
         public CustomParameters build() {
