@@ -73,7 +73,8 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity implements View
             txtTagTitle.setVisibility(View.VISIBLE);
             if (adapter == null) {
                 List<ImageTagModel> tagModels = new ArrayList<>();
-                if (NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getClickMinimumNumberOfImages() != 0 &&
+                if (NeonImagesHandler.getSingletonInstance().getGenericParam() != null &&
+                        NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getClickMinimumNumberOfImages() != 0 &&
                         !NeonImagesHandler.getSingletonInstance().getNeutralParam().getTagEnabled()) {
                     showMinCount.setVisibility(View.VISIBLE);
                     txtTagTitle.setVisibility(View.GONE);

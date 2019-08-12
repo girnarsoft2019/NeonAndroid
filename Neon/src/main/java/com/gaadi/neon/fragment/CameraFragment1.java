@@ -312,12 +312,14 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        ViewGroup.LayoutParams layoutParamsDrawing
-                = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
-                ViewGroup.LayoutParams.FILL_PARENT);
-
-        mActivity.addContentView(drawingView, layoutParamsDrawing);
+        try {
+            ViewGroup.LayoutParams layoutParamsDrawing
+                    = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
+                    ViewGroup.LayoutParams.FILL_PARENT);
+            mActivity.addContentView(drawingView, layoutParamsDrawing);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void setFlashLayoutAndMode() {

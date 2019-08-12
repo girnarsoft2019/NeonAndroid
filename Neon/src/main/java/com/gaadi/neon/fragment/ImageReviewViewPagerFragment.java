@@ -137,7 +137,8 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
         draweeView = (ImageView) rootView.findViewById(R.id.imagereview_imageview);
         tagLayout = (LinearLayout) rootView.findViewById(R.id.footer_layout_imagereview_fragment);
 
-        if (NeonImagesHandler.getSingleonInstance().getGenericParam().getTagEnabled()) {
+        if (NeonImagesHandler.getSingleonInstance().getGenericParam() != null &&
+                NeonImagesHandler.getSingleonInstance().getGenericParam().getTagEnabled()) {
             tagLayout.setVisibility(View.VISIBLE);
         } else {
             tagLayout.setVisibility(View.GONE);
@@ -250,12 +251,16 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
         } else if (v.getId() == R.id.imagereview_tag_spinner) {
             showTagsDropDown(v);
         } else if (v.getId() == R.id.imagereview_cropbtn) {
-            cropFilePath = NeonUtils.getEmptyStoragePath(getActivity());
-            //Uri inputUri = Uri.fromFile(new File(imageModel.getFilePath()));
-            //Uri outputUri = Uri.fromFile(cropFilePath);
-            Uri inputUri = FileProvider.getUriForFile(getActivity(), NeonUtils.getFileProviderAuthority(getActivity()), new File(imageModel.getFilePath()));
-            Uri outputUri = FileProvider.getUriForFile(getActivity(), NeonUtils.getFileProviderAuthority(getActivity()), cropFilePath);
-            Crop.of(inputUri, outputUri).start(getActivity(), ImageReviewViewPagerFragment.this);
+            try {
+                cropFilePath = NeonUtils.getEmptyStoragePath(getActivity());
+                //Uri inputUri = Uri.fromFile(new File(imageModel.getFilePath()));
+                //Uri outputUri = Uri.fromFile(cropFilePath);
+                Uri inputUri = FileProvider.getUriForFile(getActivity(), NeonUtils.getFileProviderAuthority(getActivity()), new File(imageModel.getFilePath()));
+                Uri outputUri = FileProvider.getUriForFile(getActivity(), NeonUtils.getFileProviderAuthority(getActivity()), cropFilePath);
+                Crop.of(inputUri, outputUri).start(getActivity(), ImageReviewViewPagerFragment.this);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
