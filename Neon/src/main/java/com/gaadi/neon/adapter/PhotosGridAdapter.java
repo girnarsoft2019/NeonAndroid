@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.gaadi.neon.dynamicgrid.BaseDynamicGridAdapter;
 import com.gaadi.neon.interfaces.UpdateSelection;
 import com.gaadi.neon.util.ApplicationController;
@@ -69,7 +70,7 @@ public class PhotosGridAdapter extends BaseDynamicGridAdapter implements View.On
 
         FileInfo fileInfo = (FileInfo) getItem(position);
         Glide.with(context).load(fileInfo.getFilePath())
-                .crossFade()
+                .transition(new DrawableTransitionOptions().crossFade())
                 .placeholder((imgLoadDefSmall > 0) ? imgLoadDefSmall : R.drawable.default_placeholder)
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)

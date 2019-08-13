@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -56,7 +57,7 @@ public class Main2Activity extends AppCompatActivity {
             protected void onPostExecute(String parser) {
                 progressDialog.dismiss();
                 Glide.with(Main2Activity.this).load("https://" + parser)
-                        .crossFade()
+                        .transition(new DrawableTransitionOptions().crossFade())
                         .placeholder(com.scanlibrary.R.drawable.default_placeholder)
                         .centerCrop()
                         .error(R.drawable.gcloud_placeholder)

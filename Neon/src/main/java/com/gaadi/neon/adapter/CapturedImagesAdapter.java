@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.gaadi.neon.util.FileInfo;
 import com.scanlibrary.R;
 
@@ -109,7 +110,7 @@ public class CapturedImagesAdapter extends BaseAdapter implements View.OnClickLi
 
         Glide.with(mContext).load("file://" + imageInfoArrayList.get(position).getFilePath())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .crossFade()
+                .transition(new DrawableTransitionOptions().crossFade())
                 .placeholder(R.drawable.image_load_default_small)
                 .into(holder.capturedImage);
         return convertView;

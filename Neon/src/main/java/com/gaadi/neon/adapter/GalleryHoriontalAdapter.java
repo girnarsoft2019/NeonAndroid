@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.gaadi.neon.activity.gallery.GridFilesActivity;
 import com.gaadi.neon.activity.gallery.HorizontalFilesActivity;
 import com.gaadi.neon.interfaces.OnImageClickListener;
@@ -58,7 +59,7 @@ public class GalleryHoriontalAdapter extends RecyclerView.Adapter<GalleryHoriont
         }
         Glide.with(context).load(fileInfo.getFilePath())
                 .thumbnail(0.1f)
-                .crossFade()
+                .transition(new DrawableTransitionOptions().crossFade())
                 .placeholder(R.drawable.default_placeholder)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.imageView);

@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.gaadi.neon.fragment.CameraFragment1;
 import com.gaadi.neon.fragment.NeutralFragment;
 import com.gaadi.neon.model.ImageTagModel;
@@ -317,7 +318,7 @@ public class CameraActivity1 extends AppCompatActivity implements CameraFragment
         Glide.with(this)
              .load("file://" + info.getFilePath())
              .diskCacheStrategy(DiskCacheStrategy.ALL)
-             .crossFade()
+                .transition(new DrawableTransitionOptions().crossFade())
              .centerCrop()
              .placeholder(R.drawable.image_load_default_small)
              .into((ImageView) outerView.findViewById(R.id.ivCaptured));/**/

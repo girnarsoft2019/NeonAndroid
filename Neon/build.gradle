@@ -1,11 +1,11 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.1'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 25
+        minSdkVersion 16
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
 
@@ -26,8 +26,8 @@ android {
     productFlavors {
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -38,14 +38,14 @@ tasks.withType(Javadoc) {
 }
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile project.GLIDE_LIBRARY
-    compile project.RECYCLERVIEW
+    compile "com.android.support:appcompat-v7:${supportLibraryVersion}"
+    compile 'com.github.bumptech.glide:glide:4.9.0'
+    compile "com.android.support:recyclerview-v7:${supportLibraryVersion}"
     compile 'com.android.support:multidex:1.0.3'
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.android.support:cardview-v7:25.3.1'
+    compile "com.android.support:design:${supportLibraryVersion}"
+    compile "com.android.support:cardview-v7:${supportLibraryVersion}"
     compile 'com.soundcloud.android:android-crop:1.0.1@aar'
-    compile 'com.android.support:exifinterface:25.3.1'
+    compile "com.android.support:exifinterface:${supportLibraryVersion}"
     compile 'com.google.android.gms:play-services-location:15.0.0'
 }
 ext {
@@ -61,7 +61,7 @@ ext {
     siteUrl = 'https://github.com/lakshaygirdhar/neon'
     gitUrl = 'https://github.com/lakshaygirdhar/neon'
 
-    libraryVersion = '4.1.1'
+    libraryVersion = '4.1.3'
 
     developerId = 'lakshay'
     developerName = 'Lakshay Girdhar'

@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.gaadi.neon.activity.neutral.NeonNeutralActivity;
 import com.gaadi.neon.dynamicgrid.BaseDynamicGridAdapter;
 import com.gaadi.neon.util.FileInfo;
@@ -125,7 +126,7 @@ public class ImageShowAdapter extends BaseDynamicGridAdapter {
         });
 */
         Glide.with(context).load(NeonImagesHandler.getSingleonInstance().getImagesCollection().get(position).getFilePath())
-                .crossFade()
+                .transition(new DrawableTransitionOptions().crossFade())
                 .placeholder(R.drawable.default_placeholder)
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
