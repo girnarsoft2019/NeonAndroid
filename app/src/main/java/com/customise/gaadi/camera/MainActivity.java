@@ -121,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                     CustomParameters.CustomParametersBuilder builder = new CustomParameters.CustomParametersBuilder();
                     builder.setLocationRestrictive(true);
                     builder.setCompressBy(75);
+                    builder.setShowPreviewForEachImage(true);
                     return builder.build();
                 }
 
@@ -203,6 +204,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                 public CustomParameters getCustomParameters() {
                     CustomParameters.CustomParametersBuilder builder = new CustomParameters.CustomParametersBuilder();
                     builder.setCompressBy(40);
+                    builder.setShowPreviewForEachImage(true);
                     return builder.build();
                 }
 

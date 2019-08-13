@@ -18,6 +18,7 @@ public class CustomParameters {
     private int clickMinimumNumberOfImages;
     private boolean showTagImage;
     private String camScannerAPIKey;
+    private boolean showPreviewForEachImage;
 
     private CustomParameters(CustomParametersBuilder builder) {
         this.hideCameraButtonInNeutral = builder.hideCameraButtonInNeutral;
@@ -31,6 +32,7 @@ public class CustomParameters {
         this.clickMinimumNumberOfImages = builder.clickMinimumNumberOfImages;
         this.showTagImage = builder.showTagImage;
         this.camScannerAPIKey = builder.camScannerAPIKey;
+        this.showPreviewForEachImage = builder.showPreviewForEachImage;
     }
 
     public boolean gethideCameraButtonInNeutral() {
@@ -81,6 +83,10 @@ public class CustomParameters {
         return showTagImage;
     }
 
+    public boolean isShowPreviewForEachImage() {
+        return showPreviewForEachImage;
+    }
+
 
     public static class CustomParametersBuilder {
 
@@ -95,7 +101,7 @@ public class CustomParameters {
         private int clickMinimumNumberOfImages;
         private boolean showTagImage;
         private String camScannerAPIKey = "";
-
+        private boolean showPreviewForEachImage;
 
         public CustomParametersBuilder sethideCameraButtonInNeutral(boolean hide) {
             this.hideCameraButtonInNeutral = hide;
@@ -150,6 +156,11 @@ public class CustomParameters {
         public CustomParametersBuilder setCamScannerAPIKey(String camScannerAPIKey){
             this.camScannerAPIKey = camScannerAPIKey;
             return  this;
+        }
+
+        public CustomParametersBuilder setShowPreviewForEachImage(boolean showPreviewForEachImage) {
+            this.showPreviewForEachImage = showPreviewForEachImage;
+            return this;
         }
 
         public CustomParameters build() {

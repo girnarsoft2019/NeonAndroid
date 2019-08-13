@@ -28,6 +28,8 @@ public class Constants {
     public static final String TAG = "Gallery";
     public static final String RESULT_IMAGES = "result_images";
 
+    public static final String SINGLE_IMAGE_PATH = "singleImagePath";
+    public static final String REVIEW_TITLE = "reviewTitle";
 
     public static final String IMAGES_SELECTED = "imagesSelected";
     public static final String IMAGE_PATH = "image_path";
