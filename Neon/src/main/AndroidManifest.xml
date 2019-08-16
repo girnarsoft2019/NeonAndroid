@@ -87,7 +87,7 @@
         <activity
             android:name="com.gaadi.neon.activity.SingleImageReviewActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="landscape" />
         <!-- Nougat specific -->
         <provider
             android:name="android.support.v4.content.FileProvider"

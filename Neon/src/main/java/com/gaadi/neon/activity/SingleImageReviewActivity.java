@@ -1,15 +1,19 @@
 package com.gaadi.neon.activity;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.gaadi.neon.enumerations.CameraOrientation;
 import com.gaadi.neon.util.Constants;
+import com.gaadi.neon.util.NeonImagesHandler;
 import com.gaadi.neon.util.NeonUtils;
 import com.scanlibrary.R;
 
@@ -17,8 +21,18 @@ public class SingleImageReviewActivity extends NeonBaseActivity {
     private ImageView ivReview;
     private String path;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        try {
+            if (NeonImagesHandler.getSingletonInstance().getCameraParam() != null && NeonImagesHandler.getSingletonInstance().getCameraParam().getCameraOrientation() == CameraOrientation.landscape) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            } else {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_image_review);
         toolbar = findViewById(R.id.tool_bar);
