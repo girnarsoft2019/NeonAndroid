@@ -67,11 +67,11 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         , LivePhotoNextTagListener, FindLocations.ILocation, View.OnClickListener {
 
     ICameraParam cameraParams;
-    RelativeLayout tagsLayout;
+    RelativeLayout tagsLayout, previewLayout;
     List<ImageTagModel> tagModels;
     int currentTag;
-    private TextView tvTag, tvNext, tvPrevious, buttonDone;
-    private ImageView buttonGallery, showTagPreview;
+    private TextView tvTag, tvNext, tvPrevious, buttonDone, previewTitle;
+    private ImageView buttonGallery, showTagPreview, imagePreview, ivPreviewDone, ivPreviewCancel;
     private Location location;
     private LinearLayout imageHolderView;
     private final int REQ_CODE_CALL_CAMSCANNER = 168;
@@ -79,6 +79,8 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
     private String mOutputImagePath;
     private String mInputImagePath;
     private CSOpenAPI camScannerApi;
+    private boolean isPreviewVisible;
+    private String filePathToReview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +94,13 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         buttonDone = findViewById(R.id.buttonDone);
         imageHolderView = findViewById(R.id.imageHolderView);
         showTagPreview = findViewById(R.id.tag_preview);
+        previewLayout = findViewById(R.id.rl_image_preview);
+        imagePreview = findViewById(R.id.iv_review);
+        ivPreviewCancel = findViewById(R.id.iv_preview_cancel);
+        ivPreviewDone = findViewById(R.id.iv_preview_done);
+        previewTitle = findViewById(R.id.tv_preview_title);
+        ivPreviewDone.setOnClickListener(this);
+        ivPreviewCancel.setOnClickListener(this);
         buttonDone.setOnClickListener(this);
         buttonGallery.setOnClickListener(this);
         tvNext.setOnClickListener(this);
@@ -313,6 +322,14 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         } else if (id == R.id.tvPrev) {
             setTag(getPreviousTag(), false);
             showTagImages();
+        } else if(id == R.id.iv_preview_cancel){
+            isPreviewVisible = false;
+            previewLayout.setVisibility(View.GONE);
+            NeonUtils.deleteFile(NormalCameraActivityNeon.this, filePathToReview);
+        } else if(id == R.id.iv_preview_done){
+            isPreviewVisible = false;
+            previewLayout.setVisibility(View.GONE);
+            afterPictureTaken(filePathToReview);
         }
     }
 
@@ -468,15 +485,20 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
 
     @Override
     public void onBackPressed() {
-        if (NeonImagesHandler.getSingletonInstance().isNeutralEnabled()) {
-            super.onBackPressed();
-        } else {
-            if (NeonImagesHandler.getSingletonInstance().getLivePhotosListener() != null) {
-                NeonImagesHandler.getSingletonInstance().showBackOperationAlertIfNeededLive(this);
+        if(isPreviewVisible){
+            isPreviewVisible = false;
+            previewLayout.setVisibility(View.GONE);
+        }else {
+            if (NeonImagesHandler.getSingletonInstance().isNeutralEnabled()) {
+                super.onBackPressed();
             } else {
-                NeonImagesHandler.getSingletonInstance().showBackOperationAlertIfNeeded(this);
-            }
+                if (NeonImagesHandler.getSingletonInstance().getLivePhotosListener() != null) {
+                    NeonImagesHandler.getSingletonInstance().showBackOperationAlertIfNeededLive(this);
+                } else {
+                    NeonImagesHandler.getSingletonInstance().showBackOperationAlertIfNeeded(this);
+                }
 
+            }
         }
     }
 
@@ -485,6 +507,8 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         Log.d("NormalCamera", "onPictureTaken: ");
         mInputImagePath = filePath;
         if (cameraParams != null && cameraParams.getCustomParameters() != null && cameraParams.getCustomParameters().getCamScannerAPIKey() != null && !cameraParams.getCustomParameters().getCamScannerAPIKey().equals("")) {
+            previewLayout.setVisibility(View.GONE);
+            isPreviewVisible = false;
             if (camScannerApi != null) {
                 if (camScannerApi.isCamScannerInstalled()) {
 
@@ -506,16 +530,33 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
                 afterPictureTaken(filePath);
             }
         } else if(cameraParams != null && cameraParams.getCustomParameters() != null && cameraParams.getCustomParameters().isShowPreviewForEachImage()){
-            Intent intent = new Intent(this, SingleImageReviewActivity.class);
+            previewLayout.setVisibility(View.VISIBLE);
+            isPreviewVisible = true;
+            filePathToReview = filePath;
+            if (cameraParams != null && cameraParams.getTagEnabled()){
+                previewTitle.setText(tagModels.get(currentTag).getTagName());;
+            }else {
+                previewTitle.setText(R.string.image_preview);
+            }
+            RequestOptions options = new RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .placeholder(R.drawable.default_placeholder);
+            Glide.with(this).load(filePath)
+                    .apply(options)
+                    .into(imagePreview);
+            /*Intent intent = new Intent(this, SingleImageReviewActivity.class);
             intent.putExtra(Constants.SINGLE_IMAGE_PATH, filePath);
             if (cameraParams != null && cameraParams.getTagEnabled()){
                 intent.putExtra(Constants.REVIEW_TITLE, tagModels.get(currentTag).getTagName());;
             }else {
                 intent.putExtra(Constants.REVIEW_TITLE, "Image Review");;
             }
-            startActivityForResult(intent, REQ_CODE_REVIEW);
+            startActivityForResult(intent, REQ_CODE_REVIEW);*/
         }else {
             Log.d("NormalCamera", "WithoutCamScanner");
+            previewLayout.setVisibility(View.GONE);
+            isPreviewVisible = false;
             afterPictureTaken(filePath);
         }
 
