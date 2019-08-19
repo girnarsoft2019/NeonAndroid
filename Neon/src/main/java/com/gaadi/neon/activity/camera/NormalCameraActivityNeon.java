@@ -24,7 +24,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.gaadi.neon.PhotosLibrary;
 import com.gaadi.neon.activity.ImageShow;
-import com.gaadi.neon.activity.SingleImageReviewActivity;
 import com.gaadi.neon.enumerations.CameraType;
 import com.gaadi.neon.enumerations.GalleryType;
 import com.gaadi.neon.enumerations.ResponseCode;
@@ -75,7 +74,6 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
     private Location location;
     private LinearLayout imageHolderView;
     private final int REQ_CODE_CALL_CAMSCANNER = 168;
-    private final int REQ_CODE_REVIEW = 169;
     private String mOutputImagePath;
     private String mInputImagePath;
     private CSOpenAPI camScannerApi;
@@ -488,6 +486,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         if(isPreviewVisible){
             isPreviewVisible = false;
             previewLayout.setVisibility(View.GONE);
+            NeonUtils.deleteFile(NormalCameraActivityNeon.this, filePathToReview);
         }else {
             if (NeonImagesHandler.getSingletonInstance().isNeutralEnabled()) {
                 super.onBackPressed();
@@ -545,14 +544,6 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
             Glide.with(this).load(filePath)
                     .apply(options)
                     .into(imagePreview);
-            /*Intent intent = new Intent(this, SingleImageReviewActivity.class);
-            intent.putExtra(Constants.SINGLE_IMAGE_PATH, filePath);
-            if (cameraParams != null && cameraParams.getTagEnabled()){
-                intent.putExtra(Constants.REVIEW_TITLE, tagModels.get(currentTag).getTagName());;
-            }else {
-                intent.putExtra(Constants.REVIEW_TITLE, "Image Review");;
-            }
-            startActivityForResult(intent, REQ_CODE_REVIEW);*/
         }else {
             Log.d("NormalCamera", "WithoutCamScanner");
             previewLayout.setVisibility(View.GONE);
@@ -706,13 +697,6 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
                         afterPictureTaken(mInputImagePath);
                     }
                 });
-            }
-            if(requestCode == REQ_CODE_REVIEW){
-                String path = data.getStringExtra(Constants.SINGLE_IMAGE_PATH);
-                if(path != null && !TextUtils.isEmpty(path)){
-                    afterPictureTaken(path);
-                }
-                Log.d("Rajeev", "onActivityResult: "+path);
             }
         }
     }
