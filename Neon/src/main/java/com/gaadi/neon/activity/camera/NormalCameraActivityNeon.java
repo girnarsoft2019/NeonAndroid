@@ -175,42 +175,47 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.buttonDone) {
-            if (!NeonImagesHandler.getSingletonInstance().isNeutralEnabled()) {
-                if ((NeonImagesHandler.getSingletonInstance().getCameraParam().enableImageEditing()
-                        || NeonImagesHandler.getSingletonInstance().getCameraParam().getTagEnabled()) &&
-                        !NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters().hideTagImageReview()) {
-                    Intent intent = new Intent(this, ImageShow.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    if (NeonImagesHandler.getSingletonInstance().validateNeonExit(this)) {
-                        NeonImagesHandler.getSingletonInstance().sendImageCollectionAndFinish(this, ResponseCode.Success);
+            try {
+                if (!NeonImagesHandler.getSingletonInstance().isNeutralEnabled()) {
+                    if ((NeonImagesHandler.getSingletonInstance().getCameraParam().enableImageEditing()
+                            || NeonImagesHandler.getSingletonInstance().getCameraParam().getTagEnabled()) &&
+                            !NeonImagesHandler.getSingletonInstance().getCameraParam().getCustomParameters().hideTagImageReview()) {
+                        Intent intent = new Intent(this, ImageShow.class);
+                        startActivity(intent);
                         finish();
                     } else {
-                        List<ImageTagModel> imageTagModels = NeonImagesHandler.getSingletonInstance().getGenericParam().getImageTagsModel();
-                        for (int j = 0; j < imageTagModels.size(); j++) {
-                            if (!imageTagModels.get(j).isMandatory()) {
-                                continue;
-                            }
-                            if (!NeonImagesHandler.getSingletonInstance().checkImagesAvailableForTag(imageTagModels.get(j))) {
-                                currentTag = j;
-                                setTag(imageTagModels.get(j), false);
-                                if (currentTag == tagModels.size() - 1) {
-                                    tvNext.setVisibility(View.VISIBLE);
-                                    tvNext.setText(getString(R.string.finish));
-                                } else {
-                                    tvNext.setVisibility(View.VISIBLE);
-                                    tvNext.setText(getString(R.string.next));
+                        if (NeonImagesHandler.getSingletonInstance().validateNeonExit(this)) {
+                            NeonImagesHandler.getSingletonInstance().sendImageCollectionAndFinish(this, ResponseCode.Success);
+                            finish();
+                        } else {
+                            List<ImageTagModel> imageTagModels = NeonImagesHandler.getSingletonInstance().getGenericParam().getImageTagsModel();
+                            for (int j = 0; j < imageTagModels.size(); j++) {
+                                if (!imageTagModels.get(j).isMandatory()) {
+                                    continue;
                                 }
-                                break;
+                                if (!NeonImagesHandler.getSingletonInstance().checkImagesAvailableForTag(imageTagModels.get(j))) {
+                                    currentTag = j;
+                                    setTag(imageTagModels.get(j), false);
+                                    if (currentTag == tagModels.size() - 1) {
+                                        tvNext.setVisibility(View.VISIBLE);
+                                        tvNext.setText(getString(R.string.finish));
+                                    } else {
+                                        tvNext.setVisibility(View.VISIBLE);
+                                        tvNext.setText(getString(R.string.next));
+                                    }
+                                    break;
+                                }
                             }
                         }
                     }
+                } else {
+                    setResult(RESULT_OK);
+                    finish();
                 }
-            } else {
-                setResult(RESULT_OK);
-                finish();
+            }catch (Exception e){
+               e.printStackTrace();
             }
+
 
         } else if (id == R.id.buttonGallery) {
             try {
