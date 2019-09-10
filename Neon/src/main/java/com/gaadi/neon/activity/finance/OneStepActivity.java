@@ -331,7 +331,9 @@ public class OneStepActivity extends AppCompatActivity implements CameraFragment
 
                     @Override
                     public CustomParameters getCustomParameters() {
-                        return null;
+                        CustomParameters.CustomParametersBuilder builder = new CustomParameters.CustomParametersBuilder();
+                        builder.setLocationRestrictive(false);
+                        return builder.build();
                     }
 
                     @Override
@@ -443,7 +445,9 @@ public class OneStepActivity extends AppCompatActivity implements CameraFragment
 
                 @Override
                 public CustomParameters getCustomParameters() {
-                    return null;
+                    CustomParameters.CustomParametersBuilder builder = new CustomParameters.CustomParametersBuilder();
+                    builder.setLocationRestrictive(false);
+                    return builder.build();
                 }
 
                 @Override
