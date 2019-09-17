@@ -715,6 +715,9 @@ public class OneStepActivity extends AppCompatActivity implements CameraFragment
      */
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void openRenderer(Context context) throws IOException {
+        if(path == null){
+            return;
+        }
         File file = new File(path);
         if (!file.exists()) {
             return;
