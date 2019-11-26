@@ -49,23 +49,23 @@ dependencies {
     implementation files('libs/csopensdk.jar')
 }
 ext {
-    bintrayRepo = 'maven'
-    bintrayName = 'Neon'
+    bintrayRepo = 'NeonAndroid'
+    bintrayName = 'NeonAndroid'
 
-    publishedGroupId = 'com.gaadi.library'
-    libraryName = 'Neon'
-    artifact = 'Neon'
+    publishedGroupId = 'com.girnarsoft.library'
+    libraryName = 'NeonAndroid'
+    artifact = 'NeonAndroid'
 
-    libraryDescription = 'A library for selection of images from android device camera or gallery'
+    libraryDescription = 'Android library for camera and gallery'
 
-    siteUrl = 'https://github.com/lakshaygirdhar/neon'
-    gitUrl = 'https://github.com/lakshaygirdhar/neon'
+    siteUrl = 'https://github.com/girnarsoft2019/NeonAndroid.git'
+    gitUrl = 'https://github.com/girnarsoft2019/NeonAndroid.git'
 
-    libraryVersion = '20.3.9'
+    libraryVersion = '1.0.0'
 
-    developerId = 'lakshay'
-    developerName = 'Lakshay Girdhar'
-    developerEmail = 'lakshay148@gmail.com'
+    developerId = 'girnarsoft2019'
+    developerName = 'Girnarsoft Dev'
+    developerEmail = 'girnarsoft.2019@gmail.com'
 
     licenseName = 'The Apache Software License, Version 2.0'
     licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
