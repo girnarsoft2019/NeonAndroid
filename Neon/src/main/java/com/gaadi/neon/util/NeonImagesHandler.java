@@ -224,14 +224,14 @@ public class NeonImagesHandler {
             if (getGenericParam().getNumberOfPhotos() > 0 &&
                     getImagesCollection() != null &&
                     getGenericParam().getNumberOfPhotos() == getImagesCollection().size()) {
-                Toast.makeText(context, context.getString(R.string.max_count_error, getGenericParam().getNumberOfPhotos()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, getGenericParam().getNumberOfPhotos() + " " + context.getString(R.string.max_count_error), Toast.LENGTH_SHORT).show();
                 return false;
             }
         } else {
             ImageTagModel imageTagModel = fileInfo.getFileTag();
             if (imageTagModel != null && imageTagModel.getNumberOfPhotos() > 0 &&
                     getNumberOfPhotosCollected(imageTagModel) >= imageTagModel.getNumberOfPhotos()) {
-                Toast.makeText(context, context.getString(R.string.max_tag_count_error, imageTagModel.getNumberOfPhotos()) + imageTagModel.getTagName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, imageTagModel.getNumberOfPhotos() + " " + context.getString(R.string.max_tag_count_error) + " " + imageTagModel.getTagName(), Toast.LENGTH_SHORT).show();
                 return false;
             }
         }
@@ -370,14 +370,14 @@ public class NeonImagesHandler {
     }
 
     private void showExitConfirmation(final Activity activity) {
-        new AlertDialog.Builder(activity).setTitle("Are you sure want to go back?")
-                .setCancelable(true).setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        new AlertDialog.Builder(activity).setTitle(R.string.sure_to_go_back)
+                .setCancelable(true).setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 sendImageCollectionAndFinish(activity, ResponseCode.Back);
             }
-        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        }).setNegativeButton(R.string.cancelDialog, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -388,8 +388,8 @@ public class NeonImagesHandler {
     public void showBackOperationAlertIfNeededLive(final Activity activity) {
         if (NeonImagesHandler.getSingletonInstance().getLibraryMode() == LibraryMode.Restrict) {
             if (!validateNeonExit(null)) {
-                new AlertDialog.Builder(activity).setTitle("Please upload " + NeonImagesHandler.getSingletonInstance().getCurrentTag() + " Photo")
-                        .setCancelable(true).setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                new AlertDialog.Builder(activity).setTitle(R.string.please_upload + " " + NeonImagesHandler.getSingletonInstance().getCurrentTag() + " Photo")
+                        .setCancelable(true).setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton(R.string.okDialog, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -422,12 +422,12 @@ public class NeonImagesHandler {
                     NeonImagesHandler.getSingletonInstance().getGenericParam() != null) {
                 int imagesCount = NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getClickMinimumNumberOfImages();
                 if (imagesCount > 0 && fileInfos == null) {
-                    Toast.makeText(activity, "Please click the minimum number of images  " + imagesCount, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, activity.getString(R.string.click_min_no_of_images) + " " + imagesCount, Toast.LENGTH_SHORT).show();
                     return false;
                 } else if (fileInfos != null && fileInfos.size() > 0 && imagesCount != 0) {
                     if (fileInfos.size() < imagesCount) {
                         if (activity != null) {
-                            Toast.makeText(activity, "Please click the minimum number of images  " + imagesCount, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity, activity.getString(R.string.click_min_no_of_images) + " " + imagesCount, Toast.LENGTH_SHORT).show();
                         }
                         return false;
                     } else {
@@ -438,7 +438,7 @@ public class NeonImagesHandler {
                         for (int i = 0; i < fileInfos.size(); i++) {
                             if (fileInfos.get(i).getFileTag() == null) {
                                 if (activity != null) {
-                                    Toast.makeText(activity, "Set tag for all images", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(activity, activity.getString(R.string.set_all_tag), Toast.LENGTH_SHORT).show();
                                 }
                                 return false;
                             }
@@ -454,7 +454,7 @@ public class NeonImagesHandler {
                 }
                 if (!NeonImagesHandler.getSingletonInstance().checkImagesAvailableForTag(imageTagModels.get(j))) {
                     if (activity != null) {
-                        Toast.makeText(activity, imageTagModels.get(j).getTagName() + " tag not covered.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, imageTagModels.get(j).getTagName() + " " + activity.getString(R.string.tag_not_covered), Toast.LENGTH_SHORT).show();
                     }
                     return false;
                 }

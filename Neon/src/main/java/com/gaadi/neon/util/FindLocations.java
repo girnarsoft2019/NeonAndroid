@@ -29,6 +29,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.scanlibrary.R;
 
 /**
  * @author Pavan
@@ -288,7 +289,7 @@ public class FindLocations implements
                             callBack.getPermissionStatus(true);
                         } else {
                             callBack.getPermissionStatus(false);
-                            Toast.makeText(activity, "Finding Location.Please try again", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity, activity.getString(R.string.finding_location_try_again), Toast.LENGTH_SHORT).show();
                         }
 
                         //updateGPSStatus("GPS is Enabled in your device");

@@ -134,7 +134,7 @@ public class HorizontalFilesActivity extends NeonBaseGalleryActivity implements 
     public void onBackPressed() {
         if (recentelyImageCollection != null && recentelyImageCollection.size() > 0) {
             new AlertDialog.Builder(this).setTitle("Are you sure want to loose all selected images?")
-                    .setCancelable(true).setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    .setCancelable(true).setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
@@ -143,7 +143,7 @@ public class HorizontalFilesActivity extends NeonBaseGalleryActivity implements 
                     }
                     finish();
                 }
-            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            }).setNegativeButton(getString(R.string.cancelDialog), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();

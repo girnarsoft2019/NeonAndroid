@@ -61,7 +61,7 @@ ext {
     siteUrl = 'https://github.com/girnarsoft2019/NeonAndroid.git'
     gitUrl = 'https://github.com/girnarsoft2019/NeonAndroid.git'
 
-    libraryVersion = '1.0.0'
+    libraryVersion = '1.0.3'
 
     developerId = 'girnarsoft2019'
     developerName = 'Girnarsoft Dev'

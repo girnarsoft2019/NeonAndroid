@@ -126,8 +126,8 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
     public void onBackPressed() {
 
         if (recentelyImageCollection != null && recentelyImageCollection.size() > 0) {
-            new AlertDialog.Builder(this).setTitle("Are you sure want to loose all selected images?")
-                    .setCancelable(true).setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            new AlertDialog.Builder(this).setTitle(R.string.sure_to_loose_images)
+                    .setCancelable(true).setIcon(android.R.drawable.ic_dialog_alert).setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
@@ -136,7 +136,7 @@ public class GridFilesActivity extends NeonBaseGalleryActivity {
                     }
                     finish();
                 }
-            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            }).setNegativeButton(getString(R.string.cancelDialog), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();

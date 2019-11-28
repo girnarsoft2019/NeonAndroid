@@ -4,14 +4,9 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="scanning">Croping in progress</string>
-    <string name="more_images">%1$d more images required"</string>
     <string name="scan">Save Croping</string>
-    <string name="select_tag">Select Tag</string>
     <string name="cantCrop">Can\'t crop the image, change the points</string>
     <string name="ok">OK</string>
-    <string name="remove_img_title">Remove Image</string>
-    <string name="cancelDialog">Cancel</string>
-    <string name="okDialog">OK</string>
     <string name="title_activity_item">ItemActivity</string>
     <string name="facebook_app_id">424300634391093</string>
     <string name="maps_key">AIzaSyBCnuONgR6ASm4J5nWo2eIL5rf84G14a4U</string>
@@ -21,44 +16,27 @@
     <string name="emptyString" />
     <string name="title_activity_media_store_test">MediaStoreTest</string>
     <string name="alert" translatable="false">Alert</string>
-    <string name="removeImage">Are you sure you want to remove this image ?</string>
-    <string name="yes">OK</string>
-    <string name="no">Cancel</string>
     <string name="title_activity_camera_priority">CameraPriorityActivity</string>
     <string name="title_activity_neutral">NeutralActivity</string>
-    <string name="permission_error">Permission not granted</string>
     <string name="you_need_to_allow_access_to">You need to allow access to %1$s.\nSettings->Apps->Gcloud->Permissions->%2$s</string>
-    <string name="go_to_app_info">Go to App Info</string>
     <string name="manifest_permission_error">Mention %1$s in your Manifest file</string>
-    <string name="photos">Photos</string>
-    <string name="photos_count">Photos (%1$d)</string>
     <string name="zero">0</string>
     <string name="choose_gallery">Choose from Gallery</string>
     <string name="take_photo">Take Photo</string>
     <string name="pass_params">Please pass photo params</string>
-    <string name="gallery">Gallery</string>
     <string name="gallery_error">Either No access or no gallery files present</string>
     <string name="wrong_format">Wrong file format selected</string>
     <string name="no_image_selected">No image selected</string>
-    <string name="max_count_error">%1$d images are allowed only</string>
-    <string name="max_tag_count_error">%1$d images are allowed only for </string>
 
     <string name="selected_max_photos">Maximum no of photos selected already</string>
     <string name="click_photo">Please click atleast one photo</string>
     <string name="pass_valid_params">Please pass valid params</string>
     <string name="invalid_mode">Please pass valid mode in params</string>
     <string name="no_images">No Images Clicked</string>
-    <string name="next">Next</string>
-    <string name="done">DONE</string>
-    <string name="image_review">Image Review</string>
     <string name="profile_photo">Profile Photo</string>
     <string name="please_select_atleast_one">Please click atleast one photo</string>
     <string name="camera_error">Camera Error. Kindly try again !!</string>
-    <string name="prev">Previous</string>
-    <string name="skip">Skip</string>
-    <string name="finish">Finish</string>
     <string name="capture">capture</string>
-    <string name="tag_mandatory_error"> %1$s \n is mandatory </string>
     <string name="press_done">Press Done</string>
     <string name="no_tags_sent">Please set tags for images</string>
     <color name="gray">#808080</color>
@@ -67,8 +45,46 @@
     <string name="would_you_like_to_save_captured_images">Would you like to save the captured images</string>
     <string name="would_you_like_to_save_captured_pdf">Would you like to save the captured PDF file</string>
     <string name="neon_file_provider_authority">com.scanlibrary.provider</string>
-    <string name="mandatory_images">Mandatory Images</string>
-    <string name="submit">Submit</string>
+
+
+
+<!--Language change required-->
+    <string name="next">Next</string>
+    <string name="done">Done</string>
+    <string name="prev">Previous</string>
+    <string name="finish">Finish</string>
+    <string name="skip">Skip</string>
+    <string name="unable_to_find_location">Unable to find location, Please try again later.</string>
+    <string name="saving_picture">Saving Picture</string>
     <string name="camera">Camera</string>
     <string name="image_preview">Image Preview</string>
+    <string name="gallery">Gallery</string>
+    <string name="submit">Submit</string>
+    <string name="mandatory_images">Mandatory Images</string>
+    <string name="image_review">Image Review</string>
+    <string name="select_tag">Select Tag</string>
+    <string name="select_label">Select Label</string>
+    <string name="remove_img_title">Remove Image</string>
+    <string name="removeImage">Are you sure you want to remove this image ?</string>
+    <string name="okDialog">OK</string>
+    <string name="cancelDialog">Cancel</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="go_to_app_info">Go to App Info</string>
+    <string name="permission_error">Permission not granted</string>
+    <string name="sure_to_go_back">Are you sure want to go back?</string>
+    <string name="click_min_no_of_images">Please click the minimum number of images</string>
+    <string name="set_all_tag">Set tag for all images</string>
+    <string name="tag_not_covered">tag not covered.</string>
+    <string name="please_upload">Please upload</string>
+    <string name="finding_location">Finding location. Please wait.</string>
+    <string name="finding_location_try_again">Finding location. Please try again</string>
+    <string name="not_allowed">Not allowed</string>
+    <string name="sure_to_loose_images">Are you sure want to loose all selected images?</string>
+
+    <string name="max_count_error">images are allowed only</string>
+    <string name="max_tag_count_error">images are allowed only for</string>
+    <string name="tag_mandatory_error">is mandatory </string>
+    <string name="more_images">more images required</string>
+    <string name="photos">Photos</string>
 </resources>

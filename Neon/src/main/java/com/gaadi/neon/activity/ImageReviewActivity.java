@@ -212,7 +212,7 @@ public class ImageReviewActivity extends NeonBaseActivity implements View.OnClic
                     NeonImagesHandler.getSingletonInstance().getLivePhotoNextTagListener().onNextTag();
                 }
                 else{
-                    Toast.makeText(this,"Finding location.Please wait.",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this,getString(R.string.finding_location),Toast.LENGTH_SHORT).show();
                 }
             }
             if(isUpdate)

@@ -114,7 +114,7 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
         if (NeonImagesHandler.getSingletonInstance() != null &&
                 NeonImagesHandler.getSingletonInstance().getGenericParam() != null &&
                 NeonImagesHandler.getSingletonInstance().getGenericParam().getImageTagsModel().size() > 0
-                ) {
+        ) {
             tagModels = NeonImagesHandler.getSingletonInstance().getGenericParam().getImageTagsModel();
         }
 
@@ -127,7 +127,6 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
                 .inflate(R.layout.fragment_image_review_viewpager, container, false);
 
         fileEditLayout = (RelativeLayout) rootView.findViewById(R.id.header_options_imageereview);
-
 
 
         deleteBtn = (ImageView) rootView.findViewById(R.id.imagereview_deletebtn);
@@ -156,7 +155,7 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
             fileEditLayout.setVisibility(View.VISIBLE);
         }
 
-        if(NeonImagesHandler.getSingletonInstance().getLivePhotosListener()!=null){
+        if (NeonImagesHandler.getSingletonInstance().getLivePhotosListener() != null) {
             fileEditLayout.setVisibility(View.GONE);
             tagLayout.setVisibility(View.GONE);
         }
@@ -210,7 +209,7 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ImageTagModel singleModel = tagModels.get(position);
                 if (singleModel.getNumberOfPhotos() > 0 && NeonImagesHandler.getSingleonInstance().getNumberOfPhotosCollected(singleModel) >= singleModel.getNumberOfPhotos()) {
-                    Toast.makeText(getActivity(), getActivity().getString(R.string.max_tag_count_error, singleModel.getNumberOfPhotos()) + singleModel.getTagName(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), singleModel.getNumberOfPhotos() + " " + getActivity().getString(R.string.max_tag_count_error) + " " + singleModel.getTagName(), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 imageModel.setFileTag(new ImageTagModel(singleModel.getTagName(), singleModel.getTagId(), singleModel.isMandatory(), singleModel.getNumberOfPhotos()));

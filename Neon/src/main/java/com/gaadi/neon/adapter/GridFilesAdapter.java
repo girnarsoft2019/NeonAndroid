@@ -122,10 +122,10 @@ public class GridFilesAdapter extends BaseAdapter {
                                             ((GridFilesActivity) context).addImageToRecentelySelected(fileInfos.get(position));
                                         }
                                     } else {
-                                        Toast.makeText(context, "Not allowed", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(context, context.getString(R.string.not_allowed), Toast.LENGTH_SHORT).show();
                                     }
                                 } else {
-                                    Toast.makeText(context, "Not allowed", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, context.getString(R.string.not_allowed), Toast.LENGTH_SHORT).show();
                                 }
 
                             } catch (Exception e) {
@@ -147,7 +147,7 @@ public class GridFilesAdapter extends BaseAdapter {
                                         ((GridFilesActivity) context).addImageToRecentelySelected(fileInfos.get(position));
                                     }
                                 } else {
-                                    Toast.makeText(context, "Not allowed", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, context.getString(R.string.not_allowed), Toast.LENGTH_SHORT).show();
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();

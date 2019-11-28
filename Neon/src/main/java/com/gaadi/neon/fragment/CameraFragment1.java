@@ -238,7 +238,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
                     clickPicture();
 
                 } else {
-                    Toast.makeText(mActivity, "Failed to get location.Please try again later.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, mActivity.getString(R.string.unable_to_find_location), Toast.LENGTH_SHORT).show();
                 }
 
             } else {
@@ -944,7 +944,7 @@ public class CameraFragment1 extends Fragment implements View.OnTouchListener, C
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = ProgressDialog.show(context, null, "Saving Picture", true);
+            progressDialog = ProgressDialog.show(context, null, context.getString(R.string.saving_picture), true);
         }
 
         @Override

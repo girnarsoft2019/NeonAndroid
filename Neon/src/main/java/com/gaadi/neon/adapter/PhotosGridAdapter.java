@@ -98,7 +98,7 @@ public class PhotosGridAdapter extends BaseDynamicGridAdapter implements View.On
             final AlertDialog alertDialog = builder
                     .setTitle(R.string.alert)
                     .setMessage(R.string.removeImage)
-                    .setPositiveButton(R.string.yes,
+                    .setPositiveButton(R.string.okDialog,
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog,
@@ -107,7 +107,7 @@ public class PhotosGridAdapter extends BaseDynamicGridAdapter implements View.On
                                     removeImage(position);
                                 }
                             })
-                    .setNegativeButton(R.string.no,
+                    .setNegativeButton(R.string.cancelDialog,
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog,

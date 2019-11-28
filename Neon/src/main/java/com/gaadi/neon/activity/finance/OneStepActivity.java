@@ -591,14 +591,14 @@ public class OneStepActivity extends AppCompatActivity implements CameraFragment
         if (mSelectedImages.size() > 0) {
             new AlertDialog.Builder(OneStepActivity.this).setTitle(R.string.please_confirm)
                     .setMessage(R.string.would_you_like_to_save_captured_images)
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             sendResponse();
 
                         }
                     })
-                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             finish();
@@ -690,7 +690,7 @@ public class OneStepActivity extends AppCompatActivity implements CameraFragment
         new AlertDialog.Builder(OneStepActivity.this).setTitle(R.string.please_confirm)
                 .setCancelable(true)
                 .setMessage("Captured images will be replace. \n Would you like to proceed?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -700,7 +700,7 @@ public class OneStepActivity extends AppCompatActivity implements CameraFragment
                         tvNext.setVisibility(View.INVISIBLE);
                         showFileChooser();
                     }
-                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                }).setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
@@ -817,13 +817,13 @@ public class OneStepActivity extends AppCompatActivity implements CameraFragment
         new AlertDialog.Builder(OneStepActivity.this).setTitle(R.string.please_confirm)
                 .setCancelable(false)
                 .setMessage(R.string.would_you_like_to_save_captured_pdf)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         sendResponse();
 
                     }
-                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                }).setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 

@@ -336,7 +336,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
             for (int i = 0; i < tagModels.size(); i++) {
                 if (tagModels.get(i).isMandatory() &&
                         !NeonImagesHandler.getSingleonInstance().checkImagesAvailableForTag(tagModels.get(i))) {
-                    Toast.makeText(this, String.format(getString(R.string.tag_mandatory_error), tagModels.get(i).getTagName()),
+                    Toast.makeText(this, tagModels.get(i).getTagName()+ " " +getString(R.string.tag_mandatory_error),
                             Toast.LENGTH_SHORT).show();
                     return false;
                 }
@@ -351,8 +351,8 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
                /* Toast.makeText(this, NeonImagesHandler.getSingleonInstance().getCameraParam().getNumberOfPhotos() -
                         NeonImagesHandler.getSingleonInstance().getImagesCollection().size() + " more image required", Toast.LENGTH_SHORT).show();
                 */
-                Toast.makeText(this, getString(R.string.more_images, NeonImagesHandler.getSingleonInstance().getCameraParam().getNumberOfPhotos() -
-                        NeonImagesHandler.getSingleonInstance().getImagesCollection().size()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, (NeonImagesHandler.getSingleonInstance().getCameraParam().getNumberOfPhotos() -
+                        NeonImagesHandler.getSingleonInstance().getImagesCollection().size())+ " " +getString(R.string.more_images), Toast.LENGTH_SHORT).show();
 
                 return false;
             }
@@ -388,7 +388,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
             if (imageTagModel.isMandatory()) {
                 tvNext.setVisibility(View.INVISIBLE);
             } else {
-                tvNext.setText("Skip");
+                tvNext.setText(R.string.skip);
                 tvNext.setVisibility(View.VISIBLE);
             }
         }
@@ -442,7 +442,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
                     tvNext.setVisibility(View.INVISIBLE);
                 } else {
                     tvNext.setVisibility(View.VISIBLE);
-                    tvNext.setText("Skip");
+                    tvNext.setText(R.string.skip);
                 }
                 tvPrevious.setVisibility(View.INVISIBLE);
             } else {
@@ -592,7 +592,7 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
                 }
             }
         } else {
-            Toast.makeText(this, "Unable to find location, Please try again later.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.unable_to_find_location), Toast.LENGTH_SHORT).show();
         }
     }
 
