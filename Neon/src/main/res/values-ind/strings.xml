@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Language change required-->
+    <string name="next">Berikutnya</string>
+    <string name="done">Selesai</string>
+    <string name="prev">Sebelumnya</string>
+    <string name="finish">Selesai</string>
+    <string name="skip">Melewatkan</string>
+    <string name="unable_to_find_location">Tidak dapat menemukan lokasi, Silakan coba lagi nanti.</string>
+    <string name="saving_picture">Menyimpan Gambar</string>
+    <string name="camera">Kamera</string>
+    <string name="image_preview">Pratinjau Gambar</string>
+    <string name="gallery">Galeri</string>
+    <string name="submit">Submit</string>
+    <string name="mandatory_images">Gambar Wajib</string>
+    <string name="image_review">Ulasan Gambar</string>
+    <string name="select_tag">Pilih Tag</string>
+    <string name="select_label">Pilih Label</string>
+    <string name="remove_img_title">Hapus Gambar</string>
+    <string name="removeImage">Anda yakin ingin menghapus gambar ini?</string>
+    <string name="okDialog">Baik</string>
+    <string name="cancelDialog">Membatalkan</string>
+    <string name="yes">Ya</string>
+    <string name="no">Tidak</string>
+    <string name="go_to_app_info">Buka Info Aplikasi</string>
+    <string name="permission_error">Izin tidak diberikan</string>
+    <string name="sure_to_go_back">Anda yakin ingin kembali?</string>
+    <string name="click_min_no_of_images">Silakan klik jumlah gambar minimum</string>
+    <string name="set_all_tag">Tetapkan tag untuk semua gambar</string>
+    <string name="tag_not_covered">tag tidak tercakup.</string>
+    <string name="please_upload">Silakan unggah</string>
+    <string name="finding_location">Menemukan lokasi. Tunggu sebentar.</string>
+    <string name="finding_location_try_again">Menemukan Lokasi. Silakan coba lagi</string>
+    <string name="not_allowed">Tidak diizinkan</string>
+    <string name="sure_to_loose_images">Yakin ingin kehilangan semua gambar yang dipilih?</string>
+
+    <string name="max_count_error">gambar hanya diperbolehkan</string>
+    <string name="max_tag_count_error">gambar hanya diizinkan untuk</string>
+    <string name="tag_mandatory_error">adalah wajib </string>
+    <string name="more_images">diperlukan gambar lagi</string>
+    <string name="photos">Foto</string>
+</resources>
+
+
+
+
+

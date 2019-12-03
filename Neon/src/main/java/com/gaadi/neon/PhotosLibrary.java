@@ -3,9 +3,6 @@ package com.gaadi.neon;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
-import android.os.Environment;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.gaadi.neon.activity.camera.NormalCameraActivityNeon;
@@ -22,6 +19,7 @@ import com.gaadi.neon.interfaces.LivePhotosListener;
 import com.gaadi.neon.interfaces.OnImageCollectionListener;
 import com.gaadi.neon.model.PhotosMode;
 import com.gaadi.neon.util.FileInfo;
+import com.gaadi.neon.util.LocaleHelper;
 import com.gaadi.neon.util.NeonException;
 import com.gaadi.neon.util.NeonImagesHandler;
 import com.gaadi.neon.util.OneStepImageHandler.OneStepActionListener;
@@ -29,13 +27,7 @@ import com.gaadi.neon.util.OneStepImageHandler;
 import com.gaadi.neon.util.Constants;
 import com.intsig.csopen.sdk.CSOpenAPI;
 import com.intsig.csopen.sdk.CSOpenAPIParam;
-import com.intsig.csopen.sdk.CSOpenApiFactory;
-import com.scanlibrary.R;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -107,6 +99,7 @@ public class PhotosLibrary {
             return;
         }
         NeonImagesHandler.getSingletonInstance().setCameraParam(cameraParams);
+        setLocale(activity);
 
         switch (cameraParams.getCameraViewType()) {
 
@@ -126,6 +119,7 @@ public class PhotosLibrary {
             return;
         }
         NeonImagesHandler.getSingletonInstance().setGalleryParam(galleryParams);
+        setLocale(activity);
 
         switch (galleryParams.getGalleryViewType()) {
 
@@ -161,6 +155,7 @@ public class PhotosLibrary {
             return;
         }
         NeonImagesHandler.getSingletonInstance().setNeutralParam(neutralParamParams);
+        setLocale(activity);
 
         Intent neutralIntent = new Intent(activity, NeonNeutralActivity.class);
         activity.startActivity(neutralIntent);
@@ -184,5 +179,13 @@ public class PhotosLibrary {
     public static boolean go2CamScanner(Activity activity, String filePath, String outputImagePath, int requestCode, CSOpenAPI csOpenAPI) {
         CSOpenAPIParam param = new CSOpenAPIParam(filePath, outputImagePath, null, null, 1.0f);
         return csOpenAPI.scanImage(activity, requestCode, param);
+    }
+
+    private static void setLocale(Context activity){
+        if (NeonImagesHandler.getSingletonInstance().getGenericParam() != null && NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters() != null && NeonImagesHandler.getSingletonInstance().getGenericParam().getCustomParameters().getLanguageId() == 1) {
+            LocaleHelper.setLocale(activity,"ind");
+        }else {
+            LocaleHelper.setLocale(activity,"");
+        }
     }
 }

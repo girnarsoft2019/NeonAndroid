@@ -1,75 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Neon</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
-    <string name="scanning">Croping in progress</string>
-    <string name="scan">Save Croping</string>
-    <string name="cantCrop">Can\'t crop the image, change the points</string>
-    <string name="ok">OK</string>
-    <string name="title_activity_item">ItemActivity</string>
-    <string name="facebook_app_id">424300634391093</string>
-    <string name="maps_key">AIzaSyBCnuONgR6ASm4J5nWo2eIL5rf84G14a4U</string>
-    <string name="crashlytics_key">212cee0812295a2c1f7ffe324c95efe625a227ea</string>
-    <string name="map_activity_item">Maps Activity</string>
-    <string name="title_activity_gallery">GalleryActivity</string>
-    <string name="emptyString" />
-    <string name="title_activity_media_store_test">MediaStoreTest</string>
+    <string name="app_name" translatable="false">Neon</string>
+    <string name="hello_world" translatable="false">Hello world!</string>
+    <string name="action_settings" translatable="false">Settings</string>
+    <string name="scanning" translatable="false">Croping in progress</string>
+    <string name="scan" translatable="false">Save Croping</string>
+    <string name="cantCrop" translatable="false">Can\'t crop the image, change the points</string>
+    <string name="ok" translatable="false">OK</string>
+    <string name="title_activity_item" translatable="false">ItemActivity</string>
+    <string name="facebook_app_id" translatable="false">424300634391093</string>
+    <string name="maps_key" translatable="false">AIzaSyBCnuONgR6ASm4J5nWo2eIL5rf84G14a4U</string>
+    <string name="crashlytics_key" translatable="false">212cee0812295a2c1f7ffe324c95efe625a227ea</string>
+    <string name="map_activity_item" translatable="false">Maps Activity</string>
+    <string name="title_activity_gallery" translatable="false">GalleryActivity</string>
+    <string name="emptyString" translatable="false" />
+    <string name="title_activity_media_store_test" translatable="false">MediaStoreTest</string>
     <string name="alert" translatable="false">Alert</string>
-    <string name="title_activity_camera_priority">CameraPriorityActivity</string>
-    <string name="title_activity_neutral">NeutralActivity</string>
-    <string name="you_need_to_allow_access_to">You need to allow access to %1$s.\nSettings->Apps->Gcloud->Permissions->%2$s</string>
-    <string name="manifest_permission_error">Mention %1$s in your Manifest file</string>
-    <string name="zero">0</string>
-    <string name="choose_gallery">Choose from Gallery</string>
-    <string name="take_photo">Take Photo</string>
-    <string name="pass_params">Please pass photo params</string>
-    <string name="gallery_error">Either No access or no gallery files present</string>
-    <string name="wrong_format">Wrong file format selected</string>
-    <string name="no_image_selected">No image selected</string>
+    <string name="title_activity_camera_priority" translatable="false">CameraPriorityActivity</string>
+    <string name="title_activity_neutral" translatable="false">NeutralActivity</string>
+    <string name="you_need_to_allow_access_to" translatable="false">You need to allow access to %1$s.\nSettings->Apps->Gcloud->Permissions->%2$s</string>
+    <string name="manifest_permission_error" translatable="false">Mention %1$s in your Manifest file</string>
+    <string name="zero" translatable="false">0</string>
+    <string name="choose_gallery" translatable="false">Choose from Gallery</string>
+    <string name="take_photo" translatable="false">Take Photo</string>
+    <string name="pass_params" translatable="false">Please pass photo params</string>
+    <string name="gallery_error" translatable="false">Either No access or no gallery files present</string>
+    <string name="wrong_format" translatable="false">Wrong file format selected</string>
+    <string name="no_image_selected" translatable="false">No image selected</string>
 
-    <string name="selected_max_photos">Maximum no of photos selected already</string>
-    <string name="click_photo">Please click atleast one photo</string>
-    <string name="pass_valid_params">Please pass valid params</string>
-    <string name="invalid_mode">Please pass valid mode in params</string>
-    <string name="no_images">No Images Clicked</string>
-    <string name="profile_photo">Profile Photo</string>
-    <string name="please_select_atleast_one">Please click atleast one photo</string>
-    <string name="camera_error">Camera Error. Kindly try again !!</string>
-    <string name="capture">capture</string>
-    <string name="press_done">Press Done</string>
-    <string name="no_tags_sent">Please set tags for images</string>
+    <string name="selected_max_photos" translatable="false">Maximum no of photos selected already</string>
+    <string name="click_photo" translatable="false">Please click atleast one photo</string>
+    <string name="pass_valid_params" translatable="false">Please pass valid params</string>
+    <string name="invalid_mode" translatable="false">Please pass valid mode in params</string>
+    <string name="no_images" translatable="false">No Images Clicked</string>
+    <string name="profile_photo" translatable="false">Profile Photo</string>
+    <string name="please_select_atleast_one" translatable="false">Please click atleast one photo</string>
+    <string name="camera_error" translatable="false">Camera Error. Kindly try again !!</string>
+    <string name="capture" translatable="false">capture</string>
+    <string name="press_done" translatable="false">Press Done</string>
+    <string name="no_tags_sent" translatable="false">Please set tags for images</string>
     <color name="gray">#808080</color>
-    <string name="title_activity_image_review">ImageReviewActivity</string>
-    <string name="please_confirm">Please confirm</string>
-    <string name="would_you_like_to_save_captured_images">Would you like to save the captured images</string>
-    <string name="would_you_like_to_save_captured_pdf">Would you like to save the captured PDF file</string>
-    <string name="neon_file_provider_authority">com.scanlibrary.provider</string>
+    <string name="title_activity_image_review" translatable="false">ImageReviewActivity</string>
+    <string name="please_confirm" translatable="false">Please confirm</string>
+    <string name="would_you_like_to_save_captured_images" translatable="false">Would you like to save the captured images</string>
+    <string name="would_you_like_to_save_captured_pdf" translatable="false">Would you like to save the captured PDF file</string>
+    <string name="neon_file_provider_authority" translatable="false">com.scanlibrary.provider</string>
 
 
 
 <!--Language change required-->
-
-    <string name="done">Done</string>
-
-
-
-    <string name="prev">Previous</string>
-    <string name="camera">Camera</string>
-    <string name="gallery">Gallery</string>
-    <string name="submit">Submit</string>
-    <string name="mandatory_images">Mandatory Images</string>
-    <string name="select_label">Select Label</string>
-    <string name="photos">Photos</string>
     <string name="next">Next</string>
+    <string name="done">Done</string>
+    <string name="prev">Previous</string>
     <string name="finish">Finish</string>
     <string name="skip">Skip</string>
     <string name="unable_to_find_location">Unable to find location, Please try again later.</string>
     <string name="saving_picture">Saving Picture</string>
+    <string name="camera">Camera</string>
     <string name="image_preview">Image Preview</string>
-
+    <string name="gallery">Gallery</string>
+    <string name="submit">Submit</string>
+    <string name="mandatory_images">Mandatory Images</string>
     <string name="image_review">Image Review</string>
     <string name="select_tag">Select Tag</string>
+    <string name="select_label">Select Label</string>
     <string name="remove_img_title">Remove Image</string>
     <string name="removeImage">Are you sure you want to remove this image ?</string>
     <string name="okDialog">OK</string>
@@ -92,4 +86,5 @@
     <string name="max_tag_count_error">images are allowed only for</string>
     <string name="tag_mandatory_error">is mandatory </string>
     <string name="more_images">more images required</string>
+    <string name="photos">Photos</string>
 </resources>

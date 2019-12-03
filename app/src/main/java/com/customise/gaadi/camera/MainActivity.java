@@ -205,6 +205,7 @@ public class MainActivity extends AppCompatActivity implements OnImageCollection
                     CustomParameters.CustomParametersBuilder builder = new CustomParameters.CustomParametersBuilder();
                     builder.setCompressBy(40);
                     builder.setShowPreviewForEachImage(true);
+                    builder.setLanguageId(1);
                     return builder.build();
                 }
 
