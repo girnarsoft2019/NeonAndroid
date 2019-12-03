@@ -81,7 +81,6 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:singleLine="true"
-            android:text="@string/select_label"
             android:textColor="@color/black" />
 
     </LinearLayout>

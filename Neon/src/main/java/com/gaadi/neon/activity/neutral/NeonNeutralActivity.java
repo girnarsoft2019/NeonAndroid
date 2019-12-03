@@ -37,7 +37,7 @@ import java.util.List;
 public class NeonNeutralActivity extends NeonBaseNeutralActivity implements View.OnClickListener {
 
     ArrayAdapter<String> adapter;
-    private TextView txtTagTitle, showMinCount;
+    private TextView txtTagTitle, showMinCount, tvCamera, tvGallery;
     private ListView tabList;
     private LinearLayout addPhotoCamera, addPhotoGallary;
     private FrameLayout imageShowFragmentContainer;
@@ -52,8 +52,13 @@ public class NeonNeutralActivity extends NeonBaseNeutralActivity implements View
         addPhotoCamera = findViewById(R.id.addPhotoCamera);
         showMinCount = findViewById(R.id.show_min_count);
         addPhotoGallary = findViewById(R.id.addPhotoGallary);
+        tvCamera = findViewById(R.id.tvCamera);
+        tvGallery = findViewById(R.id.tvGallery);
         addPhotoGallary.setOnClickListener(this);
         addPhotoCamera.setOnClickListener(this);
+        txtTagTitle.setText(R.string.mandatory_images);
+        tvCamera.setText(R.string.camera);
+        tvGallery.setText(R.string.gallery);
         bindXml();
     }
 

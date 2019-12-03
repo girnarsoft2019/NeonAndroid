@@ -19,6 +19,7 @@ public class CustomParameters {
     private boolean showTagImage;
     private String camScannerAPIKey;
     private boolean showPreviewForEachImage;
+    private int languageId;
 
     private CustomParameters(CustomParametersBuilder builder) {
         this.hideCameraButtonInNeutral = builder.hideCameraButtonInNeutral;
@@ -33,6 +34,7 @@ public class CustomParameters {
         this.showTagImage = builder.showTagImage;
         this.camScannerAPIKey = builder.camScannerAPIKey;
         this.showPreviewForEachImage = builder.showPreviewForEachImage;
+        this.languageId = builder.languageId;
     }
 
     public boolean gethideCameraButtonInNeutral() {
@@ -87,6 +89,10 @@ public class CustomParameters {
         return showPreviewForEachImage;
     }
 
+    public int getLanguageId(){
+        return languageId;
+    }
+
 
     public static class CustomParametersBuilder {
 
@@ -102,6 +108,7 @@ public class CustomParameters {
         private boolean showTagImage;
         private String camScannerAPIKey = "";
         private boolean showPreviewForEachImage;
+        private int languageId;
 
         public CustomParametersBuilder sethideCameraButtonInNeutral(boolean hide) {
             this.hideCameraButtonInNeutral = hide;
@@ -160,6 +167,11 @@ public class CustomParameters {
 
         public CustomParametersBuilder setShowPreviewForEachImage(boolean showPreviewForEachImage) {
             this.showPreviewForEachImage = showPreviewForEachImage;
+            return this;
+        }
+
+        public CustomParametersBuilder setLanguageId(int languageId) {
+            this.languageId = languageId;
             return this;
         }
 

@@ -49,21 +49,27 @@
 
 
 <!--Language change required-->
-    <string name="next">Next</string>
+
     <string name="done">Done</string>
+
+
+
     <string name="prev">Previous</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="submit">Submit</string>
+    <string name="mandatory_images">Mandatory Images</string>
+    <string name="select_label">Select Label</string>
+    <string name="photos">Photos</string>
+    <string name="next">Next</string>
     <string name="finish">Finish</string>
     <string name="skip">Skip</string>
     <string name="unable_to_find_location">Unable to find location, Please try again later.</string>
     <string name="saving_picture">Saving Picture</string>
-    <string name="camera">Camera</string>
     <string name="image_preview">Image Preview</string>
-    <string name="gallery">Gallery</string>
-    <string name="submit">Submit</string>
-    <string name="mandatory_images">Mandatory Images</string>
+
     <string name="image_review">Image Review</string>
     <string name="select_tag">Select Tag</string>
-    <string name="select_label">Select Label</string>
     <string name="remove_img_title">Remove Image</string>
     <string name="removeImage">Are you sure you want to remove this image ?</string>
     <string name="okDialog">OK</string>
@@ -86,5 +92,4 @@
     <string name="max_tag_count_error">images are allowed only for</string>
     <string name="tag_mandatory_error">is mandatory </string>
     <string name="more_images">more images required</string>
-    <string name="photos">Photos</string>
 </resources>

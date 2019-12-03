@@ -103,6 +103,9 @@ public class NormalCameraActivityNeon extends NeonBaseCameraActivity implements 
         buttonGallery.setOnClickListener(this);
         tvNext.setOnClickListener(this);
         tvPrevious.setOnClickListener(this);
+        tvNext.setText(R.string.next);
+        tvPrevious.setText(R.string.prev);
+        buttonDone.setText(R.string.done);
 
         cameraParams = NeonImagesHandler.getSingletonInstance().getCameraParam();
         if (NeonImagesHandler.getSingletonInstance().getLivePhotosListener() != null) {

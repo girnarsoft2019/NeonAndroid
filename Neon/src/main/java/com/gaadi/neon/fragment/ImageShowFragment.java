@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.gaadi.neon.activity.ImageReviewActivity;
@@ -44,6 +45,8 @@ public class ImageShowFragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater
                 .inflate(R.layout.image_show_layout, container, false);
         rootView.findViewById(R.id.btnDone).setOnClickListener(doneListener);
+        Button btn = rootView.findViewById(R.id.btnDone);
+        btn.setText(R.string.submit);
         imageShowGrid = rootView.findViewById(R.id.image_show_grid);
         imageShowGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

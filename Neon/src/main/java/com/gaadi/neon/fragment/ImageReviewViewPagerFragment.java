@@ -135,6 +135,7 @@ public class ImageReviewViewPagerFragment extends Fragment implements View.OnCli
         txtVwTagSpinner = (TextView) rootView.findViewById(R.id.imagereview_tag_spinner);
         draweeView = (ImageView) rootView.findViewById(R.id.imagereview_imageview);
         tagLayout = (LinearLayout) rootView.findViewById(R.id.footer_layout_imagereview_fragment);
+        txtVwTagSpinner.setText(R.string.select_label);
 
         if (NeonImagesHandler.getSingleonInstance().getGenericParam() != null &&
                 NeonImagesHandler.getSingleonInstance().getGenericParam().getTagEnabled()) {

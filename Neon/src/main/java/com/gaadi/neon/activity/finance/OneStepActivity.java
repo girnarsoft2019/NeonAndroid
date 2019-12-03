@@ -152,6 +152,7 @@ public class OneStepActivity extends AppCompatActivity implements CameraFragment
         rvFlash = (RecyclerView) findViewById(R.id.rvFlash);
         tvImageCount = (TextView) findViewById(R.id.tvImageCount);
         tvNext = (TextView) findViewById(R.id.tvNext);
+        tvNext.setText(R.string.done);
         tvNext.setVisibility(View.GONE);
         ivPdf.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
